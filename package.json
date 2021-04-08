@@ -10,10 +10,18 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:dotnet-solution-explorer.helloWorld"
+		"onView:dotnetSolutionExplorer"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"views": {
+			"explorer": [
+				{
+					"id": "dotnetSolutionExplorer",
+					"name": "dotnet Solution Explorer"
+				}
+			]
+		},
 		"commands": [
 			{
 				"command": "dotnet-solution-explorer.helloWorld",
