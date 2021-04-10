@@ -24,39 +24,85 @@ export class ProjectHelper {
         this.position = 0;
 
         let idOne: string = this.extractIdOne(exactSlnText);
+        let filenameNoExtension: string = this.extractDisplayName(exactSlnText);
     }
 
     private static extractIdOne(exactSlnText: string): string {
         let idOne: string = "";
         let finished: boolean = false;
 
-        while (!finished && _position < exactSlnText.Length) {
-            char currentChar = exactSlnText[_position];
+        while (!finished && this.position < exactSlnText.length) {
+            let currentChar: string = exactSlnText[this.position];
 
             switch (currentChar) {
                 case '{':
-                    _position++;
-                    if (_position < exactSlnText.Length) {
-                        currentChar = exactSlnText[_position];
+                    this.position++;
+                    if (this.position < exactSlnText.length) {
+                        currentChar = exactSlnText[this.position];
                     }
 
-                    while (currentChar != '}') {
-                        idOne.Append(currentChar);
-                        _position++;
+                    while (currentChar !== '}') {
+                        idOne += currentChar;
+                        this.position++;
 
-                        if (_position < exactSlnText.Length) {
-                            currentChar = exactSlnText[_position];
+                        if (this.position < exactSlnText.length) {
+                            currentChar = exactSlnText[this.position];
                         }
                     }
 
                     finished = true;
                     break;
                 default:
-                    _position++;
+                    this.position++;
                     break;
             }
         }
 
-        return Guid.Parse(idOne.ToString());
+        return idOne;
+    }
+
+    private static extractDisplayName(exactSlnText: string): string {
+        let displayName: string = "";
+        let finished: boolean = false;
+        let seenEquals: boolean = false;
+
+        while (!finished && this.position < exactSlnText.length) {
+            let currentChar: string = exactSlnText[this.position];
+
+            switch (currentChar) {
+                case '\"':
+                    if (seenEquals) {
+                        this.position++;
+                        if (this.position < exactSlnText.length) {
+                            currentChar = exactSlnText[this.position];
+                        }
+
+                        while (currentChar != '\"') {
+                            displayName += currentChar;
+                            this.position++;
+
+                            if (this.position < exactSlnText.length) {
+                                currentChar = exactSlnText[this.position];
+                            }
+                        }
+
+                        finished = true;
+                    }
+                    else {
+                    }
+                    break;
+                case '=':
+                    seenEquals = true;
+                    this.position++;
+
+                    break;
+                default:
+                    this.position++;
+
+                    break;
+            }
+        }
+
+        return displayName;
     }
 }
