@@ -4,7 +4,7 @@ import { ProjectHelper } from './ProjectHelper';
 import { WellKnownValues } from './WellKnownValues';
 
 const fs = require('fs');
-
+// a comment for my sanity
 export class SolutionHelperFactory {
     constructor() { }
 
