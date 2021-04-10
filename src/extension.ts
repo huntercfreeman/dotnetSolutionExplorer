@@ -35,31 +35,31 @@ export function activate(context: vscode.ExtensionContext) {
                 debugger;
               });
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.addFile', async (uri: vscode.Uri) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.addFile', async (data: any) => {
 
 			let inputBoxOptions: vscode.InputBoxOptions = {
 				placeHolder: "Enter filename with extension"
 			};
 
-			let fileName = await vscode.window.showInputBox(inputBoxOptions);
+			let filename = await vscode.window.showInputBox(inputBoxOptions);
 
-			if(!fileName) {
+			if(!filename) {
 				return;
 			}
 
 			let fileTemplate;
 
-			if(fileName.endsWith(".razor")) {
-
+			if(filename.endsWith(".razor")) {
+				fileTemplate = razorMarkupFileTemplate(filename);
 			}
 
-			await fs.writeFile(uri, "hello world!", (err: any) => {
+			await fs.writeFile(data, "hello world!", (err: any) => {
                 if (err) {
                   console.error(err);
-                  return vscode.window.showErrorMessage("Failed to create " + uri);
+                  return vscode.window.showErrorMessage("Failed to create " + data);
                 }
 
-                vscode.window.showInformationMessage("Created " + uri);
+                vscode.window.showInformationMessage("Created " + data);
               });
 		}),
 		vscode.window.registerTreeDataProvider(
