@@ -36,6 +36,14 @@ export class DotNetPathHelper {
         return fileName;
     }
 
+    public static extractFileDelimiter(absolutePath: string): string {
+        if(absolutePath.includes("\\")) {
+            return "\\";
+        }
+
+        return "/";
+    }
+
     public static convertRelativePathFromAbsolutePathToAbsolutePath(absolutePath: string, relativePathToAbsolutePath: string): string {
         var extractedFileNameFromAbsolutePath = this.extractFileName(absolutePath);
 

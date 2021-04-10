@@ -1,13 +1,17 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { DotNetPathHelper } from './DotNetPathHelper';
+
+const fs = require('fs');
 
 export abstract class DotNetFile extends vscode.TreeItem {
     constructor(
-        public readonly fileName: string,
+        public readonly absolutePath: string,
+        public readonly filename: string,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState
     ) {
-        super(fileName, collapsibleState);
-        this.tooltip = `${this.fileName} test tooltip`;
+        super(filename, collapsibleState);
+        this.tooltip = `${this.filename} test tooltip`;
         this.description = "abc test description";
     }
 
@@ -16,20 +20,45 @@ export abstract class DotNetFile extends vscode.TreeItem {
     public abstract getChildren(): Promise<DotNetFile[]>;
 }
 
-export class DotNetFileSolution extends DotNetFile {
+export class DotNetFileTxt extends DotNetFile {
     private constructor(
-        public readonly fileName: string,
+        public readonly absolutePath: string,
+        public readonly filename: string,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState
     ) {
-        super(fileName, collapsibleState);
+        super(absolutePath, filename, collapsibleState);
     }
 
-    public static createAsync(filename: string): DotNetFile {
-        return new DotNetFileSolution(filename, vscode.TreeItemCollapsibleState.Collapsed);
+    public static createAsync(absolutePath: string, filename: string): DotNetFile {
+        return new DotNetFileTxt(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed);
     }
 
     public async getChildren(): Promise<DotNetFile[]> {
-        if(this.children) {
+        if (this.children) {
+            return Promise.resolve(this.children);
+        }
+        else {
+            this.children = [];
+            return Promise.resolve(this.children);
+        }
+    }
+}
+
+export class DotNetFileSolution extends DotNetFile {
+    private constructor(
+        public readonly absolutePath: string,
+        public readonly filename: string,
+        public readonly collapsibleState: vscode.TreeItemCollapsibleState
+    ) {
+        super(absolutePath, filename, collapsibleState);
+    }
+
+    public static createAsync(absolutePath: string, filename: string): DotNetFile {
+        return new DotNetFileSolution(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed);
+    }
+
+    public async getChildren(): Promise<DotNetFile[]> {
+        if (this.children) {
             return Promise.resolve(this.children);
         }
         else {
@@ -41,43 +70,44 @@ export class DotNetFileSolution extends DotNetFile {
 
 export class DotNetFileProject extends DotNetFile {
     private constructor(
-        public readonly fileName: string,
+        public readonly absolutePath: string,
+        public readonly filename: string,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState
     ) {
-        super(fileName, collapsibleState);
+        super(absolutePath, filename, collapsibleState);
     }
 
-    public static createAsync(filename: string): DotNetFile {
-        return new DotNetFileProject(filename, vscode.TreeItemCollapsibleState.Collapsed);
+    public static createAsync(absolutePath: string, filename: string): DotNetFile {
+        return new DotNetFileProject(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed);
     }
 
     public async getChildren(): Promise<DotNetFile[]> {
-        if(this.children) {
+        if (this.children) {
             return this.children;
         }
         else {
-            await fs.readdir(vscodeInteropEvent.targetOne, (err: any, files: any) => {
-                // update vscodeInteropEvent.targetOne to be
-                // the absolute path of the csproj
-                // the result is the list of files
-                let csvOfFiles = "";
-
-                for (let i = 0; i < files.length; i++) {
-                  csvOfFiles += files[i];
-
-                  if (i < files.length - 1) {
-                    csvOfFiles += ',';
-                  }
-                }
-
-                vscodeInteropEvent.result = csvOfFiles;
-
-                webviewView.webview.postMessage(vscodeInteropEvent);
-              });
-              break;
+            let containingFolder: string = this.absolutePath
+                .replace(`/${this.filename}`, "")
+                .replace(`\\${this.filename}`, "");
 
 
-            return [];
+            let projectFiles = fs.readdirSync(containingFolder);
+
+            this.children = [];
+
+            for(let i = 0; i < projectFiles.length; i++) {
+                let fileDelimiter: string = DotNetPathHelper.extractFileDelimiter(containingFolder);
+
+                let dotNetFile: DotNetFile = DotNetFileTxt.createAsync(containingFolder + fileDelimiter + projectFiles[i], projectFiles[i]);
+
+                this.children.push(dotNetFile);
+            }
+
+            return this.children;
         }
+    }
+
+    public test(err: any, data: any): void {
+        console.log("true");
     }
 }
