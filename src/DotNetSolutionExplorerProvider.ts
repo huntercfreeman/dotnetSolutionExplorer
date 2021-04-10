@@ -37,12 +37,18 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
         let solutions = await vscode.workspace.findFiles("**/*.sln");
         let paths = solutions.map((x) => x.fsPath.toString());
 
+        if(paths.length === 0) {
+            vscode.window.showErrorMessage("No .sln files were found within workspace");
+
+            return [];
+        }
+
         let selectedSolutionPath = await vscode.window.showQuickPick(paths);
 
         if(selectedSolutionPath) {
             this.root = new DotNetFile(selectedSolutionPath, vscode.TreeItemCollapsibleState.None);
 
-            //this.root.children;
+            // TODO: this.root.children;
             return [ this.root ];
         }
         else {
