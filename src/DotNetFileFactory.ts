@@ -23,7 +23,12 @@ export class DotNetFileFactory {
             return await DotNetFileTxt.createAsync(absolutePath, filename);
         }
         if (filename.endsWith(".razor")) {
-            return await DotNetFileRazor.createAsync(absolutePath, filename, parent);
+            if(parent) {
+                return await DotNetFileRazor.createAsync(absolutePath, filename, parent);
+            }
+            else {
+                throw new Error(".razor file does not have a parent");
+            }
         }
         if (filename.endsWith(".json")) {
             return await DotNetFileJson.createAsync(absolutePath, filename);

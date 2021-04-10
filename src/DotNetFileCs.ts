@@ -17,8 +17,12 @@ export class DotNetFileCs extends DotNetFile {
             "title": "open",
             "arguments": [uri]
         };
+
+        this.namespaceString = filename.replace(".cs", "");
     }
 
+    public readonly namespaceString: string;
+    
     public static createAsync(absolutePath: string, filename: string): DotNetFile {
         return new DotNetFileCs(absolutePath, filename, vscode.TreeItemCollapsibleState.None);
     }

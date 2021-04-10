@@ -21,7 +21,11 @@ export class DotNetFileProject extends DotNetFile {
             "title": "open",
             "arguments": [uri]
         };
+
+        this.namespaceString = filename.replace(".csproj", "");
     }
+
+    public readonly namespaceString: string;
 
     public static async createAsync(absolutePath: string, filename: string): Promise<DotNetFile> {
         return new DotNetFileProject(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed);
