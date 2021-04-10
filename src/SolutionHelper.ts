@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { DotNetProject } from './DotNetProject';
 
 const fs = require('fs');
 
@@ -12,8 +13,6 @@ export class SolutionHelperFactory {
 
         solutionHelper.slnFileContents = 
             fs.readFileSync(solutionAbsolutePath, { "encoding": "UTF-8" });
-
-        
 
         return Promise.resolve(solutionHelper);
     }
@@ -34,4 +33,6 @@ class SolutionHelper implements ISolutionHelper {
 
     readonly slnDisplayName: string;
     slnFileContents: string | undefined;
+
+    private position: number = 0;
 }
