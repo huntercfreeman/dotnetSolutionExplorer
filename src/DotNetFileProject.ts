@@ -46,10 +46,12 @@ export class DotNetFileProject extends DotNetFile {
             for (let i = 0; i < projectFiles.length; i++) {
                 let fileDelimiter: string = DotNetPathHelper.extractFileDelimiter(containingFolder);
 
-                let dotNetFile: DotNetFile = await DotNetFileFactory.create(containingFolder + fileDelimiter + projectFiles[i], projectFiles[i]);
+                let dotNetFile: DotNetFile = await DotNetFileFactory.create(containingFolder + fileDelimiter + projectFiles[i], projectFiles[i], this);
 
                 this.children.push(dotNetFile);
             }
+
+            await this.tryOrphanChildren();
 
             return this.children;
         }
