@@ -25,6 +25,7 @@ export class ProjectHelper {
 
         let idOne: string = this.extractIdOne(exactSlnText);
         let filenameNoExtension: string = this.extractDisplayName(exactSlnText);
+        let relativePathFromSln: string = this.extractFileName(exactSlnText);
     }
 
     private static extractIdOne(exactSlnText: string): string {
@@ -105,4 +106,57 @@ export class ProjectHelper {
 
         return displayName;
     }
+
+    private static extractFileName(exactSlnText: string): string
+        {
+            let fileName: string = "";
+            let finished: boolean = false;
+            let seenComma: boolean = false;
+
+            while (!finished && this.position < exactSlnText.length)
+            {
+                let currentChar: string = exactSlnText[this.position];
+
+                switch (currentChar)
+                {
+                    case '\"':
+                        if (seenComma)
+                        {
+                            this.position++;
+                            if (this.position < exactSlnText.length)
+                            {
+                                currentChar = exactSlnText[this.position];
+                            }
+
+                            while (currentChar != '\"')
+                            {
+                                fileName += currentChar;
+                                this.position++;
+
+                                if (this.position < exactSlnText.length)
+                                {
+                                    currentChar = exactSlnText[this.position];
+                                }
+                            }
+
+                            finished = true;
+                        }
+                        else
+                        {
+                            this.position++;
+                        }
+                        break;
+                    case ',':
+                        seenComma = true;
+                        this.position++;
+
+                        break;
+                    default:
+                        this.position++;
+                        break;
+                }
+            }
+
+            return fileName;
+        }
 }
