@@ -11,6 +11,10 @@ export class DotNetFile extends vscode.TreeItem {
         this.description = "abc test description";
     }
 
+    children = [
+        
+    ];
+
     iconPath = {
         light: path.join('.', 'media', 'account.svg'),
         dark: path.join('.', 'media', 'account.svg'),

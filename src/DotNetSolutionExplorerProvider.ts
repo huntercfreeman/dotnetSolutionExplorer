@@ -6,6 +6,8 @@ import { DotNetFile } from './DotNetFile';
 export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<DotNetFile> {
     constructor(private workspaceRoot: string) { }
 
+    private root : DotNetFile | undefined;
+
     getTreeItem(element: DotNetFile): vscode.TreeItem {
         return element;
     }
@@ -23,50 +25,31 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
                     new DotNetFile("testTwo.txt", vscode.TreeItemCollapsibleState.Collapsed)
                 ]
             );
-        } 
+        }
         else {
-            vscode.window.showInformationMessage('Workspace has no package.json');
-            return Promise.resolve([
-                new DotNetFile("testOne.txt", vscode.TreeItemCollapsibleState.None)
-            ]);
+            return this.getRoot();
         }
     }
-    
 
-    /**
-     * Given the path to package.json, read all its dependencies and devDependencies.
-     */
-    // private getDepsInPackageJson(packageJsonPath: string): Dependency[] {
-    //     if (this.pathExists(packageJsonPath)) {
-    //         const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+    private async getRoot(): Promise<DotNetFile[]> {
+        if(this.root) { return [ this.root ]; }
+        
+        let solutions = await vscode.workspace.findFiles("**/*.sln");
+        let paths = solutions.map((x) => x.fsPath.toString());
 
-    //         const toDep = (moduleName: string, version: string): Dependency => {
-    //             if (this.pathExists(path.join(this.workspaceRoot, 'node_modules', moduleName))) {
-    //                 return new Dependency(
-    //                     moduleName,
-    //                     version,
-    //                     vscode.TreeItemCollapsibleState.Collapsed
-    //                 );
-    //             } else {
-    //                 return new Dependency(moduleName, version, vscode.TreeItemCollapsibleState.None);
-    //             }
-    //         };
+        let selectedSolutionPath = await vscode.window.showQuickPick(paths);
 
-    //         const deps = packageJson.dependencies
-    //             ? Object.keys(packageJson.dependencies).map(dep =>
-    //                 toDep(dep, packageJson.dependencies[dep])
-    //             )
-    //             : [];
-    //         const devDeps = packageJson.devDependencies
-    //             ? Object.keys(packageJson.devDependencies).map(dep =>
-    //                 toDep(dep, packageJson.devDependencies[dep])
-    //             )
-    //             : [];
-    //         return deps.concat(devDeps);
-    //     } else {
-    //         return [];
-    //     }
-    // }
+        if(selectedSolutionPath) {
+            this.root = new DotNetFile(selectedSolutionPath, vscode.TreeItemCollapsibleState.None);
+
+            //this.root.children;
+            return [ this.root ];
+        }
+        else {
+            vscode.window.showErrorMessage("Must provide a path to a .sln within workspace");
+            return [];
+        }
+    }
 
     private pathExists(p: string): boolean {
         try {
