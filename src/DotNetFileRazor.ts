@@ -25,7 +25,42 @@ export class DotNetFileRazor extends DotNetFile {
         }
     }
 
-    public tryFosterChildren(): Promise<void> {
-        return Promise.resolve();
+    public async tryFosterChildren(): Promise<void> {
+        if(!this.parent) {
+            return Promise.resolve();
+        }
+
+        let childrenOfParent = await this.parent.getChildren();
+
+        let fosteredCodebehind: DotNetFile | undefined = childrenOfParent.find((dotNetFile) => {
+            dotNetFile.filename === `${this.filename}.cs`;
+        });
+
+        let fosteredCss: DotNetFile | undefined = childrenOfParent.find((dotNetFile) => {
+            dotNetFile.filename === `${this.filename}.css`;
+        });
+
+        let children = await this.getChildren();
+
+        let newChildrenOfParent = childrenOfParent;
+
+        if(fosteredCodebehind) {
+            children.push(fosteredCodebehind);
+
+            newChildrenOfParent = newChildrenOfParent.filter((dotNetFile) => {
+                dotNetFile.filename === fosteredCodebehind?.filename;
+            });
+        }
+
+        if(fosteredCss) {
+            children.push(fosteredCss);
+
+            newChildrenOfParent = newChildrenOfParent.filter((dotNetFile) => {
+                dotNetFile.filename === fosteredCss?.filename;
+            });
+        }
+
+
+        this.parent.overwriteChildren(newChildrenOfParent);
     }
 }

@@ -45,6 +45,6 @@ export class DotNetFileProject extends DotNetFile {
     }
 
     public tryFosterChildren(): Promise<void> {
-        \
+        return Promise.resolve();
     }
 }
