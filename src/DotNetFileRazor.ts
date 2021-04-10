@@ -60,7 +60,6 @@ export class DotNetFileRazor extends DotNetFile {
             });
         }
 
-
         this.parent.overwriteChildren(newChildrenOfParent);
     }
 }
