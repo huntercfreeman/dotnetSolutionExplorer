@@ -25,23 +25,23 @@ export function activate(context: vscode.ExtensionContext) {
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.openFile', (uri: vscode.Uri) => {
 			let textDocumentShowOptions: vscode.TextDocumentShowOptions = {
-                "preserveFocus": false,
-                "preview": false,
-                "viewColumn": vscode.ViewColumn.One
-              };
+				"preserveFocus": false,
+				"preview": false,
+				"viewColumn": vscode.ViewColumn.One
+			};
 
-              vscode.workspace.openTextDocument(uri.fsPath).then((a: vscode.TextDocument) => {
-                vscode.window.showTextDocument(a, textDocumentShowOptions);
-              }, (error: any) => {
-                console.error(error);
-                debugger;
-              });
+			vscode.workspace.openTextDocument(uri.fsPath).then((a: vscode.TextDocument) => {
+				vscode.window.showTextDocument(a, textDocumentShowOptions);
+			}, (error: any) => {
+				console.error(error);
+				debugger;
+			});
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.addFile', async (data: DotNetFile) => {
 
 			let absolutePathToAddFileTo: string = data.absolutePath;
 
-			if(data.filename.endsWith(".csproj")) {
+			if (data.filename.endsWith(".csproj")) {
 				absolutePathToAddFileTo.replace(data.filename, "");
 			}
 			else {
@@ -55,36 +55,36 @@ export function activate(context: vscode.ExtensionContext) {
 
 			let filename = await vscode.window.showInputBox(inputBoxOptions);
 
-			if(!filename) {
+			if (!filename) {
 				return;
 			}
 
 			let fileTemplate = "";
 
-			if(filename.endsWith(".razor")) {
+			if (filename.endsWith(".razor")) {
 				fileTemplate = razorMarkupFileTemplate(filename);
 			}
-			else if(filename.endsWith(".razor.cs")) {
+			else if (filename.endsWith(".razor.cs")) {
 				fileTemplate = razorCodebehindFileTemplate(filename, data.namespaceString ?? "NamespaceWasUndefined");
 			}
-			else if(filename.endsWith(".cs")) {
+			else if (filename.endsWith(".cs")) {
 				fileTemplate = csFileTemplate(filename, data.namespaceString ?? "NamespaceWasUndefined");
 			}
 
 			await fs.writeFile(absolutePathToAddFileTo + filename, fileTemplate, (err: any) => {
-                if (err) {
-                  console.error(err);
-                  return vscode.window.showErrorMessage("Failed to create " + data);
-                }
+				if (err) {
+					console.error(err);
+					return vscode.window.showErrorMessage("Failed to create " + data);
+				}
 
-                vscode.window.showInformationMessage("Created " + data);
-              });
+				vscode.window.showInformationMessage("Created " + data);
+			});
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.addBlazorComponent', async (data: DotNetFile) => {
 
 			let absolutePathToAddFileTo: string = data.absolutePath;
 
-			if(data.filename.endsWith(".csproj")) {
+			if (data.filename.endsWith(".csproj")) {
 				absolutePathToAddFileTo.replace(data.filename, "");
 			}
 			else {
@@ -93,35 +93,38 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 
 			let inputBoxOptions: vscode.InputBoxOptions = {
-				placeHolder: "Enter filename with extension"
+				placeHolder: "Enter component name no extension"
 			};
 
-			let filename = await vscode.window.showInputBox(inputBoxOptions);
+			let componentName = await vscode.window.showInputBox(inputBoxOptions);
 
-			if(!filename) {
+			if (!componentName) {
 				return;
 			}
 
 			let fileTemplate = "";
 
-			if(filename.endsWith(".razor")) {
-				fileTemplate = razorMarkupFileTemplate(filename);
-			}
-			else if(filename.endsWith(".razor.cs")) {
-				fileTemplate = razorCodebehindFileTemplate(filename, data.namespaceString ?? "NamespaceWasUndefined");
-			}
-			else if(filename.endsWith(".cs")) {
-				fileTemplate = csFileTemplate(filename, data.namespaceString ?? "NamespaceWasUndefined");
-			}
+			fileTemplate = razorMarkupFileTemplate(componentName);
 
-			await fs.writeFile(absolutePathToAddFileTo + filename, fileTemplate, (err: any) => {
-                if (err) {
-                  console.error(err);
-                  return vscode.window.showErrorMessage("Failed to create " + data);
-                }
+			await fs.writeFile(absolutePathToAddFileTo + componentName + ".razor", fileTemplate, (err: any) => {
+				if (err) {
+					console.error(err);
+					return vscode.window.showErrorMessage("Failed to create " + data);
+				}
 
-                vscode.window.showInformationMessage("Created " + data);
-              });
+				vscode.window.showInformationMessage("Created " + data);
+			});
+
+			fileTemplate = razorCodebehindFileTemplate(componentName, data.namespaceString ?? "NamespaceWasUndefined");
+			
+			await fs.writeFile(absolutePathToAddFileTo + componentName + ".razor.cs", fileTemplate, (err: any) => {
+				if (err) {
+					console.error(err);
+					return vscode.window.showErrorMessage("Failed to create " + data);
+				}
+
+				vscode.window.showInformationMessage("Created " + data);
+			});
 		}),
 		vscode.window.registerTreeDataProvider(
 			'dotnetSolutionExplorer',
