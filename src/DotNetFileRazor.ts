@@ -64,4 +64,9 @@ export class DotNetFileRazor extends DotNetFile {
 
         return Promise.resolve();
     }
+
+    command = {
+        "title": "Show error",
+        "command": "dotnet-solution-explorer.helloWorld",
+    };
 }
