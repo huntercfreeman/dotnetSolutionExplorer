@@ -7,7 +7,7 @@ import { SolutionHelperFactory, ISolutionHelper } from './SolutionHelper';
 export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<DotNetFile> {
     constructor(private workspaceAbsolutePath: string) { }
 
-    private root : DotNetFile | undefined;
+    private root: DotNetFile | undefined;
     private solutionHelper: ISolutionHelper | undefined;
 
     getTreeItem(element: DotNetFile): vscode.TreeItem {
@@ -29,12 +29,12 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
     }
 
     private async getRoot(): Promise<DotNetFile[]> {
-        if(this.root) { return [ this.root ]; }
-        
+        if (this.root) { return [this.root]; }
+
         let solutions = await vscode.workspace.findFiles("**/*.sln");
         let absolutePaths = solutions.map((x) => x.fsPath.toString());
 
-        if(absolutePaths.length === 0) {
+        if (absolutePaths.length === 0) {
             vscode.window.showErrorMessage("No .sln files were found within workspace");
 
             return [];
@@ -42,7 +42,7 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
 
         let selectedSolutionAbsolutePath = await vscode.window.showQuickPick(absolutePaths);
 
-        if(selectedSolutionAbsolutePath) {
+        if (selectedSolutionAbsolutePath) {
             let solutionHelperFactory = new SolutionHelperFactory();
 
             this.solutionHelper = await solutionHelperFactory.createSolutionHelperAsync(
@@ -51,14 +51,16 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
 
             this.root = DotNetFileSolution.createAsync(this.solutionHelper.slnFileName);
 
-            for(let i = 0; i < this.solutionHelper.dotNetProjects.length; i++) {
-                let dotNetFileProject: DotNetFileProject = DotNetFileProject.createAsync(this.solutionHelper.dotNetProjects[i].filenameNoExtension);
+            for (let i = 0; i < this.solutionHelper.dotNetProjects.length; i++) {
+                let dotNetFileProject: DotNetFileProject = DotNetFileProject.createAsync(
+                    this.solutionHelper.dotNetProjects[i].filenameNoExtension + ".csproj"
+                );
 
                 this.root.getChildren().push(dotNetFileProject);
             }
 
 
-            return [ this.root ];
+            return [this.root];
         }
         else {
             vscode.window.showErrorMessage("Must provide an absolute path to a .sln within workspace");

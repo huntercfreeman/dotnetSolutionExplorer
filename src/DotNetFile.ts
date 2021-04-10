@@ -13,7 +13,7 @@ export abstract class DotNetFile extends vscode.TreeItem {
 
     children: DotNetFile[] | undefined = undefined;
 
-    public abstract getChildren(): DotNetFile[];
+    public abstract getChildren(): Promise<DotNetFile[]>;
 }
 
 export class DotNetFileSolution extends DotNetFile {
@@ -28,13 +28,13 @@ export class DotNetFileSolution extends DotNetFile {
         return new DotNetFileSolution(filename, vscode.TreeItemCollapsibleState.Collapsed);
     }
 
-    public getChildren(): DotNetFile[] {
+    public async getChildren(): Promise<DotNetFile[]> {
         if(this.children) {
-            return this.children;
+            return Promise.resolve(this.children);
         }
         else {
             this.children = [];
-            return this.children;
+            return Promise.resolve(this.children);
         }
     }
 }
@@ -51,11 +51,32 @@ export class DotNetFileProject extends DotNetFile {
         return new DotNetFileProject(filename, vscode.TreeItemCollapsibleState.Collapsed);
     }
 
-    public getChildren(): DotNetFile[] {
+    public async getChildren(): Promise<DotNetFile[]> {
         if(this.children) {
             return this.children;
         }
         else {
+            await fs.readdir(vscodeInteropEvent.targetOne, (err: any, files: any) => {
+                // update vscodeInteropEvent.targetOne to be
+                // the absolute path of the csproj
+                // the result is the list of files
+                let csvOfFiles = "";
+
+                for (let i = 0; i < files.length; i++) {
+                  csvOfFiles += files[i];
+
+                  if (i < files.length - 1) {
+                    csvOfFiles += ',';
+                  }
+                }
+
+                vscodeInteropEvent.result = csvOfFiles;
+
+                webviewView.webview.postMessage(vscodeInteropEvent);
+              });
+              break;
+
+
             return [];
         }
     }
