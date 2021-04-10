@@ -33,11 +33,11 @@ export class DotNetFileRazor extends DotNetFile {
         let childrenOfParent = await this.parent.getChildren();
 
         let fosteredCodebehind: DotNetFile | undefined = childrenOfParent.find((dotNetFile) => {
-            dotNetFile.filename === `${this.filename}.cs`;
+            return dotNetFile.filename === `${this.filename}.cs`;
         });
 
         let fosteredCss: DotNetFile | undefined = childrenOfParent.find((dotNetFile) => {
-            dotNetFile.filename === `${this.filename}.css`;
+            return dotNetFile.filename === `${this.filename}.css`;
         });
 
         let children = await this.getChildren();
@@ -48,7 +48,7 @@ export class DotNetFileRazor extends DotNetFile {
             children.push(fosteredCodebehind);
 
             newChildrenOfParent = newChildrenOfParent.filter((dotNetFile) => {
-                dotNetFile.filename === fosteredCodebehind?.filename;
+                return dotNetFile.filename !== fosteredCodebehind?.filename;
             });
         }
 
@@ -56,10 +56,12 @@ export class DotNetFileRazor extends DotNetFile {
             children.push(fosteredCss);
 
             newChildrenOfParent = newChildrenOfParent.filter((dotNetFile) => {
-                dotNetFile.filename === fosteredCss?.filename;
+                return dotNetFile.filename !== fosteredCss?.filename;
             });
         }
 
         this.parent.overwriteChildren(newChildrenOfParent);
+
+        return Promise.resolve();
     }
 }
