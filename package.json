@@ -38,6 +38,14 @@
 			{
 				"command": "dotnet-solution-explorer.addBlazorComponent",
 				"title": "Add Blazor Component"
+			},
+			{
+				"command": "dotnet-solution-explorer.copy",
+				"title": "Copy"
+			},
+			{
+				"command": "dotnet-solution-explorer.paste",
+				"title": "Copy"
 			}
 		],
 		"menus": {

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { CopyState } from './CopyState';
 import { DotNetFile } from './DotNetFile';
 import { DotNetPathHelper } from './DotNetPathHelper';
 import { DotNetSolutionExplorerProvider } from './DotNetSolutionExplorerProvider';
@@ -6,6 +7,8 @@ import { DotNetSolutionExplorerProvider } from './DotNetSolutionExplorerProvider
 const fs = require('fs');
 
 export function activate(context: vscode.ExtensionContext) {
+	let copyState: CopyState = new CopyState();
+	
 	let workspaceFolderAbsolutePath;
 
 	let workspaceFolderFsPaths = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath);
@@ -22,6 +25,42 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.commands.registerCommand('dotnet-solution-explorer.helloWorld', () => {
 			vscode.window.showInformationMessage('Hello World from dotnet Solution Explorer!');
+		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.copy', (data: DotNetFile) => {
+			copyState.copy(data.absolutePath);
+			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
+		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.paste', async (data: DotNetFile) => {
+			let clipboardObject: any = copyState.readClipboard();
+
+			let absolutePath = clipboardObject.absolutePath;
+			let wasCut = clipboardObject.wasCut;
+
+			if(!absolutePath || absolutePath === "") {
+				vscode.window.showInformationMessage("Clipboard is empty");
+				return;
+			}
+
+			await fs.readFile(absolutePath, { "encoding": "UTF-8" }, async (err: any, data: any) => {
+                await fs.writeFile(data.absolutePath, data, (err: any) => {
+                  if (err) {
+                    console.error(err);
+                    return vscode.window.showErrorMessage("Failed to paste " + data.absolutePath);
+                  }
+
+                  vscode.window.showInformationMessage("Pasted " + data.absolutePath);
+                });
+              });
+
+              if (wasCut) {
+                const edit = new vscode.WorkspaceEdit();
+
+                let fileUri = vscode.Uri.file(absolutePath);
+
+                edit.deleteFile(fileUri, { recursive: true, ignoreIfNotExists: true });
+
+                await vscode.workspace.applyEdit(edit);
+              }
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.openFile', (uri: vscode.Uri) => {
 			let textDocumentShowOptions: vscode.TextDocumentShowOptions = {
