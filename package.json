@@ -27,7 +27,16 @@
 				"command": "dotnet-solution-explorer.helloWorld",
 				"title": "Hello World"
 			}
-		]
+		],
+		"menus": {
+			"view/item/context": [
+				{
+					"when": "viewItem == YOUR_CONTEXT",
+					"command": "dotnet-solution-explorer.helloWorld",
+					"group": "YourGroup@1"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
