@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { DotNetFile, DotNetFileSolution, DotNetFileProject } from './DotNetFile';
+import { DotNetFile } from './DotNetFile';
+import { DotNetFileProject } from "./DotNetFileProject";
+import { DotNetFileSolution } from "./DotNetFileSolution";
 import { SolutionHelperFactory, ISolutionHelper } from './SolutionHelper';
 
 export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<DotNetFile> {
