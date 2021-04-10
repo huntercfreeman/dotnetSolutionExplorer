@@ -1,14 +1,20 @@
 import { SpawnOptions } from "node:child_process";
 
+const fs = require('fs');
+
 export class SolutionHelperFactory {
     constructor() { }
 
-    createSolutionHelperAsync(workspacePath: string, solutionPath: string)
-        : ISolutionHelper {
+    public async createSolutionHelperAsync(workspacePath: string, solutionPath: string)
+        : Promise<ISolutionHelper> {
 
         let solutionHelper = new SolutionHelper(workspacePath, solutionPath);
 
-        return solutionHelper;
+        await fs.readFile(solutionPath, { "encoding": "UTF-8" }, (err: any, data: any) => {
+            solutionHelper.slnFileContents = data;
+        });
+
+        return Promise.resolve(solutionHelper);
     }
 }
 
@@ -26,5 +32,5 @@ class SolutionHelper implements ISolutionHelper {
     }
 
     readonly slnDisplayName: string;
-    readonly slnFileContents: string | undefined;
+    slnFileContents: string | undefined;
 }
