@@ -4,7 +4,7 @@ import { ProjectHelper } from './ProjectHelper';
 import { WellKnownValues } from './WellKnownValues';
 
 const fs = require('fs');
-// a comment for my sanity
+
 export class SolutionHelperFactory {
     constructor() { }
 
@@ -23,8 +23,9 @@ export class SolutionHelperFactory {
 }
 
 export interface ISolutionHelper {
-    readonly slnDisplayName: string;
+    readonly slnFileName: string;
     readonly slnFileContents: string | undefined;
+    dotNetProjects: DotNetProject[];
 
     parseProjects(): void;
 }
@@ -34,14 +35,17 @@ class SolutionHelper implements ISolutionHelper {
         public readonly workspaceAbsolutePath: string,
         public readonly slnAbsolutePath: string
     ) {
-        this.slnDisplayName = slnAbsolutePath.replace(workspaceAbsolutePath, "");
+        this.slnFileName = slnAbsolutePath
+            .replace(workspaceAbsolutePath, "")
+            .replace("/", "")
+            .replace("\\", "");
     }
 
-    private dotNetProjects: DotNetProject[] = [];
     private position: number = 0;
 
-    public readonly slnDisplayName: string;
+    public readonly slnFileName: string;
     public slnFileContents: string = "";
+    public dotNetProjects: DotNetProject[] = [];
 
     public parseProjects(): void {
         while (this.position < this.slnFileContents.length) {
@@ -90,7 +94,7 @@ class SolutionHelper implements ISolutionHelper {
         }
 
         return ProjectHelper.createProject(
-            exactSlnText, this.slnAbsolutePath, this.slnDisplayName
+            exactSlnText, this.slnAbsolutePath, this.slnFileName
         );
     }
 
