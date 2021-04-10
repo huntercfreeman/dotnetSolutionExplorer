@@ -26,6 +26,7 @@ export class ProjectHelper {
         let idOne: string = this.extractIdOne(exactSlnText);
         let filenameNoExtension: string = this.extractDisplayName(exactSlnText);
         let relativePathFromSln: string = this.extractFileName(exactSlnText);
+        let idTwo: string = this.extractIdTwo(exactSlnText);
     }
 
     private static extractIdOne(exactSlnText: string): string {
@@ -107,11 +108,55 @@ export class ProjectHelper {
         return displayName;
     }
 
-    private static extractFileName(exactSlnText: string): string
+    private static extractFileName(exactSlnText: string): string {
+        let fileName: string = "";
+        let finished: boolean = false;
+        let seenComma: boolean = false;
+
+        while (!finished && this.position < exactSlnText.length) {
+            let currentChar: string = exactSlnText[this.position];
+
+            switch (currentChar) {
+                case '\"':
+                    if (seenComma) {
+                        this.position++;
+                        if (this.position < exactSlnText.length) {
+                            currentChar = exactSlnText[this.position];
+                        }
+
+                        while (currentChar != '\"') {
+                            fileName += currentChar;
+                            this.position++;
+
+                            if (this.position < exactSlnText.length) {
+                                currentChar = exactSlnText[this.position];
+                            }
+                        }
+
+                        finished = true;
+                    }
+                    else {
+                        this.position++;
+                    }
+                    break;
+                case ',':
+                    seenComma = true;
+                    this.position++;
+
+                    break;
+                default:
+                    this.position++;
+                    break;
+            }
+        }
+
+        return fileName;
+    }
+
+    private static extractIdTwo(exactSlnText: string): string
         {
-            let fileName: string = "";
+            let idTwo: string = "";
             let finished: boolean = false;
-            let seenComma: boolean = false;
 
             while (!finished && this.position < exactSlnText.length)
             {
@@ -119,37 +164,25 @@ export class ProjectHelper {
 
                 switch (currentChar)
                 {
-                    case '\"':
-                        if (seenComma)
+                    case '{':
+                        this.position++;
+                        if (this.position < exactSlnText.length)
                         {
+                            currentChar = exactSlnText[this.position];
+                        }
+
+                        while (currentChar != '}')
+                        {
+                            idTwo += currentChar;
                             this.position++;
+
                             if (this.position < exactSlnText.length)
                             {
                                 currentChar = exactSlnText[this.position];
                             }
-
-                            while (currentChar != '\"')
-                            {
-                                fileName += currentChar;
-                                this.position++;
-
-                                if (this.position < exactSlnText.length)
-                                {
-                                    currentChar = exactSlnText[this.position];
-                                }
-                            }
-
-                            finished = true;
                         }
-                        else
-                        {
-                            this.position++;
-                        }
-                        break;
-                    case ',':
-                        seenComma = true;
-                        this.position++;
 
+                        finished = true;
                         break;
                     default:
                         this.position++;
@@ -157,6 +190,6 @@ export class ProjectHelper {
                 }
             }
 
-            return fileName;
+            return idTwo;
         }
 }
