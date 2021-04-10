@@ -11,7 +11,7 @@ export class DotNetFileSolution extends DotNetFile {
         super(absolutePath, filename, collapsibleState);
     }
 
-    public static createAsync(absolutePath: string, filename: string): DotNetFile {
+    public static async createAsync(absolutePath: string, filename: string): Promise<DotNetFile> {
         return new DotNetFileSolution(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed);
     }
 

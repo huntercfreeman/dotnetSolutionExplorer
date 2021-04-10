@@ -10,8 +10,24 @@ export class DotNetFileRazor extends DotNetFile {
         super(absolutePath, filename, collapsibleState);
     }
 
-    public static createAsync(absolutePath: string, filename: string): DotNetFile {
-        return new DotNetFileRazor(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed);
+    public static async createAsync(absolutePath: string, filename: string, parent?: DotNetFile): Promise<DotNetFile> {
+        let createdFile = new DotNetFileRazor(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed);
+        
+        if(!parent) {
+            return createdFile;
+        }
+
+        let fosteredChild: DotNetFile | undefined = await parent.tryFosterChild(`${filename}.cs`);
+
+        if(!fosteredChild) {
+            return createdFile;
+        }
+
+        let createdFilesChildren: DotNetFile[] = await createdFile.getChildren();
+
+        createdFilesChildren.push(fosteredChild);
+
+        return createdFile;
     }
 
     public async getChildren(): Promise<DotNetFile[]> {

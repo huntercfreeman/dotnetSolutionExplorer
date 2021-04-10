@@ -15,7 +15,7 @@ export class DotNetFileDirectory extends DotNetFile {
         super(absolutePath, filename, collapsibleState);
     }
 
-    public static createAsync(absolutePath: string, filename: string): DotNetFile {
+    public static async createAsync(absolutePath: string, filename: string): Promise<DotNetFile> {
         return new DotNetFileDirectory(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed);
     }
 
@@ -31,7 +31,7 @@ export class DotNetFileDirectory extends DotNetFile {
             for (let i = 0; i < projectFiles.length; i++) {
                 let fileDelimiter: string = DotNetPathHelper.extractFileDelimiter(this.absolutePath);
 
-                let dotNetFile: DotNetFile = DotNetFileFactory.create(this.absolutePath + fileDelimiter + projectFiles[i], projectFiles[i]);
+                let dotNetFile: DotNetFile = await DotNetFileFactory.create(this.absolutePath + fileDelimiter + projectFiles[i], projectFiles[i]);
 
                 this.children.push(dotNetFile);
             }

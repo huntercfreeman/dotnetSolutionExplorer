@@ -12,26 +12,26 @@ export class DotNetFileFactory {
     ) {
     }
 
-    public static create(absolutePath: string, filename: string): DotNetFile {
+    public static async create(absolutePath: string, filename: string, parent?: DotNetFile): Promise<DotNetFile> {
         if (filename.endsWith(".sln")) {
-            return DotNetFileSolution.createAsync(absolutePath, filename);
+            return await DotNetFileSolution.createAsync(absolutePath, filename);
         }
         if (filename.endsWith(".csproj")) {
-            return DotNetFileProject.createAsync(absolutePath, filename);
+            return await DotNetFileProject.createAsync(absolutePath, filename);
         }
         if (filename.endsWith(".txt")) {
-            return DotNetFileTxt.createAsync(absolutePath, filename);
+            return await DotNetFileTxt.createAsync(absolutePath, filename);
         }
         if (filename.endsWith(".razor")) {
-            return DotNetFileRazor.createAsync(absolutePath, filename);
+            return await DotNetFileRazor.createAsync(absolutePath, filename, parent);
         }
         if (filename.endsWith(".json")) {
-            return DotNetFileJson.createAsync(absolutePath, filename);
+            return await DotNetFileJson.createAsync(absolutePath, filename);
         }
         if(filename.includes(".")) {
-            return DotNetFileTxt.createAsync(absolutePath, filename);
+            return await DotNetFileTxt.createAsync(absolutePath, filename);
         }
 
-        return DotNetFileDirectory.createAsync(absolutePath, filename);
+        return await DotNetFileDirectory.createAsync(absolutePath, filename);
     }
 }
