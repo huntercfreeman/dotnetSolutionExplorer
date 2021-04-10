@@ -9,6 +9,13 @@ export class DotNetFileRazor extends DotNetFile {
         public parent?: DotNetFile
     ) {
         super(absolutePath, filename, collapsibleState);
+        
+        this.resourceUri = vscode.Uri.parse(absolutePath);
+        this.command = {
+            "command": "vscode.open",
+            "title": "open",
+            "arguments": [this.resourceUri]
+        };
     }
 
     public static async createAsync(absolutePath: string, filename: string, parent?: DotNetFile): Promise<DotNetFile> {
@@ -65,10 +72,7 @@ export class DotNetFileRazor extends DotNetFile {
         return Promise.resolve();
     }
 
-    command = {
-        "title": "Open File",
-        "command": "dotnet-solution-explorer.openFile",
-    };
+    
 
-    contextValue = "dotnet-solution-explorer.razor";
+    contextValue = "vscode.open";
 }
