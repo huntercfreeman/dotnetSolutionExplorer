@@ -12,9 +12,9 @@ export class SolutionHelperFactory {
 
         await fs.readFile(solutionAbsolutePath, { "encoding": "UTF-8" }, (err: any, data: any) => {
             if(err) {
-                vscode.errorw|
-
+                vscode.window.showErrorMessage(`Could not open file ${solutionAbsolutePath}.\nReceived error ${err}`);
             }
+            
             solutionHelper.slnFileContents = data;
         });
 
