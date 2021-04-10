@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import { DotNetPathHelper } from './DotNetPathHelper';
 import { DotNetFileTxt } from './DotNetFileTxt';
-const fs = require('fs');
 import { DotNetFile } from './DotNetFile';
 
+const fs = require('fs');
 
 export class DotNetFileProject extends DotNetFile {
     private constructor(
@@ -41,9 +41,5 @@ export class DotNetFileProject extends DotNetFile {
 
             return this.children;
         }
-    }
-
-    public test(err: any, data: any): void {
-        console.log("true");
     }
 }
