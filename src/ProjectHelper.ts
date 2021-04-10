@@ -34,6 +34,14 @@ export class ProjectHelper {
             relativePathFromSln)
             .replace("\\\\", "\\")
             .replace("//", "/");
+
+            return new DotNetProject(
+                idOne,
+                idTwo,
+                filenameNoExtension,
+                relativePathFromSln,
+                projectAbsolutePath
+            );
     }
 
     private static extractIdOne(exactSlnText: string): string {
