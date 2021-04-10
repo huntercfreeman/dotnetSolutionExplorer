@@ -2,18 +2,21 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import { DotNetFile } from './DotNetFile';
+import { SolutionHelperFactory, ISolutionHelper } from './SolutionHelper';
 
 export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<DotNetFile> {
-    constructor(private workspaceRoot: string) { }
+    constructor(private workspaceAbsolutePath: string) { }
 
     private root : DotNetFile | undefined;
+    private solutionHelper: ISolutionHelper | undefined;
+
 
     getTreeItem(element: DotNetFile): vscode.TreeItem {
         return element;
     }
 
     getChildren(element?: DotNetFile): Thenable<DotNetFile[]> {
-        if (!this.workspaceRoot) {
+        if (!this.workspaceAbsolutePath) {
             vscode.window.showInformationMessage('No files in empty workspace');
             return Promise.resolve([]);
         }
@@ -46,6 +49,12 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
         let selectedSolutionAbsolutePath = await vscode.window.showQuickPick(absolutePaths);
 
         if(selectedSolutionAbsolutePath) {
+            let solutionHelperFactory = new SolutionHelperFactory();
+
+            this.solutionHelper = await solutionHelperFactory.createSolutionHelperAsync(
+                this.workspaceAbsolutePath, selectedSolutionAbsolutePath
+            );
+
             this.root = new DotNetFile(selectedSolutionAbsolutePath, vscode.TreeItemCollapsibleState.None);
 
             // TODO: this.root.children;
