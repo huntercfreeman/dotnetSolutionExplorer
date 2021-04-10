@@ -19,7 +19,11 @@ export class DotNetFileCs extends DotNetFile {
             "arguments": [uri]
         };
 
-        this.namespaceString = filename.replace(".cs", "");
+        if(parent.namespaceString) {
+            this.namespaceString = parent.namespaceString;
+        }
+        
+        this.namespaceString += "." + filename.replace(".cs", "");
     }
 
     public static createAsync(absolutePath: string, filename: string, parent: DotNetFile): DotNetFile {

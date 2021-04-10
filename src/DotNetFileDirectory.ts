@@ -15,10 +15,11 @@ export class DotNetFileDirectory extends DotNetFile {
     ) {
         super(absolutePath, filename, collapsibleState);
 
-        if(parent) {
-            this.namespace = parent.namespaceString;
+        if(parent && parent.namespaceString) {
+            this.namespaceString = parent.namespaceString;
         }
-        this.namespaceString = filename;
+        
+        this.namespaceString += "." + filename;
     }
 
     public static async createAsync(absolutePath: string, filename: string, parent?: DotNetFile): Promise<DotNetFile> {

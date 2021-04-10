@@ -18,6 +18,12 @@ export class DotNetFileRazor extends DotNetFile {
             "title": "open",
             "arguments": [uri]
         };
+
+        if(parent.namespaceString) {
+            this.namespaceString = parent.namespaceString;
+        }
+        
+        this.namespaceString += "." + filename.replace(".razor", "");
     }
 
     public static async createAsync(absolutePath: string, filename: string, parent: DotNetFile): Promise<DotNetFile> {
