@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { DotNetProject } from './DotNetProject';
+import { ProjectHelper } from './ProjectHelper';
 
 const fs = require('fs');
 
@@ -31,8 +32,9 @@ class SolutionHelper implements ISolutionHelper {
         this.slnDisplayName = solutionPath.replace(workspacePath, "");
     }
 
-    readonly slnDisplayName: string;
-    slnFileContents: string | undefined;
-
     private position: number = 0;
+    private projectHelper = new ProjectHelper();
+
+    public readonly slnDisplayName: string;
+    public slnFileContents: string | undefined;
 }
