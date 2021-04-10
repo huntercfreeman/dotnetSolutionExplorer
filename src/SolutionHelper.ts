@@ -15,6 +15,8 @@ export class SolutionHelperFactory {
         solutionHelper.slnFileContents = 
             fs.readFileSync(solutionAbsolutePath, { "encoding": "UTF-8" });
 
+        solutionHelper.parseProjects();
+
         return Promise.resolve(solutionHelper);
     }
 }
@@ -22,6 +24,8 @@ export class SolutionHelperFactory {
 export interface ISolutionHelper {
     readonly slnDisplayName: string;
     readonly slnFileContents: string | undefined;
+    
+    parseProjects() : void;
 }
 
 class SolutionHelper implements ISolutionHelper {
@@ -32,9 +36,24 @@ class SolutionHelper implements ISolutionHelper {
         this.slnDisplayName = solutionPath.replace(workspacePath, "");
     }
 
-    private position: number = 0;
     private projectHelper = new ProjectHelper();
+    private dotNetProjects : DotNetProject[] = [];
 
     public readonly slnDisplayName: string;
-    public slnFileContents: string | undefined;
+    public slnFileContents: string = "";
+
+    public parseProjects() : void {
+        let position: number = 0;
+
+
+        while(position < this.slnFileContents.length) {
+            let currentChar: string = this.slnFileContents[position];
+
+            switch(currentChar) {
+                case 'P':
+                    position++;
+                    
+            }
+        }
+    }
 }
