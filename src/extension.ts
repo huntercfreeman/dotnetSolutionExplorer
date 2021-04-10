@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import { DotNetSolutionExplorerProvider } from './DotNetSolutionExplorerProvider';
 
+const fs = require('fs');
+
 export function activate(context: vscode.ExtensionContext) {
 	let workspaceFolderAbsolutePath;
 
@@ -33,6 +35,33 @@ export function activate(context: vscode.ExtensionContext) {
                 debugger;
               });
 		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.addFile', async (uri: vscode.Uri) => {
+
+			let inputBoxOptions: vscode.InputBoxOptions = {
+				placeHolder: "Enter filename with extension"
+			};
+
+			let fileName = await vscode.window.showInputBox(inputBoxOptions);
+
+			if(!fileName) {
+				return;
+			}
+
+			let fileTemplate;
+
+			if(fileName.endsWith(".razor")) {
+
+			}
+
+			await fs.writeFile(uri, "hello world!", (err: any) => {
+                if (err) {
+                  console.error(err);
+                  return vscode.window.showErrorMessage("Failed to create " + uri);
+                }
+
+                vscode.window.showInformationMessage("Created " + uri);
+              });
+		}),
 		vscode.window.registerTreeDataProvider(
 			'dotnetSolutionExplorer',
 			new DotNetSolutionExplorerProvider(workspaceFolderAbsolutePath ?? "")
@@ -41,3 +70,28 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() { }
+
+function razorMarkupFileTemplate(filename: string): string {
+	return `<h3>${filename.replace(".razor", "")}</h3>
+
+	@code {
+	
+	}
+`;
+}
+
+function razorCodebehindFileTemplate(filename: string, namespace: string): string {
+	return `using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace ${namespace}
+{
+    public class ${filename.replace(".razor.cs", "")} : ComponentBase
+    {
+    }
+}
+
+`;
+}

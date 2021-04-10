@@ -30,6 +30,10 @@
 			{
 				"command": "dotnet-solution-explorer.openFile",
 				"title": "Open File"
+			},
+			{
+				"command": "dotnet-solution-explorer.addFile",
+				"title": "Add File"
 			}
 		],
 		"menus": {
@@ -37,6 +41,10 @@
 				{
 					"when": "viewItem == dotnet-solution-explorer.razor",
 					"command": "dotnet-solution-explorer.helloWorld"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.directory",
+					"command": "dotnet-solution-explorer.addFile"
 				}
 			],
 			"explorer/context": [{

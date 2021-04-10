@@ -45,4 +45,6 @@ export class DotNetFileDirectory extends DotNetFile {
     public tryFosterChildren(): Promise<void> {
         return Promise.resolve();
     }
+
+    contextValue = "dotnet-solution-explorer.directory";
 }
