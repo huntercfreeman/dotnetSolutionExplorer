@@ -12,7 +12,7 @@ export class DotNetFileCs extends DotNetFile {
     }
 
     public static createAsync(absolutePath: string, filename: string): DotNetFile {
-        return new DotNetFileCs(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed);
+        return new DotNetFileCs(absolutePath, filename, vscode.TreeItemCollapsibleState.None);
     }
 
     public async getChildren(): Promise<DotNetFile[]> {

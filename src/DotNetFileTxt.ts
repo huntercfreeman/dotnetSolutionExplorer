@@ -11,7 +11,7 @@ export class DotNetFileTxt extends DotNetFile {
     }
 
     public static createAsync(absolutePath: string, filename: string): DotNetFile {
-        return new DotNetFileTxt(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed);
+        return new DotNetFileTxt(absolutePath, filename, vscode.TreeItemCollapsibleState.None);
     }
 
     public async getChildren(): Promise<DotNetFile[]> {
