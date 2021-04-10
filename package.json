@@ -26,6 +26,10 @@
 			{
 				"command": "dotnet-solution-explorer.helloWorld",
 				"title": "Hello World"
+			},
+			{
+				"command": "dotnet-solution-explorer.openFile",
+				"title": "Open File"
 			}
 		],
 		"menus": {
@@ -34,7 +38,12 @@
 					"when": "viewItem == dotnet-solution-explorer.razor",
 					"command": "dotnet-solution-explorer.helloWorld"
 				}
-			]
+			],
+			"explorer/context": [{
+                "when": "viewItem == dotnet-solution-explorer.razor",
+                "command": "dotnet-solution-explorer.openFile",
+                "group": "MyGroup"
+          }]
 		}
 	},
 	"scripts": {

@@ -66,8 +66,8 @@ export class DotNetFileRazor extends DotNetFile {
     }
 
     command = {
-        "title": "Show error",
-        "command": "dotnet-solution-explorer.helloWorld",
+        "title": "Open File",
+        "command": "dotnet-solution-explorer.openFile",
     };
 
     contextValue = "dotnet-solution-explorer.razor";

@@ -19,6 +19,9 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('dotnet-solution-explorer.helloWorld', () => {
 			vscode.window.showInformationMessage('Hello World from dotnet Solution Explorer!');
 		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.openFile', (uri: vscode.Uri) => {
+			vscode.window.showInformationMessage('File was opened');
+		}),
 		vscode.window.registerTreeDataProvider(
 			'dotnetSolutionExplorer',
 			new DotNetSolutionExplorerProvider(workspaceFolderAbsolutePath ?? "")
