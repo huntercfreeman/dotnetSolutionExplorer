@@ -86,7 +86,7 @@ class SolutionHelper implements ISolutionHelper {
             !this.peek("rojects)") && // NestedProjects)
             !this.peekConsumeIfTrue(WellKnownValues.endOfProjectMarker) &&
             this.position < this.slnFileContents.length) {
-            this.consumeCurrentChar(exactSlnText);
+            exactSlnText = this.consumeCurrentChar(exactSlnText);
         }
 
         return ProjectHelper.createProject(
@@ -94,10 +94,10 @@ class SolutionHelper implements ISolutionHelper {
         );
     }
 
-    private consumeCurrentChar(exactSlnText: string): void {
+    private consumeCurrentChar(exactSlnText: string): string {
         let currentChar: string = this.slnFileContents[this.position++];
 
-        exactSlnText += currentChar;
+        return exactSlnText + currentChar;
     }
 
     private peekConsumeIfTrue(substring: string): boolean {

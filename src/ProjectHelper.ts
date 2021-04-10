@@ -94,7 +94,7 @@ export class ProjectHelper {
                             currentChar = exactSlnText[this.position];
                         }
 
-                        while (currentChar != '\"') {
+                        while (currentChar !== '\"') {
                             displayName += currentChar;
                             this.position++;
 
@@ -106,7 +106,8 @@ export class ProjectHelper {
                         finished = true;
                     }
                     else {
-                    }
+                    this.position++;
+                }
                     break;
                 case '=':
                     seenEquals = true;
@@ -139,7 +140,7 @@ export class ProjectHelper {
                             currentChar = exactSlnText[this.position];
                         }
 
-                        while (currentChar != '\"') {
+                        while (currentChar !== '\"') {
                             fileName += currentChar;
                             this.position++;
 
@@ -186,7 +187,7 @@ export class ProjectHelper {
                             currentChar = exactSlnText[this.position];
                         }
 
-                        while (currentChar != '}')
+                        while (currentChar !== '}')
                         {
                             idTwo += currentChar;
                             this.position++;
