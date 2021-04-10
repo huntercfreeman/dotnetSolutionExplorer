@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { DotNetFile } from './DotNetFile';
+import { DotNetFile, DotNetFileSolution, DotNetFileProject } from './DotNetFile';
 import { SolutionHelperFactory, ISolutionHelper } from './SolutionHelper';
 
 export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<DotNetFile> {
@@ -24,8 +24,6 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
         if (element) {
             return Promise.resolve(
                 [
-                    new DotNetFile("testOne.txt", vscode.TreeItemCollapsibleState.Collapsed),
-                    new DotNetFile("testTwo.txt", vscode.TreeItemCollapsibleState.Collapsed)
                 ]
             );
         }
@@ -55,10 +53,10 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
                 this.workspaceAbsolutePath, selectedSolutionAbsolutePath
             );
 
-            this.root = new DotNetFile(this.solutionHelper.slnFileName, vscode.TreeItemCollapsibleState.None);
+            this.root = DotNetFileSolution.createAsync(this.solutionHelper.slnFileName);
 
             for(let i = 0; i < this.solutionHelper.dotNetProjects.length; i++) {
-                this.root.children.push()
+                this.root.children.push((this.solutionHelper.dotNetProjects[i]));
             }
 
 
