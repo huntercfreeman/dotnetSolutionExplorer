@@ -11,7 +11,9 @@ export abstract class DotNetFile extends vscode.TreeItem {
         this.description = "abc test description";
     }
 
-    children: DotNetFile[] = [];
+    children: DotNetFile[] | undefined = undefined;
+
+    public abstract getChildren(): DotNetFile[];
 }
 
 export class DotNetFileSolution extends DotNetFile {
@@ -25,6 +27,16 @@ export class DotNetFileSolution extends DotNetFile {
     public static createAsync(filename: string): DotNetFile {
         return new DotNetFileSolution(filename, vscode.TreeItemCollapsibleState.Collapsed);
     }
+
+    public getChildren(): DotNetFile[] {
+        if(this.children) {
+            return this.children;
+        }
+        else {
+            this.children = [];
+            return this.children;
+        }
+    }
 }
 
 export class DotNetFileProject extends DotNetFile {
@@ -37,5 +49,14 @@ export class DotNetFileProject extends DotNetFile {
 
     public static createAsync(filename: string): DotNetFile {
         return new DotNetFileProject(filename, vscode.TreeItemCollapsibleState.Collapsed);
+    }
+
+    public getChildren(): DotNetFile[] {
+        if(this.children) {
+            return this.children;
+        }
+        else {
+            return [];
+        }
     }
 }

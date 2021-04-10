@@ -10,7 +10,6 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
     private root : DotNetFile | undefined;
     private solutionHelper: ISolutionHelper | undefined;
 
-
     getTreeItem(element: DotNetFile): vscode.TreeItem {
         return element;
     }
@@ -22,7 +21,7 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
         }
 
         if (element) {
-            return Promise.resolve(element.children);
+            return Promise.resolve(element.getChildren());
         }
         else {
             return this.getRoot();
@@ -55,7 +54,7 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
             for(let i = 0; i < this.solutionHelper.dotNetProjects.length; i++) {
                 let dotNetFileProject: DotNetFileProject = DotNetFileProject.createAsync(this.solutionHelper.dotNetProjects[i].filenameNoExtension);
 
-                this.root.children.push(dotNetFileProject);
+                this.root.getChildren().push(dotNetFileProject);
             }
 
 
