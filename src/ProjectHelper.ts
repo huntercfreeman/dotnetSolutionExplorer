@@ -13,13 +13,13 @@ export class ProjectHelper {
         : DotNetProject {
 
         if (!exactSlnText) {
-            throw new Error(`Argument passed to ${ProjectHelper.createProject.name}`);
+            throw new Error(`Argument was null in function ${ProjectHelper.createProject.name}, argument may have been exactSlnText`);
         }
         if (!slnAbsolutePath) {
-            throw new Error(`Argument passed to ${ProjectHelper.createProject.name}`);
+            throw new Error(`Argument was null in function ${ProjectHelper.createProject.name}, argument may have been slnAbsolutePath`);
         }
         if (!slnDisplayName) {
-            throw new Error(`Argument passed to ${ProjectHelper.createProject.name}`);
+            throw new Error(`Argument was null in function ${ProjectHelper.createProject.name}, argument may have been slnDisplayName`);
         }
 
         this.position = 0;

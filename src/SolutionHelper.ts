@@ -100,10 +100,11 @@ class SolutionHelper implements ISolutionHelper {
         exactSlnText += currentChar;
     }
 
-
     private peekConsumeIfTrue(substring: string): boolean {
+        let peekString = this.slnFileContents.substring(this.position, this.position + substring.length);
+
         if (this.position + substring.length < this.slnFileContents.length &&
-            this.slnFileContents.substring(this.position, substring.length) == substring) {
+            peekString === substring) {
             this.position += substring.length;
 
             return true;
@@ -114,7 +115,7 @@ class SolutionHelper implements ISolutionHelper {
 
     private peek(substring: string): boolean {
         if (this.position + substring.length < this.slnFileContents.length &&
-            this.slnFileContents.substring(this.position, substring.length) == substring) {
+            this.slnFileContents.substring(this.position, this.position + substring.length) === substring) {
             return true;
         }
 
