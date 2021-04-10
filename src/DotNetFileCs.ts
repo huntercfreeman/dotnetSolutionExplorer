@@ -6,7 +6,8 @@ export class DotNetFileCs extends DotNetFile {
     private constructor(
         public readonly absolutePath: string,
         public readonly filename: string,
-        public readonly collapsibleState: vscode.TreeItemCollapsibleState
+        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+        public readonly parent: DotNetFile
     ) {
         super(absolutePath, filename, collapsibleState);
 
@@ -22,9 +23,9 @@ export class DotNetFileCs extends DotNetFile {
     }
 
     public readonly namespaceString: string;
-    
-    public static createAsync(absolutePath: string, filename: string): DotNetFile {
-        return new DotNetFileCs(absolutePath, filename, vscode.TreeItemCollapsibleState.None);
+
+    public static createAsync(absolutePath: string, filename: string, parent: DotNetFile): DotNetFile {
+        return new DotNetFileCs(absolutePath, filename, vscode.TreeItemCollapsibleState.None, parent);
     }
 
     public async getChildren(): Promise<DotNetFile[]> {

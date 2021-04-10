@@ -20,23 +20,38 @@ export class DotNetFileFactory {
             return await DotNetFileProject.createAsync(absolutePath, filename);
         }
         if (filename.endsWith(".txt")) {
-            return await DotNetFileTxt.createAsync(absolutePath, filename);
+            if (parent) {
+                return await DotNetFileTxt.createAsync(absolutePath, filename, parent);
+            }
+            else {
+                throw new Error(".txt file requires a parent");
+            }
         }
         if (filename.endsWith(".razor")) {
-            if(parent) {
+            if (parent) {
                 return await DotNetFileRazor.createAsync(absolutePath, filename, parent);
             }
             else {
-                throw new Error(".razor file does not have a parent");
+                throw new Error(".razor file requires a parent");
             }
         }
         if (filename.endsWith(".json")) {
-            return await DotNetFileJson.createAsync(absolutePath, filename);
+            if (parent) {
+                return await DotNetFileJson.createAsync(absolutePath, filename, parent);
+            }
+            else {
+                throw new Error(".json requires a parent");
+            }
         }
-        if(filename.includes(".")) {
-            return await DotNetFileTxt.createAsync(absolutePath, filename);
+        if (filename.includes(".")) {
+            if (parent) {
+                return await DotNetFileTxt.createAsync(absolutePath, filename, parent);
+            }
+            else {
+                throw new Error(".txt file requires a parent");
+            }
         }
 
-        return await DotNetFileDirectory.createAsync(absolutePath, filename);
+        return await DotNetFileDirectory.createAsync(absolutePath, filename, parent);
     }
 }

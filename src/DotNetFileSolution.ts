@@ -6,7 +6,8 @@ export class DotNetFileSolution extends DotNetFile {
     private constructor(
         public readonly absolutePath: string,
         public readonly filename: string,
-        public readonly collapsibleState: vscode.TreeItemCollapsibleState
+        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+        public readonly parent?: DotNetFile
     ) {
         super(absolutePath, filename, collapsibleState);
     }
