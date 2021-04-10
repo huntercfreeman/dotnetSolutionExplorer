@@ -5,12 +5,12 @@ const fs = require('fs');
 export class SolutionHelperFactory {
     constructor() { }
 
-    public async createSolutionHelperAsync(workspacePath: string, solutionPath: string)
+    public async createSolutionHelperAsync(workspaceAbsolutePath: string, solutionAbsolutePath: string)
         : Promise<ISolutionHelper> {
 
-        let solutionHelper = new SolutionHelper(workspacePath, solutionPath);
+        let solutionHelper = new SolutionHelper(workspaceAbsolutePath, solutionAbsolutePath);
 
-        await fs.readFile(solutionPath, { "encoding": "UTF-8" }, (err: any, data: any) => {
+        await fs.readFile(solutionAbsolutePath, { "encoding": "UTF-8" }, (err: any, data: any) => {
             solutionHelper.slnFileContents = data;
         });
 
