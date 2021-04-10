@@ -14,7 +14,14 @@ export class DotNetFileDirectory extends DotNetFile {
         public readonly parent?: DotNetFile
     ) {
         super(absolutePath, filename, collapsibleState);
+
+        if(parent) {
+            this.namespace = parent.namespaceString;
+        }
+        this.namespaceString = filename;
     }
+
+    public readonly namespaceString: string;
 
     public static async createAsync(absolutePath: string, filename: string, parent?: DotNetFile): Promise<DotNetFile> {
         return new DotNetFileDirectory(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed, parent);

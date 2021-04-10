@@ -11,6 +11,7 @@ export abstract class DotNetFile extends vscode.TreeItem {
         this.description = "abc test description";
     }
 
+    public readonly namespaceString: string;
     children: DotNetFile[] | undefined = undefined;
 
     public abstract getChildren(): Promise<DotNetFile[]>;
