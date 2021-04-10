@@ -10,13 +10,10 @@ export class SolutionHelperFactory {
 
         let solutionHelper = new SolutionHelper(workspaceAbsolutePath, solutionAbsolutePath);
 
-        await fs.readFile(solutionAbsolutePath, { "encoding": "UTF-8" }, (err: any, data: any) => {
-            if(err) {
-                vscode.window.showErrorMessage(`Could not open file ${solutionAbsolutePath}.\nReceived error ${err}`);
-            }
-            
-            solutionHelper.slnFileContents = data;
-        });
+        solutionHelper.slnFileContents = 
+            fs.readFileSync(solutionAbsolutePath, { "encoding": "UTF-8" });
+
+        
 
         return Promise.resolve(solutionHelper);
     }
