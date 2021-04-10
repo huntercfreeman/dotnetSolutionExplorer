@@ -31,16 +31,15 @@ export interface ISolutionHelper {
 
 class SolutionHelper implements ISolutionHelper {
     constructor(
-        public readonly workspacePath: string,
-        public readonly solutionPath: string
+        public readonly workspaceAbsolutePath: string,
+        public readonly slnAbsolutePath: string
     ) {
-        this.slnDisplayName = solutionPath.replace(workspacePath, "");
+        this.slnDisplayName = slnAbsolutePath.replace(workspaceAbsolutePath, "");
     }
 
     private projectHelper = new ProjectHelper();
     private dotNetProjects: DotNetProject[] = [];
     private position: number = 0;
-
 
     public readonly slnDisplayName: string;
     public slnFileContents: string = "";
@@ -68,22 +67,28 @@ class SolutionHelper implements ISolutionHelper {
         }
     }
 
-    private CreateProjectFromExactSlnText(): DotNetProject
-        {
-            let exactSlnText: string[] = [];
+    private CreateProjectFromExactSlnText(): DotNetProject {
+        let exactSlnText: string = "";
 
-            while (!this.peek("rojectDependencies") &&
-                   !this.peek("rojectConfiguration") &&
-                   !this.peek("rojectConfigurationPlatforms") &&
-                   !this.peek("rojects)") && // NestedProjects)
-                   !this.peekConsumeIfTrue(WellKnownValues.endOfProjectMarker) &&
-                    this.position < this.slnFileContents.length)
-            {
-                ConsumeCurrentChar(exactSlnText);
-            }
-
-            return _projectHelper.Parse(exactSlnText.ToString(), SlnAbsolutePath, SlnDisplayName);
+        while (!this.peek("rojectDependencies") &&
+            !this.peek("rojectConfiguration") &&
+            !this.peek("rojectConfigurationPlatforms") &&
+            !this.peek("rojects)") && // NestedProjects)
+            !this.peekConsumeIfTrue(WellKnownValues.endOfProjectMarker) &&
+            this.position < this.slnFileContents.length) {
+            this.consumeCurrentChar(exactSlnText);
         }
+
+        return ProjectHelper.createProject(
+            exactSlnText, this.slnAbsolutePath, this.slnDisplayName
+        );
+    }
+
+    private consumeCurrentChar(exactSlnText: string): void {
+        let currentChar: string = this.slnFileContents[this.position++];
+
+        exactSlnText += currentChar;
+    }
 
 
     private peekConsumeIfTrue(substring: string): boolean {
