@@ -21,8 +21,6 @@ export class DotNetFileDirectory extends DotNetFile {
         this.namespaceString = filename;
     }
 
-    public readonly namespaceString: string;
-
     public static async createAsync(absolutePath: string, filename: string, parent?: DotNetFile): Promise<DotNetFile> {
         return new DotNetFileDirectory(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed, parent);
     }

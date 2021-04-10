@@ -22,8 +22,6 @@ export class DotNetFileCs extends DotNetFile {
         this.namespaceString = filename.replace(".cs", "");
     }
 
-    public readonly namespaceString: string;
-
     public static createAsync(absolutePath: string, filename: string, parent: DotNetFile): DotNetFile {
         return new DotNetFileCs(absolutePath, filename, vscode.TreeItemCollapsibleState.None, parent);
     }
