@@ -1,4 +1,4 @@
-import { SpawnOptions } from "node:child_process";
+import * as vscode from 'vscode';
 
 const fs = require('fs');
 
@@ -11,6 +11,10 @@ export class SolutionHelperFactory {
         let solutionHelper = new SolutionHelper(workspaceAbsolutePath, solutionAbsolutePath);
 
         await fs.readFile(solutionAbsolutePath, { "encoding": "UTF-8" }, (err: any, data: any) => {
+            if(err) {
+                vscode.errorw|
+
+            }
             solutionHelper.slnFileContents = data;
         });
 
