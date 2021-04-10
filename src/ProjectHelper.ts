@@ -1,4 +1,5 @@
 import { hasUncaughtExceptionCaptureCallback } from "node:process";
+import { DotNetPathHelper } from "./DotNetPathHelper";
 import { DotNetProject } from "./DotNetProject";
 
 export class ProjectHelper {
@@ -27,6 +28,12 @@ export class ProjectHelper {
         let filenameNoExtension: string = this.extractDisplayName(exactSlnText);
         let relativePathFromSln: string = this.extractFileName(exactSlnText);
         let idTwo: string = this.extractIdTwo(exactSlnText);
+
+        let projectAbsolutePath: string = DotNetPathHelper.convertRelativePathFromAbsolutePathToAbsolutePath(
+            slnAbsolutePath,
+            relativePathFromSln)
+            .replace("\\\\", "\\")
+            .replace("//", "/");
     }
 
     private static extractIdOne(exactSlnText: string): string {
