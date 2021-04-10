@@ -36,7 +36,7 @@ export class DotNetFileDirectory extends DotNetFile {
                 this.children.push(dotNetFile);
             }
 
-            this.tryOrphanChildren();
+            await this.tryOrphanChildren();
 
             return this.children;
         }

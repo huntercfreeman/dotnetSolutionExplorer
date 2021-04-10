@@ -27,6 +27,7 @@ export abstract class DotNetFile extends vscode.TreeItem {
             currentChildren = await this.getChildren();
 
             if(currentChildCount !== currentChildren.length) {
+                currentChildCount = currentChildren.length;
                 i = 0;
             }
         }
