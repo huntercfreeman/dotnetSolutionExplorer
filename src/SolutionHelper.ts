@@ -37,7 +37,6 @@ class SolutionHelper implements ISolutionHelper {
         this.slnDisplayName = slnAbsolutePath.replace(workspaceAbsolutePath, "");
     }
 
-    private projectHelper = new ProjectHelper();
     private dotNetProjects: DotNetProject[] = [];
     private position: number = 0;
 
@@ -57,17 +56,28 @@ class SolutionHelper implements ISolutionHelper {
                         !this.peek("rojectConfigurationPlatforms") &&
                         !this.peek("rojects)") && // NestedProjects)
                         this.peekConsumeIfTrue("roject")) {
-                        DotNetProject projectItem = CreateProjectFromExactSlnText();
+                        let projectItem: DotNetProject = this.createProjectFromExactSlnText();
 
-                        if (projectItem != null) {
-                            _csharpProjects.Add(projectItem);
+                        if (projectItem) {
+                            this.dotNetProjects.push(projectItem);
                         }
                     }
+
+                    break;
+                case 'E':
+                    this.position++;
+                    this.peekConsumeIfTrue("ndProject");
+
+                    break;
+                default:
+                    this.position++;
+
+                    break;
             }
         }
     }
 
-    private CreateProjectFromExactSlnText(): DotNetProject {
+    private createProjectFromExactSlnText(): DotNetProject {
         let exactSlnText: string = "";
 
         while (!this.peek("rojectDependencies") &&
