@@ -55,9 +55,13 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
                 this.workspaceAbsolutePath, selectedSolutionAbsolutePath
             );
 
-            this.root = new DotNetFile(selectedSolutionAbsolutePath, vscode.TreeItemCollapsibleState.None);
+            this.root = new DotNetFile(this.solutionHelper.slnFileName, vscode.TreeItemCollapsibleState.None);
 
-            // TODO: this.root.children;
+            for(let i = 0; i < this.solutionHelper.dotNetProjects.length; i++) {
+                this.root.children.push()
+            }
+
+
             return [ this.root ];
         }
         else {
