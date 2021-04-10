@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { DotNetFile } from './DotNetFile';
 
-
 export class DotNetFileTxt extends DotNetFile {
     private constructor(
         public readonly absolutePath: string,
