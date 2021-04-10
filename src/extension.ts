@@ -27,10 +27,6 @@ export function activate(context: vscode.ExtensionContext) {
 			new DotNetSolutionExplorerProvider(workspaceFolderAbsolutePath ?? "")
 		)
 	);
-
-	// vscode.window.createTreeView('nodeDependencies', {
-	// 	treeDataProvider: new DotNetSolutionExplorerProvider(workspaceFolderAbsolutePath ?? "")
-	// });
 }
 
 export function deactivate() { }
