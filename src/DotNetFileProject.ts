@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { DotNetPathHelper } from './DotNetPathHelper';
 import { DotNetFileTxt } from './DotNetFileTxt';
 import { DotNetFile } from './DotNetFile';
+import { DotNetFileFactory } from './DotNetFileFactory';
 
 const fs = require('fs');
 
@@ -34,7 +35,7 @@ export class DotNetFileProject extends DotNetFile {
             for (let i = 0; i < projectFiles.length; i++) {
                 let fileDelimiter: string = DotNetPathHelper.extractFileDelimiter(containingFolder);
 
-                let dotNetFile: DotNetFile = DotNetFileTxt.createAsync(containingFolder + fileDelimiter + projectFiles[i], projectFiles[i]);
+                let dotNetFile: DotNetFile = DotNetFileFactory.create(containingFolder + fileDelimiter + projectFiles[i], projectFiles[i]);
 
                 this.children.push(dotNetFile);
             }

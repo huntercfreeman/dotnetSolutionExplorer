@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { DotNetFile } from './DotNetFile';
 import { DotNetFileSolution } from './DotNetFileSolution';
 import { DotNetFileProject } from './DotNetFileProject';
 import { DotNetFileRazor } from './DotNetFileRazor';
@@ -11,7 +12,7 @@ export class DotNetFileFactory {
     ) {
     }
 
-    public static dotNetFileFactory(absolutePath: string, filename: string, collapsibleState: vscode.TreeItemCollapsibleState) {
+    public static create(absolutePath: string, filename: string): DotNetFile {
         if (filename.endsWith(".sln")) {
             return DotNetFileSolution.createAsync(absolutePath, filename);
         }
