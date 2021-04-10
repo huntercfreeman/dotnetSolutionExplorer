@@ -70,5 +70,5 @@ export class DotNetFileRazor extends DotNetFile {
         "command": "dotnet-solution-explorer.helloWorld",
     };
 
-    contextValue = "YOUR_CONTEXT";
+    contextValue = "dotnet-solution-explorer.razor";
 }
