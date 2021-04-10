@@ -10,11 +10,13 @@ export class DotNetFileRazor extends DotNetFile {
     ) {
         super(absolutePath, filename, collapsibleState);
         
-        this.resourceUri = vscode.Uri.parse(absolutePath);
+        let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
+
+        //this.resourceUri = uri;
         this.command = {
             "command": "vscode.open",
             "title": "open",
-            "arguments": [this.resourceUri]
+            "arguments": [uri]
         };
     }
 
