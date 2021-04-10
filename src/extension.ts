@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import { DotNetFile } from './DotNetFile';
+import { DotNetPathHelper } from './DotNetPathHelper';
 import { DotNetSolutionExplorerProvider } from './DotNetSolutionExplorerProvider';
 
 const fs = require('fs');
@@ -35,7 +37,17 @@ export function activate(context: vscode.ExtensionContext) {
                 debugger;
               });
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.addFile', async (data: any) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.addFile', async (data: DotNetFile) => {
+
+			let absolutePathToAddFileTo: string = data.absolutePath;
+
+			if(data.filename.endsWith(".csproj")) {
+				absolutePathToAddFileTo.replace(data.filename, "");
+			}
+			else {
+				let fileDelimiter = DotNetPathHelper.extractFileDelimiter(data.absolutePath);
+				absolutePathToAddFileTo += fileDelimiter;
+			}
 
 			let inputBoxOptions: vscode.InputBoxOptions = {
 				placeHolder: "Enter filename with extension"
@@ -47,13 +59,62 @@ export function activate(context: vscode.ExtensionContext) {
 				return;
 			}
 
-			let fileTemplate;
+			let fileTemplate = "";
 
 			if(filename.endsWith(".razor")) {
 				fileTemplate = razorMarkupFileTemplate(filename);
 			}
+			else if(filename.endsWith(".razor.cs")) {
+				fileTemplate = razorCodebehindFileTemplate(filename, data.namespaceString ?? "NamespaceWasUndefined");
+			}
+			else if(filename.endsWith(".cs")) {
+				fileTemplate = csFileTemplate(filename, data.namespaceString ?? "NamespaceWasUndefined");
+			}
 
-			await fs.writeFile(data, "hello world!", (err: any) => {
+			await fs.writeFile(absolutePathToAddFileTo + filename, fileTemplate, (err: any) => {
+                if (err) {
+                  console.error(err);
+                  return vscode.window.showErrorMessage("Failed to create " + data);
+                }
+
+                vscode.window.showInformationMessage("Created " + data);
+              });
+		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.addBlazorComponent', async (data: DotNetFile) => {
+
+			let absolutePathToAddFileTo: string = data.absolutePath;
+
+			if(data.filename.endsWith(".csproj")) {
+				absolutePathToAddFileTo.replace(data.filename, "");
+			}
+			else {
+				let fileDelimiter = DotNetPathHelper.extractFileDelimiter(data.absolutePath);
+				absolutePathToAddFileTo += fileDelimiter;
+			}
+
+			let inputBoxOptions: vscode.InputBoxOptions = {
+				placeHolder: "Enter filename with extension"
+			};
+
+			let filename = await vscode.window.showInputBox(inputBoxOptions);
+
+			if(!filename) {
+				return;
+			}
+
+			let fileTemplate = "";
+
+			if(filename.endsWith(".razor")) {
+				fileTemplate = razorMarkupFileTemplate(filename);
+			}
+			else if(filename.endsWith(".razor.cs")) {
+				fileTemplate = razorCodebehindFileTemplate(filename, data.namespaceString ?? "NamespaceWasUndefined");
+			}
+			else if(filename.endsWith(".cs")) {
+				fileTemplate = csFileTemplate(filename, data.namespaceString ?? "NamespaceWasUndefined");
+			}
+
+			await fs.writeFile(absolutePathToAddFileTo + filename, fileTemplate, (err: any) => {
                 if (err) {
                   console.error(err);
                   return vscode.window.showErrorMessage("Failed to create " + data);
@@ -74,9 +135,9 @@ export function deactivate() { }
 function razorMarkupFileTemplate(filename: string): string {
 	return `<h3>${filename.replace(".razor", "")}</h3>
 
-	@code {
+@code {
 	
-	}
+}
 `;
 }
 
@@ -85,10 +146,27 @@ function razorCodebehindFileTemplate(filename: string, namespace: string): strin
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
 namespace ${namespace}
 {
-    public class ${filename.replace(".razor.cs", "")} : ComponentBase
+    public partial class ${filename.replace(".razor.cs", "")} : ComponentBase
+    {
+    }
+}
+
+`;
+}
+
+function csFileTemplate(filename: string, namespace: string): string {
+	return `using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace ${namespace}
+{
+    public class ${filename.replace(".cs", "")}
     {
     }
 }

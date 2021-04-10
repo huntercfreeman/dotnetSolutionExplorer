@@ -34,6 +34,10 @@
 			{
 				"command": "dotnet-solution-explorer.addFile",
 				"title": "Add File"
+			},
+			{
+				"command": "dotnet-solution-explorer.addBlazorComponent",
+				"title": "Add Blazor Component"
 			}
 		],
 		"menus": {
@@ -45,6 +49,10 @@
 				{
 					"when": "viewItem == dotnet-solution-explorer.directory",
 					"command": "dotnet-solution-explorer.addFile"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.directory",
+					"command": "dotnet-solution-explorer.addBlazorComponent"
 				}
 			],
 			"explorer/context": [{
