@@ -90,7 +90,6 @@ export class DotNetFileProject extends DotNetFile {
                 .replace(`/${this.filename}`, "")
                 .replace(`\\${this.filename}`, "");
 
-
             let projectFiles = fs.readdirSync(containingFolder);
 
             this.children = [];
