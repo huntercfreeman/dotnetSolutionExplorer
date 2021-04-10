@@ -8,6 +8,14 @@ export class DotNetFileTxt extends DotNetFile {
         public readonly collapsibleState: vscode.TreeItemCollapsibleState
     ) {
         super(absolutePath, filename, collapsibleState);
+
+        let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
+
+        this.command = {
+            "command": "dotnet-solution-explorer.openFile",
+            "title": "open",
+            "arguments": [uri]
+        };
     }
 
     public static async createAsync(absolutePath: string, filename: string): Promise<DotNetFile> {
