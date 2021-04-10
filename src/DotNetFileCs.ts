@@ -24,4 +24,8 @@ export class DotNetFileCs extends DotNetFile {
             return Promise.resolve(this.children);
         }
     }
+
+    public tryFosterChildren(): Promise<void> {
+        return Promise.resolve();
+    }
 }

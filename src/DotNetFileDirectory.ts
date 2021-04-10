@@ -31,12 +31,16 @@ export class DotNetFileDirectory extends DotNetFile {
             for (let i = 0; i < projectFiles.length; i++) {
                 let fileDelimiter: string = DotNetPathHelper.extractFileDelimiter(this.absolutePath);
 
-                let dotNetFile: DotNetFile = await DotNetFileFactory.create(this.absolutePath + fileDelimiter + projectFiles[i], projectFiles[i]);
+                let dotNetFile: DotNetFile = await DotNetFileFactory.create(this.absolutePath + fileDelimiter + projectFiles[i], projectFiles[i], this);
 
                 this.children.push(dotNetFile);
             }
 
             return this.children;
         }
+    }
+    
+    public tryFosterChildren(): Promise<void> {
+        return Promise.resolve();
     }
 }

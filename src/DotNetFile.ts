@@ -15,21 +15,15 @@ export abstract class DotNetFile extends vscode.TreeItem {
 
     public abstract getChildren(): Promise<DotNetFile[]>;
 
-    public async tryFosterChild(filename: string): Promise<DotNetFile | undefined> {
+    public async tryOrphanChildren(): Promise<void> {
         let childFiles: DotNetFile[] = await this.getChildren();
 
-        let fosteredChild = childFiles.find((dotNetFile) => {
-            dotNetFile.filename === filename;
-        });
+        for(let i = 0; i < childFiles.length; i++) {
+            let childFile = childFiles[i];
 
-        if(!fosteredChild) {
-            return undefined;
+            childFile.tryFosterChildren();
         }
-
-        this.children = childFiles.filter((dotNetFile) => {
-            dotNetFile.filename === filename;
-        });
-
-        return fosteredChild;
     }
+
+    public abstract tryFosterChildren() : Promise<void>;
 }

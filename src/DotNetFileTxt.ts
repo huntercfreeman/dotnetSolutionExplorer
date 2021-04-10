@@ -23,4 +23,8 @@ export class DotNetFileTxt extends DotNetFile {
             return Promise.resolve(this.children);
         }
     }
+
+    public tryFosterChildren(): Promise<void> {
+        return Promise.resolve();
+    }
 }
