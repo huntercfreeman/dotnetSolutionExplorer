@@ -20,7 +20,18 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showInformationMessage('Hello World from dotnet Solution Explorer!');
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.openFile', (uri: vscode.Uri) => {
-			vscode.window.showInformationMessage('File was opened');
+			let textDocumentShowOptions: vscode.TextDocumentShowOptions = {
+                "preserveFocus": false,
+                "preview": false,
+                "viewColumn": vscode.ViewColumn.One
+              };
+
+              vscode.workspace.openTextDocument(uri.fsPath).then((a: vscode.TextDocument) => {
+                vscode.window.showTextDocument(a, textDocumentShowOptions);
+              }, (error: any) => {
+                console.error(error);
+                debugger;
+              });
 		}),
 		vscode.window.registerTreeDataProvider(
 			'dotnetSolutionExplorer',
@@ -30,3 +41,5 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() { }
+
+// comment to ensure committed
