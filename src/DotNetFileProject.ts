@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { DotNetPathHelper } from './DotNetPathHelper';
 import { DotNetFileTxt } from './DotNetFileTxt';
-import { DotNetFile } from './DotNetFile';
+import { DotNetFile, DotNetFileKind } from './DotNetFile';
 import { DotNetFileFactory } from './DotNetFileFactory';
 
 const fs = require('fs');
@@ -13,7 +13,7 @@ export class DotNetFileProject extends DotNetFile {
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly parent?: DotNetFile
     ) {
-        super(absolutePath, filename, collapsibleState, parent);
+        super(absolutePath, filename, collapsibleState, DotNetFileKind.csproj, parent);
 
         let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
 
@@ -39,19 +39,23 @@ export class DotNetFileProject extends DotNetFile {
                 .replace(`/${this.filename}`, "")
                 .replace(`\\${this.filename}`, "");
 
-            let projectFiles = fs.readdirSync(containingFolder);
+            let projectFiles: string[] = fs.readdirSync(containingFolder);
 
             this.children = [];
 
-            for (let i = 0; i < projectFiles.length; i++) {
-                let fileDelimiter: string = DotNetPathHelper.extractFileDelimiter(containingFolder);
+            if (projectFiles) {
+                projectFiles = projectFiles.filter((x) => x !== this.filename);
 
-                let dotNetFile: DotNetFile = await DotNetFileFactory.create(containingFolder + fileDelimiter + projectFiles[i], projectFiles[i], this);
+                for (let i = 0; i < projectFiles.length; i++) {
+                    let fileDelimiter: string = DotNetPathHelper.extractFileDelimiter(containingFolder);
 
-                this.children.push(dotNetFile);
+                    let dotNetFile: DotNetFile = await DotNetFileFactory.create(containingFolder + fileDelimiter + projectFiles[i], projectFiles[i], this);
+
+                    this.children.push(dotNetFile);
+                }
+
+                await this.tryOrphanChildren();
             }
-
-            await this.tryOrphanChildren();
 
             return this.children;
         }

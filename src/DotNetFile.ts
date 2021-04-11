@@ -1,10 +1,22 @@
 import * as vscode from 'vscode';
 
+export enum DotNetFileKind {
+    cs,
+    css,
+    dir,
+    json,
+    csproj,
+    razor,
+    sln,
+    txt
+}
+
 export abstract class DotNetFile extends vscode.TreeItem {
     constructor(
         public readonly absolutePath: string,
         public readonly filename: string,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+        public readonly dotNetFileKind: DotNetFileKind,
         public readonly parent?: DotNetFile
     ) {
         super(filename, collapsibleState);

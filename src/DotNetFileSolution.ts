@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { DotNetFile } from './DotNetFile';
+import { DotNetFile, DotNetFileKind } from './DotNetFile';
 
 
 export class DotNetFileSolution extends DotNetFile {
@@ -9,7 +9,7 @@ export class DotNetFileSolution extends DotNetFile {
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly parent?: DotNetFile
     ) {
-        super(absolutePath, filename, collapsibleState, parent);
+        super(absolutePath, filename, collapsibleState, DotNetFileKind.sln, parent);
     }
 
     public static async createAsync(absolutePath: string, filename: string): Promise<DotNetFile> {

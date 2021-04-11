@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { DotNetFile } from './DotNetFile';
+import { DotNetFile, DotNetFileKind } from './DotNetFile';
 
 export class DotNetFileRazor extends DotNetFile {
     private constructor(
@@ -9,7 +9,7 @@ export class DotNetFileRazor extends DotNetFile {
         public collapsibleState: vscode.TreeItemCollapsibleState,
         public parent: DotNetFile
     ) {
-        super(absolutePath, filename, collapsibleState, parent);
+        super(absolutePath, filename, collapsibleState, DotNetFileKind.razor, parent);
 
         let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
 

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { DotNetFile } from './DotNetFile';
+import { DotNetFile, DotNetFileKind } from './DotNetFile';
 import { DotNetFileFactory } from './DotNetFileFactory';
 import { DotNetFileTxt } from './DotNetFileTxt';
 import { DotNetPathHelper } from './DotNetPathHelper';
@@ -13,7 +13,7 @@ export class DotNetFileDirectory extends DotNetFile {
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly parent?: DotNetFile
     ) {
-        super(absolutePath, filename, collapsibleState, parent);
+        super(absolutePath, filename, collapsibleState, DotNetFileKind.dir, parent);
 
         if (parent && parent.namespaceString) {
             this.namespaceString = parent.namespaceString;

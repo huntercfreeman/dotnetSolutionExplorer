@@ -4,8 +4,10 @@ import { DotNetFileSolution } from './DotNetFileSolution';
 import { DotNetFileProject } from './DotNetFileProject';
 import { DotNetFileRazor } from './DotNetFileRazor';
 import { DotNetFileTxt } from './DotNetFileTxt';
+import { DotNetFileCss } from "./DotNetFileCss";
 import { DotNetFileDirectory } from './DotNetFileDirectory';
 import { DotNetFileJson } from './DotNetFileJson';
+import { DotNetFileCs } from './DotNetFileCs';
 
 export class DotNetFileFactory {
     private constructor(
@@ -22,6 +24,22 @@ export class DotNetFileFactory {
         if (filename.endsWith(".txt")) {
             if (parent) {
                 return await DotNetFileTxt.createAsync(absolutePath, filename, parent);
+            }
+            else {
+                throw new Error(".txt file requires a parent");
+            }
+        }
+        if (filename.endsWith(".cs")) {
+            if (parent) {
+                return await DotNetFileCs.createAsync(absolutePath, filename, parent);
+            }
+            else {
+                throw new Error(".txt file requires a parent");
+            }
+        }
+        if (filename.endsWith(".css")) {
+            if (parent) {
+                return await DotNetFileCss.createAsync(absolutePath, filename, parent);
             }
             else {
                 throw new Error(".txt file requires a parent");

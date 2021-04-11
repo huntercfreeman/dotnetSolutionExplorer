@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { DotNetFile } from './DotNetFile';
+import { DotNetFile, DotNetFileKind } from './DotNetFile';
 
 export class DotNetFileTxt extends DotNetFile {
     private constructor(
@@ -9,14 +9,11 @@ export class DotNetFileTxt extends DotNetFile {
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly parent: DotNetFile
     ) {
-        super(absolutePath, filename, collapsibleState, parent);
+        super(absolutePath, filename, collapsibleState, DotNetFileKind.txt, parent);
 
         let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
 
-        this.iconPath = {
-            light: path.join(__filename, '..', '..', 'resources', 'light', 'fileCssIcon.svg'),
-            dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileCssIcon.svg')
-        };
+        
 
         this.command = {
             "command": "dotnet-solution-explorer.openFile",
@@ -43,3 +40,4 @@ export class DotNetFileTxt extends DotNetFile {
         return Promise.resolve();
     }
 }
+
