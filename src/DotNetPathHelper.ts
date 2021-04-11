@@ -87,6 +87,11 @@ export class DotNetPathHelper {
     }
 
     public static convertRelativePathFromAbsolutePathToAbsolutePath(absolutePath: string, relativePathToAbsolutePath: string): string {
+
+        if(this.extractFileDelimiter(absolutePath) === "/") {
+            relativePathToAbsolutePath = relativePathToAbsolutePath.replace(/\\/g, "/");
+        }
+
         // absolutePath: /home/hunter/Repos/TestProject/DeepTest/DeepSln/DeepSln.sln
         // relativePathToAbsolutePath: ../../MyBlazorServerApp/MyBlazorServerApp.csproj
 
@@ -112,7 +117,7 @@ export class DotNetPathHelper {
 
         let peekChar = (peek: number): string => {
             if ((position + peek) < relativePathToAbsolutePath.length &&
-                position > 0) {
+                position >= 0) {
                 return relativePathToAbsolutePath[position + peek];
             }
 
@@ -122,6 +127,8 @@ export class DotNetPathHelper {
         let currentChar = (): string => {
             return peekChar(0);
         };
+
+        let relativePath: string = "";
 
         while (currentChar() !== '\0') {
             switch (currentChar()) {
@@ -139,10 +146,13 @@ export class DotNetPathHelper {
                     position += 1;
                     break;
                 default:
+                    relativePath = relativePathToAbsolutePath.substring(position);
                     position = Number.MAX_SAFE_INTEGER;
                     break;
             }
         }
+
+        
 
         // reminder of convertedRelativePathToAbsolutePathBuilder: /home/hunter/Repos/TestProject/DeepTest/DeepSln
 
@@ -161,15 +171,6 @@ export class DotNetPathHelper {
 
         while (moveUpDirectoryCount > 0) {
             switch (currentChar()) {
-                case ".":
-                    if (peekChar(1) === '.') {
-                        position += 2;
-                        moveUpDirectoryCount++;
-                    }
-                    else {
-                        position = Number.MAX_SAFE_INTEGER;
-                        break;
-                    }
                 case "/":
                 case "\\":
                     moveUpDirectoryCount -= 1;
@@ -181,26 +182,8 @@ export class DotNetPathHelper {
             }
         }
 
-        while (relativePathToAbsolutePath.startsWith("..")) {
-            while (convertedRelativePathToAbsolutePathBuilder.endsWith("\\")) {
-                convertedRelativePathToAbsolutePathBuilder = convertedRelativePathToAbsolutePathBuilder.slice(0, convertedRelativePathToAbsolutePathBuilder.length - 1)
-                    + convertedRelativePathToAbsolutePathBuilder.slice(convertedRelativePathToAbsolutePathBuilder.length);
-            }
+        let path: string = reversedPath.join("").substring(position).split("").reverse().join("");
 
-            while (convertedRelativePathToAbsolutePathBuilder.endsWith("/")) {
-                convertedRelativePathToAbsolutePathBuilder = convertedRelativePathToAbsolutePathBuilder.slice(0, convertedRelativePathToAbsolutePathBuilder.length - 1)
-                    + convertedRelativePathToAbsolutePathBuilder.slice(convertedRelativePathToAbsolutePathBuilder.length);
-            }
-
-            let currentFilename: string = this.extractFileName(convertedRelativePathToAbsolutePathBuilder);
-
-            convertedRelativePathToAbsolutePathBuilder = convertedRelativePathToAbsolutePathBuilder
-                .replace(currentFilename, "");
-
-            relativePathToAbsolutePath = relativePathToAbsolutePath
-                .replace("..", "");
-        }
-
-        return convertedRelativePathToAbsolutePathBuilder + relativePathToAbsolutePath;
+        return path + fileDelimiter + relativePath;
     }
 }
