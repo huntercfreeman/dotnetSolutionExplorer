@@ -13,8 +13,6 @@ export class DotNetFileTxt extends DotNetFile {
 
         let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
 
-        
-
         this.command = {
             "command": "dotnet-solution-explorer.openFile",
             "title": "open",
