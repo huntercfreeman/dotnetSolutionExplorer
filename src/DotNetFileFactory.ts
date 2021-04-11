@@ -8,6 +8,7 @@ import { DotNetFileCss } from "./DotNetFileCss";
 import { DotNetFileDirectory } from './DotNetFileDirectory';
 import { DotNetFileJson } from './DotNetFileJson';
 import { DotNetFileCs } from './DotNetFileCs';
+import { DotNetFileCshtml } from './DotNetFileCshtml';
 
 export class DotNetFileFactory {
     private constructor(
@@ -43,6 +44,14 @@ export class DotNetFileFactory {
             }
             else {
                 throw new Error(".txt file requires a parent");
+            }
+        }
+        if (filename.endsWith(".cshtml")) {
+            if (parent) {
+                return await DotNetFileCshtml.createAsync(absolutePath, filename, parent);
+            }
+            else {
+                throw new Error(".razor file requires a parent");
             }
         }
         if (filename.endsWith(".razor")) {
