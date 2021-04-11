@@ -54,7 +54,15 @@
 			},
 			{
 				"command": "dotnet-solution-explorer.paste",
-				"title": "Copy"
+				"title": "Paste"
+			},
+			{
+				"command": "dotnet-solution-explorer.delete",
+				"title": "Delete"
+			},
+			{
+				"command": "dotnet-solution-explorer.cut",
+				"title": "Cut"
 			}
 		],
 		"menus": {
@@ -78,6 +86,26 @@
 					"when": "viewItem == dotnet-solution-explorer.directory",
 					"command": "dotnet-solution-explorer.addBlazorComponent",
 					"group": "navigation"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.directory",
+					"command": "dotnet-solution-explorer.copy",
+					"group": "9_cutcopypaste"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.directory",
+					"command": "dotnet-solution-explorer.paste",
+					"group": "9_cutcopypaste"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.directory",
+					"command": "dotnet-solution-explorer.cut",
+					"group": "9_cutcopypaste"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.directory",
+					"command": "dotnet-solution-explorer.delete",
+					"group": "9_cutcopypaste"
 				}
 			],
 			"explorer/context": [
