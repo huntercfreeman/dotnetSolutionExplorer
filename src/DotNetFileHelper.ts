@@ -19,29 +19,57 @@ export class DotNetFileHelper {
             slnFiles: DotNetFile[] = [],
             txtFiles: DotNetFile[] = [];
 
+        let unrecognizedFiles: DotNetFile[] = [];
+
         let organizedFiles: DotNetFile[] = [];
 
         for (let i = 0; i < dotNetFiles.length; i++) {
             let currentFile = dotNetFiles[i];
 
             switch (currentFile.dotNetFileKind) {
-                case DotNetFileKind.cs:
-                    break;
-                case DotNetFileKind.css:
-                    break;
                 case DotNetFileKind.dir:
+                    dirFiles.push(currentFile);
                     break;
-                case DotNetFileKind.json:
-                    break;
-                case DotNetFileKind.csproj:
-                    break;
-                case DotNetFileKind.razor:
-                    break;
-                case DotNetFileKind.sln:
-                    break;
-                case DotNetFileKind.txt:
+                // case DotNetFileKind.cs:
+                //     csFiles.push(currentFile);
+                //     break;
+                // case DotNetFileKind.css:
+                //     cssFiles.push(currentFile);
+                //     break;
+                // case DotNetFileKind.json:
+                //     jsonFiles.push(currentFile);
+                //     break;
+                // case DotNetFileKind.csproj:
+                //     csprojFiles.push(currentFile);
+                //     break;
+                // case DotNetFileKind.razor:
+                //     razorFiles.push(currentFile);
+                //     break;
+                // case DotNetFileKind.sln:
+                //     slnFiles.push(currentFile);
+                //     break;
+                // case DotNetFileKind.txt:
+                //     txtFiles.push(currentFile);
+                //     break;
+                default:
+                    unrecognizedFiles.push(currentFile);
                     break;
             }
         }
+
+        unrecognizedFiles.sort();
+
+        organizedFiles = organizedFiles
+            .concat(dirFiles)
+            .concat(unrecognizedFiles);
+        // .concat(csFiles)
+        // .concat(cssFiles)
+        // .concat(jsonFiles)
+        // .concat(csprojFiles)
+        // .concat(razorFiles)
+        // .concat(slnFiles)
+        // .concat(txtFiles);
+
+        return organizedFiles;
     }
 }

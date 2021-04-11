@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { DotNetFile, DotNetFileKind } from './DotNetFile';
 import { DotNetFileFactory } from './DotNetFileFactory';
+import { DotNetFileHelper } from './DotNetFileHelper';
 import { DotNetFileTxt } from './DotNetFileTxt';
 import { DotNetPathHelper } from './DotNetPathHelper';
 
@@ -44,6 +45,8 @@ export class DotNetFileDirectory extends DotNetFile {
             }
 
             await this.tryOrphanChildren();
+
+            this.children = DotNetFileHelper.organizeContainer(this.children);
 
             return this.children;
         }

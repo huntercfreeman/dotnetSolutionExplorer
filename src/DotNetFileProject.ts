@@ -3,6 +3,7 @@ import { DotNetPathHelper } from './DotNetPathHelper';
 import { DotNetFileTxt } from './DotNetFileTxt';
 import { DotNetFile, DotNetFileKind } from './DotNetFile';
 import { DotNetFileFactory } from './DotNetFileFactory';
+import { DotNetFileHelper } from './DotNetFileHelper';
 
 const fs = require('fs');
 
@@ -56,6 +57,8 @@ export class DotNetFileProject extends DotNetFile {
 
                 await this.tryOrphanChildren();
             }
+
+            this.children = DotNetFileHelper.organizeContainer(this.children);
 
             return this.children;
         }
