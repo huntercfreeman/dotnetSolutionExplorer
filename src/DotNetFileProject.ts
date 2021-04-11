@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { DotNetPathHelper } from './DotNetPathHelper';
 import { DotNetFileTxt } from './DotNetFileTxt';
 import { DotNetFile, DotNetFileKind } from './DotNetFile';
@@ -17,6 +18,11 @@ export class DotNetFileProject extends DotNetFile {
         super(absolutePath, filename, collapsibleState, DotNetFileKind.csproj, parent);
 
         let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
+
+        this.iconPath = {
+            light: path.join(__filename, '..', '..', 'resources', 'light', 'fileProjectIcon.svg'),
+            dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileProjectIcon.svg')
+        };
 
         this.command = {
             "command": "dotnet-solution-explorer.openFile",

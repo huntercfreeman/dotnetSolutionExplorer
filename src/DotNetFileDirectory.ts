@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { DotNetFile, DotNetFileKind } from './DotNetFile';
 import { DotNetFileFactory } from './DotNetFileFactory';
 import { DotNetFileHelper } from './DotNetFileHelper';
@@ -15,6 +16,11 @@ export class DotNetFileDirectory extends DotNetFile {
         public readonly parent?: DotNetFile
     ) {
         super(absolutePath, filename, collapsibleState, DotNetFileKind.dir, parent);
+
+        this.iconPath = {
+            light: path.join(__filename, '..', '..', 'resources', 'light', 'fileDirectoryIcon.svg'),
+            dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileDirectoryIcon.svg')
+        };
 
         if (parent && parent.namespaceString) {
             this.namespaceString = parent.namespaceString;

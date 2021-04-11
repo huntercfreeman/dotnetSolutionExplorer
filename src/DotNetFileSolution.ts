@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { DotNetFile, DotNetFileKind } from './DotNetFile';
 
 
@@ -10,6 +11,11 @@ export class DotNetFileSolution extends DotNetFile {
         public readonly parent?: DotNetFile
     ) {
         super(absolutePath, filename, collapsibleState, DotNetFileKind.sln, parent);
+
+        this.iconPath = {
+            light: path.join(__filename, '..', '..', 'resources', 'light', 'fileSolutionIcon.svg'),
+            dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileSolutionIcon.svg')
+        };
     }
 
     public static async createAsync(absolutePath: string, filename: string): Promise<DotNetFile> {
