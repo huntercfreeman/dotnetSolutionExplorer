@@ -22,6 +22,13 @@ export class DotNetFileDirectory extends DotNetFile {
             dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileDirectoryIcon.svg')
         };
 
+        if(this.filename === "wwwroot") {
+            this.iconPath = {
+                light: path.join(__filename, '..', '..', 'resources', 'light', 'fileWwwRootIcon.svg'),
+                dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileWwwRootIcon.svg')
+            };
+        }
+
         if (parent && parent.namespaceString) {
             this.namespaceString = parent.namespaceString;
         }

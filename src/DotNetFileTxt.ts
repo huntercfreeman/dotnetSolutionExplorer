@@ -13,6 +13,11 @@ export class DotNetFileTxt extends DotNetFile {
 
         let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
 
+        this.iconPath = {
+            light: path.join(__filename, '..', '..', 'resources', 'light', 'fileTxtIcon.svg'),
+            dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileTxtIcon.svg')
+        };
+
         this.command = {
             "command": "dotnet-solution-explorer.openFile",
             "title": "open",
