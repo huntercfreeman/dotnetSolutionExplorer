@@ -15,10 +15,10 @@ export class DotNetFileDirectory extends DotNetFile {
     ) {
         super(absolutePath, filename, collapsibleState);
 
-        if(parent && parent.namespaceString) {
+        if (parent && parent.namespaceString) {
             this.namespaceString = parent.namespaceString;
         }
-        
+
         this.namespaceString += "." + filename;
     }
 
@@ -48,7 +48,7 @@ export class DotNetFileDirectory extends DotNetFile {
             return this.children;
         }
     }
-    
+
     public tryFosterChildren(): Promise<void> {
         return Promise.resolve();
     }

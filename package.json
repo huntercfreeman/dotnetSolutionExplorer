@@ -24,6 +24,14 @@
 		},
 		"commands": [
 			{
+				"command": "dotnet-solution-explorer.refreshEntry",
+				"title": "Refresh",
+				"icon": {
+					"light": "resources/light/refresh.svg",
+					"dark": "resources/dark/refresh.svg"
+				}
+			},
+			{
 				"command": "dotnet-solution-explorer.helloWorld",
 				"title": "Hello World"
 			},
@@ -55,6 +63,11 @@
 					"command": "dotnet-solution-explorer.helloWorld"
 				},
 				{
+					"command": "dotnet-solution-explorer.refreshEntry",
+					"group": "navigation",
+					"when": "view == dotnetSolutionExplorer"
+				},
+				{
 					"when": "viewItem == dotnet-solution-explorer.directory",
 					"command": "dotnet-solution-explorer.addFile"
 				},
@@ -63,11 +76,13 @@
 					"command": "dotnet-solution-explorer.addBlazorComponent"
 				}
 			],
-			"explorer/context": [{
-                "when": "viewItem == dotnet-solution-explorer.razor",
-                "command": "dotnet-solution-explorer.openFile",
-                "group": "MyGroup"
-          }]
+			"explorer/context": [
+				{
+					"when": "viewItem == dotnet-solution-explorer.razor",
+					"command": "dotnet-solution-explorer.openFile",
+					"group": "MyGroup"
+				}
+			]
 		}
 	},
 	"scripts": {

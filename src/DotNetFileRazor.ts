@@ -80,5 +80,5 @@ export class DotNetFileRazor extends DotNetFile {
         return Promise.resolve();
     }
 
-    contextValue = "vscode.open";
+    contextValue = "dotnet-solution-explorer.razor";
 }

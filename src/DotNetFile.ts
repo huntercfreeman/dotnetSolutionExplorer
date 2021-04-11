@@ -35,7 +35,7 @@ export abstract class DotNetFile extends vscode.TreeItem {
         }
     }
 
-    overwriteChildren(newChildren: DotNetFile[]) {
+    overwriteChildren(newChildren: DotNetFile[] | undefined) {
         this.children = newChildren;
     }
 }

@@ -75,4 +75,15 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
             return [];
         }
     }
+
+    private _onDidChangeTreeData: vscode.EventEmitter<DotNetFile | undefined | null | void> = new vscode.EventEmitter<DotNetFile | undefined | null | void>();
+    readonly onDidChangeTreeData: vscode.Event<DotNetFile | undefined | null | void> = this._onDidChangeTreeData.event;
+
+    refresh(e: DotNetFile): void {
+        if(e) {
+            e.overwriteChildren(undefined);
+        }
+
+        this._onDidChangeTreeData.fire();
+    }
 }
