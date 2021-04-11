@@ -62,21 +62,25 @@ export function activate(context: vscode.ExtensionContext) {
 				absolutePathToAddFileTo += fileDelimiter;
 			}
 
-			let siblingFiles: string[] = fs.readdirSync();
+			let siblingFiles: string[] = fs.readdirSync(absolutePathToAddFileTo);
 
 			let uniqueAbsolutePathForCopy: string | undefined;
 
 			if (!siblingFiles.includes(clipboardItemFileName)) {
 				uniqueAbsolutePathForCopy = absolutePathToAddFileTo +
-											clipboardItemFileName;
+					clipboardItemFileName;
 			}
 			else {
-				uniqueAbsolutePathForCopy = absolutePathToAddFileTo +
-				clipboardItemFileName +
-				"_copy-" +
-				uuid();
-			}
+				let extension = DotNetPathHelper.extractExtension(clipboardItemFileName);
 
+				let filenameNoExtension = clipboardItemFileName.replace(extension, "");
+
+				uniqueAbsolutePathForCopy = absolutePathToAddFileTo +
+				filenameNoExtension +
+					"_copy-" +
+					uuid() +
+					extension;
+			}
 
 			let absolutePath = clipboardObject.absolutePath;
 			let wasCut = clipboardObject.wasCut;
@@ -86,16 +90,11 @@ export function activate(context: vscode.ExtensionContext) {
 				return;
 			}
 
-			await fs.readFile(absolutePath, { "encoding": "UTF-8" }, async (err: any, data: any) => {
-				await fs.writeFile(data.absolutePath, data, (err: any) => {
-					if (err) {
-						console.error(err);
-						return vscode.window.showErrorMessage("Failed to paste " + data.absolutePath);
-					}
+			let fileContents = fs.readFileSync(absolutePath, { "encoding": "UTF-8" });
 
-					vscode.window.showInformationMessage("Pasted " + data.absolutePath);
-				});
-			});
+			fs.writeFileSync(uniqueAbsolutePathForCopy, fileContents);
+
+			vscode.window.showInformationMessage("Pasted " + data.absolutePath);
 
 			if (wasCut) {
 				const edit = new vscode.WorkspaceEdit();
@@ -105,6 +104,8 @@ export function activate(context: vscode.ExtensionContext) {
 				edit.deleteFile(fileUri, { recursive: true, ignoreIfNotExists: true });
 
 				await vscode.workspace.applyEdit(edit);
+
+				vscode.window.showInformationMessage("Deleted " + absolutePath);
 			}
 
 			if (data.parent) {

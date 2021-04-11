@@ -19,16 +19,16 @@ export class DotNetPathHelper {
         // Directories end with the file delimiter
         // so we need to read it in and move
         // character by 1 index.
-        if (position == 0 &&
+        if (position === 0 &&
             position < reversedAbsolutePath.length &&
-            currentChar() == '/' ||
-            currentChar() == '\\') {
+            currentChar() === '/' ||
+            currentChar() === '\\') {
             position++;
         }
 
         while (position < reversedAbsolutePath.length &&
-            currentChar() != '/' &&
-            currentChar() != '\\') {
+            currentChar() !== '/' &&
+            currentChar() !== '\\') {
             fileName = currentChar() + fileName;
             position++;
         }
@@ -36,8 +36,50 @@ export class DotNetPathHelper {
         return fileName;
     }
 
+    public static extractExtension(absolutePath: string): string {
+        let reversedAbsolutePath = absolutePath
+            .split("")
+            .reverse()
+            .join("");
+
+        let position: number = 0;
+
+        function currentChar(): string {
+            if (position < reversedAbsolutePath.length) {
+                return reversedAbsolutePath[position];
+            }
+
+            return '\0';
+        }
+
+        let extension: string = "";
+
+        // Directories end with the file delimiter
+        // so we need to read it in and move
+        // character by 1 index.
+        if (position === 0 &&
+            position < reversedAbsolutePath.length &&
+            currentChar() === '/' ||
+            currentChar() === '\\') {
+            position++;
+        }
+
+        while (position < reversedAbsolutePath.length &&
+            currentChar() !== '.' &&
+            currentChar() !== '\0') {
+            extension = currentChar() + extension;
+            position++;
+        }
+
+        if(currentChar() === '\0') {
+            return "";
+        }
+
+        return "." + extension;
+    }
+
     public static extractFileDelimiter(absolutePath: string): string {
-        if(absolutePath.includes("\\")) {
+        if (absolutePath.includes("\\")) {
             return "\\";
         }
 
