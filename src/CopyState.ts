@@ -34,7 +34,7 @@ export class CopyState {
         this.isCutActive = false;
         
         return {
-            "absolutePath": this.absolutePath,
+            "absolutePath": temporary,
             "wasCut": true
         };
     }

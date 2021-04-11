@@ -40,8 +40,8 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.cut', (data: DotNetFile) => {
-			clipboard.copy(data.absolutePath);
-			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
+			clipboard.cut(data.absolutePath);
+			vscode.window.showInformationMessage(`Cut: ${data.absolutePath} to virtual clipboard`);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.deleteFile', (data: DotNetFile) => deleteFile(data, solutionExplorerProvider)),
 		vscode.commands.registerCommand('dotnet-solution-explorer.deleteDirectory', async (data: DotNetFile) => {
@@ -111,13 +111,13 @@ export function activate(context: vscode.ExtensionContext) {
 			if (wasCut) {
 				const edit = new vscode.WorkspaceEdit();
 
-				let fileUri = vscode.Uri.file(absolutePath);
+				let fileUri = vscode.Uri.file(clipboardObject.absolutePath);
 
 				edit.deleteFile(fileUri, { recursive: true, ignoreIfNotExists: true });
 
 				await vscode.workspace.applyEdit(edit);
 
-				vscode.window.showInformationMessage("Deleted " + absolutePath);
+				vscode.window.showInformationMessage(`Deleted: ${clipboardObject.absolutePath}`);
 			}
 
 			if (data.parent) {
@@ -264,7 +264,7 @@ async function deleteFile(data: DotNetFile, solutionExplorerProvider: DotNetSolu
 	if (data.parent) {
 		solutionExplorerProvider.refresh(data.parent);
 	}
-	
+
 	return Promise.resolve();
 }
 
