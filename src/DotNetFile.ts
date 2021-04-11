@@ -8,8 +8,8 @@ export abstract class DotNetFile extends vscode.TreeItem {
         public readonly parent?: DotNetFile
     ) {
         super(filename, collapsibleState);
-        this.tooltip = `${this.filename} test tooltip`;
-        this.description = "abc test description";
+        // this.tooltip = `${this.filename} test tooltip`;
+        // this.description = "abc test description";
     }
 
     public namespaceString: string | undefined;
