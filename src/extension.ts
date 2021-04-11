@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
+import { uuid } from 'uuidv4';
 import { CopyState } from './CopyState';
 import { DotNetFile } from './DotNetFile';
 import { DotNetPathHelper } from './DotNetPathHelper';
 import { DotNetSolutionExplorerProvider } from './DotNetSolutionExplorerProvider';
 
 const fs = require('fs');
-const uuidv4 = require("uuid/v4")
 
 export function activate(context: vscode.ExtensionContext) {
 	let clipboard: CopyState = new CopyState();
@@ -74,7 +74,7 @@ export function activate(context: vscode.ExtensionContext) {
 				uniqueAbsolutePathForCopy = absolutePathToAddFileTo +
 				clipboardItemFileName +
 				"_copy-" +
-				uuidv4();
+				uuid();
 			}
 
 
