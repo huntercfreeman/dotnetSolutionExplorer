@@ -45,6 +45,10 @@
 				"title": "Add File"
 			},
 			{
+				"command": "dotnet-solution-explorer.addDirectory",
+				"title": "Add Directory"
+			},
+			{
 				"command": "dotnet-solution-explorer.addBlazorComponent",
 				"title": "Add Blazor Component"
 			},
@@ -82,12 +86,12 @@
 					"when": "view == dotnetSolutionExplorer"
 				},
 				{
-					"when": "viewItem == dotnet-solution-explorer.directory",
+					"when": "viewItem == dotnet-solution-explorer.directory || viewItem == dotnet-solution-explorer.project",
 					"command": "dotnet-solution-explorer.addFile",
 					"group": "navigation"
 				},
 				{
-					"when": "viewItem == dotnet-solution-explorer.directory",
+					"when": "viewItem == dotnet-solution-explorer.directory || viewItem == dotnet-solution-explorer.project",
 					"command": "dotnet-solution-explorer.addBlazorComponent",
 					"group": "navigation"
 				},
