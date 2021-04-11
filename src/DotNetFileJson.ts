@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { DotNetFile } from './DotNetFile';
 
 
@@ -12,6 +13,11 @@ export class DotNetFileJson extends DotNetFile {
         super(absolutePath, filename, collapsibleState, parent);
 
         let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
+
+        this.iconPath = {
+            light: path.join(__filename, '..', '..', 'resources', 'light', 'fileJsonIcon.svg'),
+            dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileJsonIcon.svg')
+        };
 
         this.command = {
             "command": "dotnet-solution-explorer.openFile",
