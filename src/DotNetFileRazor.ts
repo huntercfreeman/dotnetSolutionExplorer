@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { DotNetFile } from './DotNetFile';
 
 export class DotNetFileRazor extends DotNetFile {
@@ -9,20 +10,24 @@ export class DotNetFileRazor extends DotNetFile {
         public parent: DotNetFile
     ) {
         super(absolutePath, filename, collapsibleState, parent);
-        
+
         let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
 
-        this.resourceUri = uri;
+        this.iconPath = {
+            light: path.join(__filename, '..', '..', 'resources', 'light', 'fileRazorIcon.svg'),
+            dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileRazorIcon.svg')
+        };
+
         this.command = {
             "command": "dotnet-solution-explorer.openFile",
             "title": "open",
             "arguments": [uri]
         };
 
-        if(parent.namespaceString) {
+        if (parent.namespaceString) {
             this.namespaceString = parent.namespaceString;
         }
-        
+
         this.namespaceString += "." + filename.replace(".razor", "");
     }
 
@@ -41,7 +46,7 @@ export class DotNetFileRazor extends DotNetFile {
     }
 
     public async tryFosterChildren(): Promise<void> {
-        if(!this.parent) {
+        if (!this.parent) {
             return Promise.resolve();
         }
 
@@ -59,7 +64,7 @@ export class DotNetFileRazor extends DotNetFile {
 
         let newChildrenOfParent = childrenOfParent;
 
-        if(fosteredCodebehind) {
+        if (fosteredCodebehind) {
             children.push(fosteredCodebehind);
 
             newChildrenOfParent = newChildrenOfParent.filter((dotNetFile) => {
@@ -67,7 +72,7 @@ export class DotNetFileRazor extends DotNetFile {
             });
         }
 
-        if(fosteredCss) {
+        if (fosteredCss) {
             children.push(fosteredCss);
 
             newChildrenOfParent = newChildrenOfParent.filter((dotNetFile) => {
@@ -77,7 +82,7 @@ export class DotNetFileRazor extends DotNetFile {
 
         this.parent.overwriteChildren(newChildrenOfParent);
 
-        if(children.length <= 0) {
+        if (children.length <= 0) {
             this.collapsibleState = vscode.TreeItemCollapsibleState.None;
         }
 
