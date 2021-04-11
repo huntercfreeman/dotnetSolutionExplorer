@@ -48,7 +48,9 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.paste', async (data: DotNetFile) => {
-			let clipboardItemFileName: string = DotNetPathHelper.extractFileName(clipboard.readClipboard());
+			let clipboardObject: any = clipboard.readClipboard();
+
+			let clipboardItemFileName: string = DotNetPathHelper.extractFileName(clipboardObject.absolutePath);
 
 			let absolutePathToAddFileTo: string = data.absolutePath;
 
@@ -75,7 +77,6 @@ export function activate(context: vscode.ExtensionContext) {
 				uuidv4();
 			}
 
-			let clipboardObject: any = clipboard.readClipboard();
 
 			let absolutePath = clipboardObject.absolutePath;
 			let wasCut = clipboardObject.wasCut;
