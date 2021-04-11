@@ -13,7 +13,7 @@ export class DotNetFileDirectory extends DotNetFile {
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly parent?: DotNetFile
     ) {
-        super(absolutePath, filename, collapsibleState);
+        super(absolutePath, filename, collapsibleState, parent);
 
         if (parent && parent.namespaceString) {
             this.namespaceString = parent.namespaceString;

@@ -9,7 +9,7 @@ export class DotNetFileJson extends DotNetFile {
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly parent: DotNetFile
     ) {
-        super(absolutePath, filename, collapsibleState);
+        super(absolutePath, filename, collapsibleState, parent);
 
         let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
 
