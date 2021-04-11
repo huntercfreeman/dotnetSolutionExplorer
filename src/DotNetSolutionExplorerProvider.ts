@@ -34,17 +34,41 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
         if (this.root) { return [this.root]; }
 
         let solutions = await vscode.workspace.findFiles("**/*.sln");
-        let absolutePaths = solutions.map((x) => x.fsPath.toString());
+        let slnPathObjects = solutions.map((x) => {
+            let slnFsPath = x.fsPath.toString();
 
-        if (absolutePaths.length === 0) {
+            // .substring(1) to remove leading file delimiter: '/' or '\\'
+            let slnFilename: string = slnFsPath
+                .replace(this.workspaceAbsolutePath, "")
+                .substring(1);
+
+            return {
+                "absolutePath": slnFsPath,
+                "filename": slnFilename
+            };
+        });
+
+        if (slnPathObjects.length === 0) {
             vscode.window.showErrorMessage("No .sln files were found within workspace");
 
             return [];
         }
 
-        let selectedSolutionAbsolutePath = await vscode.window.showQuickPick(absolutePaths);
+        let selectedSolutionFilename = await vscode.window.showQuickPick(slnPathObjects.map(x => x.filename));
 
-        if (selectedSolutionAbsolutePath) {
+        if (selectedSolutionFilename) {
+            let selectedSlnPathObject: any = slnPathObjects.find((x) => {
+                return x.filename === selectedSolutionFilename;
+            });
+
+            if (!selectedSlnPathObject) {
+                vscode.window.showErrorMessage("Could not find absolute path for chosen .sln filename");
+
+                return [];
+            }
+
+            let selectedSolutionAbsolutePath = selectedSlnPathObject.absolutePath;
+
             let solutionHelperFactory = new SolutionHelperFactory();
 
             this.solutionHelper = await solutionHelperFactory.createSolutionHelperAsync(
@@ -80,7 +104,7 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
     readonly onDidChangeTreeData: vscode.Event<DotNetFile | undefined | null | void> = this._onDidChangeTreeData.event;
 
     refresh(e: DotNetFile): void {
-        if(e) {
+        if (e) {
             e.overwriteChildren(undefined);
         }
 
