@@ -57,7 +57,11 @@
 				"title": "Paste"
 			},
 			{
-				"command": "dotnet-solution-explorer.delete",
+				"command": "dotnet-solution-explorer.deleteFile",
+				"title": "Delete"
+			},
+			{
+				"command": "dotnet-solution-explorer.deleteDirectory",
 				"title": "Delete"
 			},
 			{
@@ -103,8 +107,13 @@
 					"group": "9_cutcopypaste"
 				},
 				{
-					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project",
-					"command": "dotnet-solution-explorer.delete",
+					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.directory",
+					"command": "dotnet-solution-explorer.deleteFile",
+					"group": "9_cutcopypaste"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.directory",
+					"command": "dotnet-solution-explorer.deleteDirectory",
 					"group": "9_cutcopypaste"
 				}
 			],

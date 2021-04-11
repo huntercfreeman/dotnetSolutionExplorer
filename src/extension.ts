@@ -43,7 +43,8 @@ export function activate(context: vscode.ExtensionContext) {
 			clipboard.copy(data.absolutePath);
 			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.delete', async (data: DotNetFile) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.deleteFile', deleteFile),
+		vscode.commands.registerCommand('dotnet-solution-explorer.deleteDirectory', async (data: DotNetFile) => {
 			const edit = new vscode.WorkspaceEdit();
 
 			let fileUri = vscode.Uri.file(data.absolutePath);
@@ -238,6 +239,34 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() { }
+
+async function deleteFile(data: DotNetFile, solutionExplorerProvider: DotNetSolutionExplorerProvider): Promise<void> {
+	let children = await data.getChildren();
+	let childDeleteCounter: number = 0;
+
+	const edit = new vscode.WorkspaceEdit();
+	let fileUri = vscode.Uri.file(data.absolutePath);
+	edit.deleteFile(fileUri, { recursive: true, ignoreIfNotExists: true });
+
+	if (children && children.length > 0) {
+		for (let i = 0; i < children.length; i++) {
+			fileUri = vscode.Uri.file(children[i].absolutePath);
+			edit.deleteFile(fileUri, { recursive: true, ignoreIfNotExists: true });
+			childDeleteCounter++;
+			// await deleteFile(children[i], solutionExplorerProvider);
+		}
+	}
+
+	await vscode.workspace.applyEdit(edit);
+
+	vscode.window.showInformationMessage(`Deleted: ${data.absolutePath} and ${childDeleteCounter} nested files.`);
+
+	if (data.parent) {
+		solutionExplorerProvider.refresh(data.parent);
+	}
+	
+	return Promise.resolve();
+}
 
 function razorMarkupFileTemplate(filename: string): string {
 	return `<h3>${filename.replace(".razor", "")}</h3>
