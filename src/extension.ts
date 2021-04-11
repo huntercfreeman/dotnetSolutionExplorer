@@ -5,9 +5,10 @@ import { DotNetPathHelper } from './DotNetPathHelper';
 import { DotNetSolutionExplorerProvider } from './DotNetSolutionExplorerProvider';
 
 const fs = require('fs');
+const uuidv4 = require("uuid/v4")
 
 export function activate(context: vscode.ExtensionContext) {
-	let copyState: CopyState = new CopyState();
+	let clipboard: CopyState = new CopyState();
 
 	let workspaceFolderAbsolutePath;
 
@@ -35,11 +36,46 @@ export function activate(context: vscode.ExtensionContext) {
 			solutionExplorerProvider.refresh(e)
 		),
 		vscode.commands.registerCommand('dotnet-solution-explorer.copy', (data: DotNetFile) => {
-			copyState.copy(data.absolutePath);
+			clipboard.copy(data.absolutePath);
+			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
+		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.cut', (data: DotNetFile) => {
+			clipboard.copy(data.absolutePath);
+			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
+		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.delete', (data: DotNetFile) => {
+			clipboard.copy(data.absolutePath);
 			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.paste', async (data: DotNetFile) => {
-			let clipboardObject: any = copyState.readClipboard();
+			let clipboardItemFileName: string = DotNetPathHelper.extractFileName(clipboard.readClipboard());
+
+			let absolutePathToAddFileTo: string = data.absolutePath;
+
+			if (data.filename.endsWith(".csproj")) {
+				absolutePathToAddFileTo.replace(data.filename, "");
+			}
+			else {
+				let fileDelimiter = DotNetPathHelper.extractFileDelimiter(data.absolutePath);
+				absolutePathToAddFileTo += fileDelimiter;
+			}
+
+			let siblingFiles: string[] = fs.readdirSync();
+
+			let uniqueAbsolutePathForCopy: string | undefined;
+
+			if (!siblingFiles.includes(clipboardItemFileName)) {
+				uniqueAbsolutePathForCopy = absolutePathToAddFileTo +
+											clipboardItemFileName;
+			}
+			else {
+				uniqueAbsolutePathForCopy = absolutePathToAddFileTo +
+				clipboardItemFileName +
+				"_copy-" +
+				uuidv4();
+			}
+
+			let clipboardObject: any = clipboard.readClipboard();
 
 			let absolutePath = clipboardObject.absolutePath;
 			let wasCut = clipboardObject.wasCut;
@@ -70,7 +106,7 @@ export function activate(context: vscode.ExtensionContext) {
 				await vscode.workspace.applyEdit(edit);
 			}
 
-			if(data.parent) {
+			if (data.parent) {
 				solutionExplorerProvider.refresh(data.parent);
 			}
 		}),
@@ -131,7 +167,7 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showInformationMessage("Created " + data);
 			});
 
-			if(data) {
+			if (data) {
 				solutionExplorerProvider.refresh(data);
 			}
 		}),
@@ -181,7 +217,7 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showInformationMessage("Created " + data);
 			});
 
-			if(data) {
+			if (data) {
 				solutionExplorerProvider.refresh(data);
 			}
 		})
