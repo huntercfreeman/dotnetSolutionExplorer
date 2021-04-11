@@ -1,9 +1,9 @@
 {
 	"name": "dotnet-solution-explorer",
 	"displayName": "dotnet Solution Explorer",
-	"publisher": "hunter",
+	"publisher": "hunterFreemanPublish",
 	"description": "",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"engines": {
 		"vscode": "^1.55.0"
 	},
