@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	let solutionExplorerProvider: DotNetSolutionExplorerProvider = new DotNetSolutionExplorerProvider(workspaceFolderAbsolutePath ?? "");
-
+//sanity commit
 	context.subscriptions.push(
 		vscode.window.registerTreeDataProvider(
 			'dotnetSolutionExplorer',
