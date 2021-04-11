@@ -69,6 +69,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 				await vscode.workspace.applyEdit(edit);
 			}
+
+			if(data.parent) {
+				solutionExplorerProvider.refresh(data.parent);
+			}
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.openFile', (uri: vscode.Uri) => {
 			let textDocumentShowOptions: vscode.TextDocumentShowOptions = {

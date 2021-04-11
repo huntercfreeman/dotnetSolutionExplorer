@@ -4,7 +4,8 @@ export abstract class DotNetFile extends vscode.TreeItem {
     constructor(
         public readonly absolutePath: string,
         public readonly filename: string,
-        public readonly collapsibleState: vscode.TreeItemCollapsibleState
+        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+        public readonly parent?: DotNetFile
     ) {
         super(filename, collapsibleState);
         this.tooltip = `${this.filename} test tooltip`;
