@@ -43,7 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
 			clipboard.copy(data.absolutePath);
 			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.deleteFile', deleteFile),
+		vscode.commands.registerCommand('dotnet-solution-explorer.deleteFile', (data: DotNetFile) => deleteFile(data, solutionExplorerProvider)),
 		vscode.commands.registerCommand('dotnet-solution-explorer.deleteDirectory', async (data: DotNetFile) => {
 			const edit = new vscode.WorkspaceEdit();
 
