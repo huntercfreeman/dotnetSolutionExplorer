@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { DotNetFile } from './DotNetFile';
+import { DotNetFile, DotNetFileKind } from './DotNetFile';
 import { DotNetFileProject } from "./DotNetFileProject";
 import { DotNetFileSolution } from "./DotNetFileSolution";
 import { SolutionHelperFactory, ISolutionHelper } from './SolutionHelper';
@@ -105,7 +105,13 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
 
     refresh(e: DotNetFile): void {
         if (e) {
-            e.overwriteChildren(undefined);
+            if(e.dotNetFileKind !== DotNetFileKind.sln) {
+                e.overwriteChildren(undefined);
+            }
+            else {
+                this.root = undefined;
+                this.getRoot();
+            }
         }
 
         this._onDidChangeTreeData.fire();
