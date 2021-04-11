@@ -53,7 +53,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			await vscode.workspace.applyEdit(edit);
 
-			vscode.window.showInformationMessage(`Deleted: ${data.absolutePath}`);
+			vscode.window.showInformationMessage(`Deleted: ${data.filename}`);
 
 			if (data.parent) {
 				solutionExplorerProvider.refresh(data.parent);
@@ -117,7 +117,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 				await vscode.workspace.applyEdit(edit);
 
-				vscode.window.showInformationMessage(`Deleted: ${clipboardObject.absolutePath}`);
+				vscode.window.showInformationMessage(`Deleted: ${clipboardObject.filename}`);
 			}
 
 			if (data.parent) {
@@ -143,7 +143,7 @@ export function activate(context: vscode.ExtensionContext) {
 			let absolutePathToAddFileTo: string = data.absolutePath;
 
 			if (data.filename.endsWith(".csproj")) {
-				absolutePathToAddFileTo.replace(data.filename, "");
+				absolutePathToAddFileTo = absolutePathToAddFileTo.replace(data.filename, "");
 			}
 			else {
 				let fileDelimiter = DotNetPathHelper.extractFileDelimiter(data.absolutePath);
@@ -178,7 +178,7 @@ export function activate(context: vscode.ExtensionContext) {
 					return vscode.window.showErrorMessage("Failed to create " + data);
 				}
 
-				vscode.window.showInformationMessage("Created " + data);
+				vscode.window.showInformationMessage("Created " + filename);
 			});
 
 			if (data) {
@@ -190,7 +190,7 @@ export function activate(context: vscode.ExtensionContext) {
 			let absolutePathToAddFileTo: string = data.absolutePath;
 
 			if (data.filename.endsWith(".csproj")) {
-				absolutePathToAddFileTo.replace(data.filename, "");
+				absolutePathToAddFileTo = absolutePathToAddFileTo.replace(data.filename, "");
 			}
 			else {
 				let fileDelimiter = DotNetPathHelper.extractFileDelimiter(data.absolutePath);
@@ -214,10 +214,10 @@ export function activate(context: vscode.ExtensionContext) {
 			await fs.writeFile(absolutePathToAddFileTo + componentName + ".razor", fileTemplate, (err: any) => {
 				if (err) {
 					console.error(err);
-					return vscode.window.showErrorMessage("Failed to create " + data);
+					return vscode.window.showErrorMessage("Failed to create " + componentName + ".razor");
 				}
 
-				vscode.window.showInformationMessage("Created " + data);
+				vscode.window.showInformationMessage("Created " + componentName + ".razor");
 			});
 
 			fileTemplate = razorCodebehindFileTemplate(componentName, data.namespaceString ?? "NamespaceWasUndefined");
@@ -225,10 +225,10 @@ export function activate(context: vscode.ExtensionContext) {
 			await fs.writeFile(absolutePathToAddFileTo + componentName + ".razor.cs", fileTemplate, (err: any) => {
 				if (err) {
 					console.error(err);
-					return vscode.window.showErrorMessage("Failed to create " + data);
+					return vscode.window.showErrorMessage("Failed to create " + componentName + ".razor.cs");
 				}
 
-				vscode.window.showInformationMessage("Created " + data);
+				vscode.window.showInformationMessage("Created " + componentName + ".razor.cs");
 			});
 
 			if (data) {
@@ -259,7 +259,7 @@ async function deleteFile(data: DotNetFile, solutionExplorerProvider: DotNetSolu
 
 	await vscode.workspace.applyEdit(edit);
 
-	vscode.window.showInformationMessage(`Deleted: ${data.absolutePath} and ${childDeleteCounter} nested files.`);
+	vscode.window.showInformationMessage(`Deleted: ${data.filename} and ${childDeleteCounter} nested files.`);
 
 	if (data.parent) {
 		solutionExplorerProvider.refresh(data.parent);
