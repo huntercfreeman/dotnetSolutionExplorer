@@ -24,7 +24,7 @@ Now that we have a .sln let's expand the 'DOTNET SOLUTION EXPLORER' tab under 'O
 
 ![stepThree](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepThree.png)
 
-Vscode will show a quickpick for us to choose our .sln. If you do not see this run the run the reload window command (press 'ctrl' + 'shift' + 'p' then type reload window). The result of selecting 'MyBlazorCrudApp.sln' from vscode's quickpick is the following.
+Vscode will show a quickpick for us to choose our .sln. If you do not see this run the reload window command (press 'ctrl' + 'shift' + 'p' then type reload window). The result of selecting 'MyBlazorCrudApp.sln' from vscode's quickpick is the following.
 
 ![stepFour](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepFour.png)
 
