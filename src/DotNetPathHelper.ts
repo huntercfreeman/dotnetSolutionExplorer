@@ -71,7 +71,7 @@ export class DotNetPathHelper {
             position++;
         }
 
-        if(currentChar() === '\0') {
+        if (currentChar() === '\0') {
             return "";
         }
 
@@ -87,14 +87,99 @@ export class DotNetPathHelper {
     }
 
     public static convertRelativePathFromAbsolutePathToAbsolutePath(absolutePath: string, relativePathToAbsolutePath: string): string {
+        // absolutePath: /home/hunter/Repos/TestProject/DeepTest/DeepSln/DeepSln.sln
+        // relativePathToAbsolutePath: ../../MyBlazorServerApp/MyBlazorServerApp.csproj
+
+        // resulting extractedFileNameFromAbsolutePath: DeepSln.sln
         var extractedFileNameFromAbsolutePath = this.extractFileName(absolutePath);
 
+        // If simpler case
         if (!relativePathToAbsolutePath.startsWith("..")) {
             return absolutePath.replace(extractedFileNameFromAbsolutePath, relativePathToAbsolutePath);
         }
 
+        // resulting fileDelimiter: '/'
+        let fileDelimiter: string = this.extractFileDelimiter(absolutePath);
+
+        // resulting convertedRelativePathToAbsolutePathBuilder: /home/hunter/Repos/TestProject/DeepTest/DeepSln
         let convertedRelativePathToAbsolutePathBuilder: string = absolutePath
-            .replace(extractedFileNameFromAbsolutePath, "");
+            .replace(fileDelimiter + extractedFileNameFromAbsolutePath, "");
+
+
+        let moveUpDirectoryCount = 0;
+
+        let position: number = 0;
+
+        let peekChar = (peek: number): string => {
+            if ((position + peek) < relativePathToAbsolutePath.length &&
+                position > 0) {
+                return relativePathToAbsolutePath[position + peek];
+            }
+
+            return '\0';
+        };
+
+        let currentChar = (): string => {
+            return peekChar(0);
+        };
+
+        while (currentChar() !== '\0') {
+            switch (currentChar()) {
+                case ".":
+                    if (peekChar(1) === '.') {
+                        position += 2;
+                        moveUpDirectoryCount++;
+                    }
+                    else {
+                        position = Number.MAX_SAFE_INTEGER;
+                        break;
+                    }
+                case "/":
+                case "\\":
+                    position += 1;
+                    break;
+                default:
+                    position = Number.MAX_SAFE_INTEGER;
+                    break;
+            }
+        }
+
+        // reminder of convertedRelativePathToAbsolutePathBuilder: /home/hunter/Repos/TestProject/DeepTest/DeepSln
+
+        let reversedPath = convertedRelativePathToAbsolutePathBuilder.split("").reverse();
+
+        position = 0;
+
+        peekChar = (peek: number): string => {
+            if ((position + peek) < reversedPath.length &&
+                position > 0) {
+                return reversedPath[position + peek];
+            }
+
+            return '\0';
+        };
+
+        while (moveUpDirectoryCount > 0) {
+            switch (currentChar()) {
+                case ".":
+                    if (peekChar(1) === '.') {
+                        position += 2;
+                        moveUpDirectoryCount++;
+                    }
+                    else {
+                        position = Number.MAX_SAFE_INTEGER;
+                        break;
+                    }
+                case "/":
+                case "\\":
+                    moveUpDirectoryCount -= 1;
+                    position += 1;
+                    break;
+                default:
+                    position += 1;
+                    break;
+            }
+        }
 
         while (relativePathToAbsolutePath.startsWith("..")) {
             while (convertedRelativePathToAbsolutePathBuilder.endsWith("\\")) {
