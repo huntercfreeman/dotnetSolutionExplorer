@@ -5,7 +5,7 @@ export class DotNetFileRazor extends DotNetFile {
     private constructor(
         public readonly absolutePath: string,
         public readonly filename: string,
-        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+        public collapsibleState: vscode.TreeItemCollapsibleState,
         public parent: DotNetFile
     ) {
         super(absolutePath, filename, collapsibleState, parent);
@@ -76,6 +76,10 @@ export class DotNetFileRazor extends DotNetFile {
         }
 
         this.parent.overwriteChildren(newChildrenOfParent);
+
+        if(children.length <= 0) {
+            this.collapsibleState = vscode.TreeItemCollapsibleState.None;
+        }
 
         return Promise.resolve();
     }

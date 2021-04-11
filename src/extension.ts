@@ -130,6 +130,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 				vscode.window.showInformationMessage("Created " + data);
 			});
+
+			if(data) {
+				solutionExplorerProvider.refresh(data);
+			}
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.addBlazorComponent', async (data: DotNetFile) => {
 
@@ -176,6 +180,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 				vscode.window.showInformationMessage("Created " + data);
 			});
+
+			if(data) {
+				solutionExplorerProvider.refresh(data);
+			}
 		})
 	);
 }
