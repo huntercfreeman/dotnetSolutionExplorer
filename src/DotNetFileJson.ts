@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { DotNetFile, DotNetFileKind } from './DotNetFile';
 
-
 export class DotNetFileJson extends DotNetFile {
     private constructor(
         public readonly absolutePath: string,
