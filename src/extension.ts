@@ -43,9 +43,20 @@ export function activate(context: vscode.ExtensionContext) {
 			clipboard.copy(data.absolutePath);
 			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.delete', (data: DotNetFile) => {
-			clipboard.copy(data.absolutePath);
-			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
+		vscode.commands.registerCommand('dotnet-solution-explorer.delete', async (data: DotNetFile) => {
+			const edit = new vscode.WorkspaceEdit();
+
+			let fileUri = vscode.Uri.file(data.absolutePath);
+
+			edit.deleteFile(fileUri, { recursive: true, ignoreIfNotExists: true });
+
+			await vscode.workspace.applyEdit(edit);
+
+			vscode.window.showInformationMessage(`Deleted: ${data.absolutePath}`);
+
+			if (data.parent) {
+				solutionExplorerProvider.refresh(data.parent);
+			}
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.paste', async (data: DotNetFile) => {
 			let clipboardObject: any = clipboard.readClipboard();
@@ -76,7 +87,7 @@ export function activate(context: vscode.ExtensionContext) {
 				let filenameNoExtension = clipboardItemFileName.replace(extension, "");
 
 				uniqueAbsolutePathForCopy = absolutePathToAddFileTo +
-				filenameNoExtension +
+					filenameNoExtension +
 					"_copy-" +
 					uuid() +
 					extension;
