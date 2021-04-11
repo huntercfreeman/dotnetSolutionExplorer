@@ -92,6 +92,11 @@
 				},
 				{
 					"when": "viewItem == dotnet-solution-explorer.directory || viewItem == dotnet-solution-explorer.project",
+					"command": "dotnet-solution-explorer.addDirectory",
+					"group": "navigation"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.directory || viewItem == dotnet-solution-explorer.project",
 					"command": "dotnet-solution-explorer.addBlazorComponent",
 					"group": "navigation"
 				},

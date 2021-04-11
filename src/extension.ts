@@ -4,6 +4,7 @@ import { CopyState } from './CopyState';
 import { DotNetFile } from './DotNetFile';
 import { DotNetPathHelper } from './DotNetPathHelper';
 import { DotNetSolutionExplorerProvider } from './DotNetSolutionExplorerProvider';
+import { hasUncaughtExceptionCaptureCallback } from 'node:process';
 
 const fs = require('fs');
 
@@ -35,6 +36,37 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('dotnet-solution-explorer.refreshEntry', (e: any) =>
 			solutionExplorerProvider.refresh(e)
 		),
+		vscode.commands.registerCommand('dotnet-solution-explorer.addDirectory', async (data: DotNetFile) => {
+			let absolutePathToAddFileTo: string = data.absolutePath;
+
+			if (data.filename.endsWith(".csproj")) {
+				absolutePathToAddFileTo = absolutePathToAddFileTo.replace(data.filename, "");
+			}
+			else {
+				let fileDelimiter = DotNetPathHelper.extractFileDelimiter(data.absolutePath);
+				absolutePathToAddFileTo += fileDelimiter;
+			}
+
+			let inputBoxOptions: vscode.InputBoxOptions = {
+				placeHolder: "Enter directory name"
+			};
+
+			let filename = await vscode.window.showInputBox(inputBoxOptions);
+
+			if (!filename) {
+				return;
+			}
+
+			try {
+				fs.mkdirSync(absolutePathToAddFileTo + filename);
+				vscode.window.showInformationMessage("Added directory.");
+			}
+			catch {
+				vscode.window.showErrorMessage("Could not add directory.");
+			}
+
+			solutionExplorerProvider.refresh(data);
+		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.copy', (data: DotNetFile) => {
 			clipboard.copy(data.absolutePath);
 			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
@@ -120,9 +152,7 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showInformationMessage(`Deleted: ${clipboardObject.filename}`);
 			}
 
-			if (data.parent) {
-				solutionExplorerProvider.refresh(data.parent);
-			}
+			solutionExplorerProvider.refresh(data);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.openFile', (uri: vscode.Uri) => {
 			let textDocumentShowOptions: vscode.TextDocumentShowOptions = {
@@ -181,9 +211,7 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showInformationMessage("Created " + filename);
 			});
 
-			if (data) {
-				solutionExplorerProvider.refresh(data);
-			}
+			solutionExplorerProvider.refresh(data);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.addBlazorComponent', async (data: DotNetFile) => {
 
@@ -231,9 +259,7 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showInformationMessage("Created " + componentName + ".razor.cs");
 			});
 
-			if (data) {
-				solutionExplorerProvider.refresh(data);
-			}
+			solutionExplorerProvider.refresh(data);
 		})
 	);
 }
