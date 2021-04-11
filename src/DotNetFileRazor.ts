@@ -86,3 +86,4 @@ export class DotNetFileRazor extends DotNetFile {
 
     contextValue = "dotnet-solution-explorer.razor";
 }
+// sanity check
