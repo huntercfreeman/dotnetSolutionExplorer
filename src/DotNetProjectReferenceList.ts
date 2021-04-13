@@ -62,7 +62,7 @@ export class DotNetProjectReferenceList extends DotNetFile {
             this.children = [];
 
             for (let i = 0; i < projectReferences.length; i++) {
-                let dotNetFile: DotNetFile = await DotNetProjectDependencies.createAsync(projectReferences[i], DotNetPathHelper.extractFileName(projectReferences[i]), this);
+                let dotNetFile: DotNetFile = await DotNetProjectReference.createAsync(projectReferences[i], DotNetPathHelper.extractFileName(projectReferences[i]), this);
 
                 this.children.push(dotNetFile);
             }
@@ -70,6 +70,49 @@ export class DotNetProjectReferenceList extends DotNetFile {
             await this.tryOrphanChildren();
 
             this.children = DotNetFileHelper.organizeContainer(this.children);
+
+            return Promise.resolve(this.children);
+        }
+    }
+
+    public tryFosterChildren(): Promise<void> {
+        return Promise.resolve();
+    }
+}
+
+export class DotNetProjectReference extends DotNetFile {
+    private constructor(
+        public readonly absolutePath: string,
+        public readonly filename: string,
+        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+        public readonly parent: DotNetFile
+    ) {
+        super(absolutePath, filename, collapsibleState, DotNetFileKind.txt, parent);
+
+        let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
+
+        this.iconPath = {
+            light: path.join(__filename, '..', '..', 'resources', 'light', 'fileTxtIcon.svg'),
+            dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileTxtIcon.svg')
+        };
+
+        this.command = {
+            "command": "dotnet-solution-explorer.openFile",
+            "title": "open",
+            "arguments": [uri]
+        };
+    }
+
+    public static async createAsync(absolutePath: string, filename: string, parent: DotNetFile): Promise<DotNetFile> {
+        return new DotNetProjectReference(absolutePath, filename, vscode.TreeItemCollapsibleState.None, parent);
+    }
+
+    public async getChildren(): Promise<DotNetFile[]> {
+        if (this.children) {
+            return Promise.resolve(this.children);
+        }
+        else {
+            this.children = [];
 
             return Promise.resolve(this.children);
         }
