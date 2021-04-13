@@ -71,6 +71,14 @@
 			{
 				"command": "dotnet-solution-explorer.cut",
 				"title": "Cut"
+			},
+			{
+				"command": "dotnet-solution-explorer.addProjectReference",
+				"title": "Add Project Reference"
+			},
+			{
+				"command": "dotnet-solution-explorer.removeProjectReference",
+				"title": "Remove Project Reference"
 			}
 		],
 		"menus": {
@@ -124,6 +132,16 @@
 					"when": "viewItem == dotnet-solution-explorer.directory",
 					"command": "dotnet-solution-explorer.deleteDirectory",
 					"group": "9_cutcopypaste"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.project-reference",
+					"command": "dotnet-solution-explorer.addProjectReference",
+					"group": "navigation"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.project-reference",
+					"command": "dotnet-solution-explorer.removeProjectReference",
+					"group": "navigation"
 				}
 			],
 			"explorer/context": [
