@@ -39,18 +39,13 @@ export class DotNetProjectDependencies extends DotNetFile {
             return this.children;
         }
         else {
-            // Analyzers
-            // Frameworks
-            // Packages
-            // Projects
-
             this.children = [];
 
-            if(this.filename.endsWith(".csproj")) {
-                let analyzers = await DotNetProjectAnaylzerList.createAsync(this.absolutePath, DotNetPathHelper.extractFileName(this.absolutePath), this);
-                let frameworks = await DotNetProjectFrameworkList.createAsync(this.absolutePath, DotNetPathHelper.extractFileName(this.absolutePath), this);
-                let packages = await DotNetProjectPackageList.createAsync(this.absolutePath, DotNetPathHelper.extractFileName(this.absolutePath), this);
-                let projects = await DotNetProjectReferenceList.createAsync(this.absolutePath, DotNetPathHelper.extractFileName(this.absolutePath), this);
+            if(this.absolutePath.endsWith(".csproj")) {
+                let analyzers = await DotNetProjectAnaylzerList.createAsync(this.absolutePath, "Analyzers", this);
+                let frameworks = await DotNetProjectFrameworkList.createAsync(this.absolutePath, "Frameworks", this);
+                let packages = await DotNetProjectPackageList.createAsync(this.absolutePath, "Packages", this);
+                let projects = await DotNetProjectReferenceList.createAsync(this.absolutePath, "Projects", this);
 
                 this.children.push(analyzers);
                 this.children.push(frameworks);
