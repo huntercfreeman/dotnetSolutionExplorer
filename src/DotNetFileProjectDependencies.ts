@@ -18,8 +18,8 @@ export class DotNetFileProjectDependencies extends DotNetFile {
         super(absolutePath, filename, collapsibleState, DotNetFileKind.dir, parent);
 
         this.iconPath = {
-            light: path.join(__filename, '..', '..', 'resources', 'light', 'fileDirectoryIcon.svg'),
-            dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileDirectoryIcon.svg')
+            light: path.join(__filename, '..', '..', 'resources', 'light', 'fileProjectDependenciesIcon.svg'),
+            dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileProjectDependenciesIcon.svg')
         };
 
         if(this.filename === "wwwroot") {
@@ -69,5 +69,5 @@ export class DotNetFileProjectDependencies extends DotNetFile {
         return Promise.resolve();
     }
 
-    contextValue = "dotnet-solution-explorer.directory";
+    contextValue = "dotnet-solution-explorer.project-dependencies";
 }
