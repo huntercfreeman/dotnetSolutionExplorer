@@ -225,6 +225,8 @@ export class ProjectHelper {
             return peekSubstring(position + 1);
         };
 
+        let projectReferencesArray: string[] = [];
+
         while (currentChar() !== '\0') {
             switch (currentChar()) {
                 case 'P':
@@ -239,6 +241,8 @@ export class ProjectHelper {
                             projectReference += currentChar();
                             position++;
                         }
+
+                        projectReferencesArray.push(projectReference);
                     }
                     else
                     {
@@ -251,6 +255,6 @@ export class ProjectHelper {
             }
         }
 
-        return [];
+        return projectReferencesArray;
     }
 }
