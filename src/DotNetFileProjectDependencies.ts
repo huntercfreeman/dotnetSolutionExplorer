@@ -39,44 +39,34 @@ export class DotNetFileProjectDependencies extends DotNetFile {
             return this.children;
         }
         else {
-        let projectFileContents: string = fs.readFileSync(this.absolutePath, { "encoding": "UTF-8" });
+            let projectFileContents: string = fs.readFileSync(this.absolutePath, { "encoding": "UTF-8" });
 
-        let projectReferences: string[] = ProjectHelper.extractProjectReferences(projectFileContents);
-        projectReferences = projectReferences.map(projectReference => {
-            var startOfAbsolutePath = projectReference.indexOf('\"');
+            let projectReferences: string[] = ProjectHelper.extractProjectReferences(projectFileContents);
+            projectReferences = projectReferences.map(projectReference => {
+                var startOfAbsolutePath = projectReference.indexOf('\"');
 
-            let position: number = startOfAbsolutePath + 1;
+                let position: number = startOfAbsolutePath + 1;
 
-            let isolatedAbsolutePath = "";
+                let isolatedAbsolutePath = "";
 
-            while(position < projectReference.length && projectReference[position] !== '\"') {
-                isolatedAbsolutePath += projectReference[position++];
+                while (position < projectReference.length && projectReference[position] !== '\"') {
+                    isolatedAbsolutePath += projectReference[position++];
+                }
+
+                return isolatedAbsolutePath;
+            });
+
+            this.children = [];
+
+            for (let i = 0; i < projectReferences.length; i++) {
+                let dotNetFile: DotNetFile = await DotNetFileProjectDependencies.createAsync(projectReferences[i], DotNetPathHelper.extractFileName(projectReferences[i]), this);
+
+                this.children.push(dotNetFile);
             }
 
-            return isolatedAbsolutePath;
-        });
-        // let packageReferences: string[] = ProjectHelper.extractProjectReferences(projectFileContents);
+            await this.tryOrphanChildren();
 
-        this.children = [];
-
-        //return Promise.resolve(solutionHelper);
-
-
-            // let projectFiles = fs.readdirSync(this.absolutePath);
-
-            // this.children = [];
-
-            // for (let i = 0; i < projectFiles.length; i++) {
-            //     let fileDelimiter: string = DotNetPathHelper.extractFileDelimiter(this.absolutePath);
-
-            //     let dotNetFile: DotNetFile = await DotNetFileFactory.create(this.absolutePath + fileDelimiter + projectFiles[i], projectFiles[i], this);
-
-            //     this.children.push(dotNetFile);
-            // }
-
-            // await this.tryOrphanChildren();
-
-            // this.children = DotNetFileHelper.organizeContainer(this.children);
+            this.children = DotNetFileHelper.organizeContainer(this.children);
 
             return this.children;
         }
