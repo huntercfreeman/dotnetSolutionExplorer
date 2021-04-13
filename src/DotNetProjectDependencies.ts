@@ -47,43 +47,16 @@ export class DotNetProjectDependencies extends DotNetFile {
             this.children = [];
 
             if(this.filename.endsWith(".csproj")) {
-                let analyzers = DotNetProjectAnaylzerList.createAsync(this.absolutePath, DotNetPathHelper.extractFileName(this.absolutePath), this);
-                let frameworks = DotNetProjectFrameworkList.createAsync(this.absolutePath, DotNetPathHelper.extractFileName(this.absolutePath), this);
-                let packages = DotNetProjectPackageList.createAsync(this.absolutePath, DotNetPathHelper.extractFileName(this.absolutePath), this);
-                let projects = DotNetProjectReferenceList.createAsync(this.absolutePath, DotNetPathHelper.extractFileName(this.absolutePath), this);
+                let analyzers = await DotNetProjectAnaylzerList.createAsync(this.absolutePath, DotNetPathHelper.extractFileName(this.absolutePath), this);
+                let frameworks = await DotNetProjectFrameworkList.createAsync(this.absolutePath, DotNetPathHelper.extractFileName(this.absolutePath), this);
+                let packages = await DotNetProjectPackageList.createAsync(this.absolutePath, DotNetPathHelper.extractFileName(this.absolutePath), this);
+                let projects = await DotNetProjectReferenceList.createAsync(this.absolutePath, DotNetPathHelper.extractFileName(this.absolutePath), this);
 
-                this.children.push();
+                this.children.push(analyzers);
+                this.children.push(frameworks);
+                this.children.push(packages);
+                this.children.push(projects);
             }
-
-
-            let projectFileContents: string = fs.readFileSync(this.absolutePath, { "encoding": "UTF-8" });
-
-            let projectReferences: string[] = ProjectHelper.extractProjectReferences(projectFileContents);
-            projectReferences = projectReferences.map(projectReference => {
-                var startOfAbsolutePath = projectReference.indexOf('\"');
-
-                let position: number = startOfAbsolutePath + 1;
-
-                let isolatedAbsolutePath = "";
-
-                while (position < projectReference.length && projectReference[position] !== '\"') {
-                    isolatedAbsolutePath += projectReference[position++];
-                }
-
-                return isolatedAbsolutePath;
-            });
-
-            this.children = [];
-
-            for (let i = 0; i < projectReferences.length; i++) {
-                let dotNetFile: DotNetFile = await DotNetProjectDependencies.createAsync(projectReferences[i], DotNetPathHelper.extractFileName(projectReferences[i]), this);
-
-                this.children.push(dotNetFile);
-            }
-
-            await this.tryOrphanChildren();
-
-            this.children = DotNetFileHelper.organizeContainer(this.children);
 
             return this.children;
         }
@@ -255,6 +228,36 @@ export class DotNetProjectReferenceList extends DotNetFile {
         }
         else {
             this.children = [];
+
+            let projectFileContents: string = fs.readFileSync(this.absolutePath, { "encoding": "UTF-8" });
+
+            let projectReferences: string[] = ProjectHelper.extractProjectReferences(projectFileContents);
+            projectReferences = projectReferences.map(projectReference => {
+                var startOfAbsolutePath = projectReference.indexOf('\"');
+
+                let position: number = startOfAbsolutePath + 1;
+
+                let isolatedAbsolutePath = "";
+
+                while (position < projectReference.length && projectReference[position] !== '\"') {
+                    isolatedAbsolutePath += projectReference[position++];
+                }
+
+                return isolatedAbsolutePath;
+            });
+
+            this.children = [];
+
+            for (let i = 0; i < projectReferences.length; i++) {
+                let dotNetFile: DotNetFile = await DotNetProjectDependencies.createAsync(projectReferences[i], DotNetPathHelper.extractFileName(projectReferences[i]), this);
+
+                this.children.push(dotNetFile);
+            }
+
+            await this.tryOrphanChildren();
+
+            this.children = DotNetFileHelper.organizeContainer(this.children);
+
             return Promise.resolve(this.children);
         }
     }
