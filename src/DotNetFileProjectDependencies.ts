@@ -42,6 +42,19 @@ export class DotNetFileProjectDependencies extends DotNetFile {
         let projectFileContents: string = fs.readFileSync(this.absolutePath, { "encoding": "UTF-8" });
 
         let projectReferences: string[] = ProjectHelper.extractProjectReferences(projectFileContents);
+        projectReferences = projectReferences.map(projectReference => {
+            var startOfAbsolutePath = projectReference.indexOf('\"');
+
+            let position: number = startOfAbsolutePath + 1;
+
+            let isolatedAbsolutePath = "";
+
+            while(position < projectReference.length && projectReference[position] !== '\"') {
+                isolatedAbsolutePath += projectReference[position++];
+            }
+
+            return isolatedAbsolutePath;
+        });
         // let packageReferences: string[] = ProjectHelper.extractProjectReferences(projectFileContents);
 
         this.children = [];
