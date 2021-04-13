@@ -231,9 +231,14 @@ export class ProjectHelper {
                     let peekedString = peekSubstring(position + projectReferenceString.length);
                     if(peekedString === projectReferenceString)
                     {
-                        var x = 2;
-                        position += 1;
-                        // Found a reference
+                        position += projectReferenceString.length;
+                        let projectReference: string = "";
+
+                        while(peekSubstring(position + 2) !== '/>')
+                        {
+                            projectReference += currentChar();
+                            position++;
+                        }
                     }
                     else
                     {
