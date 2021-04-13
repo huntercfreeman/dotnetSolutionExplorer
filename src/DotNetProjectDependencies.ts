@@ -88,7 +88,7 @@ export class DotNetProjectFrameworkList extends DotNetFile {
     }
 
     public static async createAsync(absolutePath: string, filename: string, parent: DotNetFile): Promise<DotNetFile> {
-        return new DotNetProjectFrameworkList(absolutePath, filename, vscode.TreeItemCollapsibleState.None, parent);
+        return new DotNetProjectFrameworkList(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed, parent);
     }
 
     public async getChildren(): Promise<DotNetFile[]> {
@@ -130,7 +130,7 @@ export class DotNetProjectAnaylzerList extends DotNetFile {
     }
 
     public static async createAsync(absolutePath: string, filename: string, parent: DotNetFile): Promise<DotNetFile> {
-        return new DotNetProjectAnaylzerList(absolutePath, filename, vscode.TreeItemCollapsibleState.None, parent);
+        return new DotNetProjectAnaylzerList(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed, parent);
     }
 
     public async getChildren(): Promise<DotNetFile[]> {
@@ -172,7 +172,7 @@ export class DotNetProjectPackageList extends DotNetFile {
     }
 
     public static async createAsync(absolutePath: string, filename: string, parent: DotNetFile): Promise<DotNetFile> {
-        return new DotNetProjectPackageList(absolutePath, filename, vscode.TreeItemCollapsibleState.None, parent);
+        return new DotNetProjectPackageList(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed, parent);
     }
 
     public async getChildren(): Promise<DotNetFile[]> {
@@ -214,7 +214,7 @@ export class DotNetProjectReferenceList extends DotNetFile {
     }
 
     public static async createAsync(absolutePath: string, filename: string, parent: DotNetFile): Promise<DotNetFile> {
-        return new DotNetProjectReferenceList(absolutePath, filename, vscode.TreeItemCollapsibleState.None, parent);
+        return new DotNetProjectReferenceList(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed, parent);
     }
 
     public async getChildren(): Promise<DotNetFile[]> {
