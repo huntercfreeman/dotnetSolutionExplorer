@@ -5,7 +5,7 @@ import { DotNetFileTxt } from './DotNetFileTxt';
 import { DotNetFile, DotNetFileKind } from './DotNetFile';
 import { DotNetFileFactory } from './DotNetFileFactory';
 import { DotNetFileHelper } from './DotNetFileHelper';
-import { DotNetFileProjectDependencies } from './DotNetFileProjectDependencies';
+import { DotNetProjectDependencies } from './DotNetProjectDependencies';
 
 const fs = require('fs');
 
@@ -67,7 +67,7 @@ export class DotNetFileProject extends DotNetFile {
 
             this.children = DotNetFileHelper.organizeContainer(this.children);
 
-            this.children.push(await DotNetFileProjectDependencies.createAsync(this.absolutePath, "Dependencies", this));
+            this.children.push(await DotNetProjectDependencies.createAsync(this.absolutePath, "Dependencies", this));
 
             return this.children;
         }
