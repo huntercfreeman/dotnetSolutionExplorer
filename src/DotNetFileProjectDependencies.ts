@@ -5,6 +5,7 @@ import { DotNetFileFactory } from './DotNetFileFactory';
 import { DotNetFileHelper } from './DotNetFileHelper';
 import { DotNetFileTxt } from './DotNetFileTxt';
 import { DotNetPathHelper } from './DotNetPathHelper';
+import { ProjectHelper } from './ProjectHelper';
 
 const fs = require('fs');
 
@@ -22,13 +23,6 @@ export class DotNetFileProjectDependencies extends DotNetFile {
             dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileProjectDependenciesIcon.svg')
         };
 
-        if(this.filename === "wwwroot") {
-            this.iconPath = {
-                light: path.join(__filename, '..', '..', 'resources', 'light', 'fileWwwRootIcon.svg'),
-                dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileWwwRootIcon.svg')
-            };
-        }
-
         if (parent && parent.namespaceString) {
             this.namespaceString = parent.namespaceString;
         }
@@ -45,21 +39,31 @@ export class DotNetFileProjectDependencies extends DotNetFile {
             return this.children;
         }
         else {
-            let projectFiles = fs.readdirSync(this.absolutePath);
+        let projectFileContents: string = fs.readFileSync(this.absolutePath, { "encoding": "UTF-8" });
 
-            this.children = [];
+        let projectReferences: string[] = ProjectHelper.extractProjectReferences(projectFileContents);
+        // let packageReferences: string[] = ProjectHelper.extractProjectReferences(projectFileContents);
 
-            for (let i = 0; i < projectFiles.length; i++) {
-                let fileDelimiter: string = DotNetPathHelper.extractFileDelimiter(this.absolutePath);
+        this.children = [];
 
-                let dotNetFile: DotNetFile = await DotNetFileFactory.create(this.absolutePath + fileDelimiter + projectFiles[i], projectFiles[i], this);
+        //return Promise.resolve(solutionHelper);
 
-                this.children.push(dotNetFile);
-            }
 
-            await this.tryOrphanChildren();
+            // let projectFiles = fs.readdirSync(this.absolutePath);
 
-            this.children = DotNetFileHelper.organizeContainer(this.children);
+            // this.children = [];
+
+            // for (let i = 0; i < projectFiles.length; i++) {
+            //     let fileDelimiter: string = DotNetPathHelper.extractFileDelimiter(this.absolutePath);
+
+            //     let dotNetFile: DotNetFile = await DotNetFileFactory.create(this.absolutePath + fileDelimiter + projectFiles[i], projectFiles[i], this);
+
+            //     this.children.push(dotNetFile);
+            // }
+
+            // await this.tryOrphanChildren();
+
+            // this.children = DotNetFileHelper.organizeContainer(this.children);
 
             return this.children;
         }

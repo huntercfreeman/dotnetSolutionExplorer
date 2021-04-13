@@ -1,4 +1,5 @@
 import { hasUncaughtExceptionCaptureCallback } from "node:process";
+import { isFunction } from "node:util";
 import { DotNetPathHelper } from "./DotNetPathHelper";
 import { DotNetProject } from "./DotNetProject";
 
@@ -35,13 +36,13 @@ export class ProjectHelper {
             .replace("\\\\", "\\")
             .replace("//", "/");
 
-            return new DotNetProject(
-                idOne,
-                idTwo,
-                filenameNoExtension,
-                relativePathFromSln,
-                projectAbsolutePath
-            );
+        return new DotNetProject(
+            idOne,
+            idTwo,
+            filenameNoExtension,
+            relativePathFromSln,
+            projectAbsolutePath
+        );
     }
 
     private static extractIdOne(exactSlnText: string): string {
@@ -106,8 +107,8 @@ export class ProjectHelper {
                         finished = true;
                     }
                     else {
-                    this.position++;
-                }
+                        this.position++;
+                    }
                     break;
                 case '=':
                     seenEquals = true;
@@ -169,43 +170,82 @@ export class ProjectHelper {
         return fileName;
     }
 
-    private static extractIdTwo(exactSlnText: string): string
-        {
-            let idTwo: string = "";
-            let finished: boolean = false;
+    private static extractIdTwo(exactSlnText: string): string {
+        let idTwo: string = "";
+        let finished: boolean = false;
 
-            while (!finished && this.position < exactSlnText.length)
-            {
-                let currentChar: string = exactSlnText[this.position];
+        while (!finished && this.position < exactSlnText.length) {
+            let currentChar: string = exactSlnText[this.position];
 
-                switch (currentChar)
-                {
-                    case '{':
+            switch (currentChar) {
+                case '{':
+                    this.position++;
+                    if (this.position < exactSlnText.length) {
+                        currentChar = exactSlnText[this.position];
+                    }
+
+                    while (currentChar !== '}') {
+                        idTwo += currentChar;
                         this.position++;
-                        if (this.position < exactSlnText.length)
-                        {
+
+                        if (this.position < exactSlnText.length) {
                             currentChar = exactSlnText[this.position];
                         }
+                    }
 
-                        while (currentChar !== '}')
-                        {
-                            idTwo += currentChar;
-                            this.position++;
+                    finished = true;
+                    break;
+                default:
+                    this.position++;
+                    break;
+            }
+        }
 
-                            if (this.position < exactSlnText.length)
-                            {
-                                currentChar = exactSlnText[this.position];
-                            }
-                        }
+        return idTwo;
+    }
 
-                        finished = true;
-                        break;
-                    default:
-                        this.position++;
-                        break;
-                }
+    public static extractProjectReferences(exactProjectText: string): string[] {
+        let position: number = 0;
+
+        let projectReferenceString = "ProjectReference";
+
+        let peekSubstring = (peekToIndex: number) => {
+            if (position >= exactProjectText.length) {
+                return '\0';
             }
 
-            return idTwo;
+            if (peekToIndex > exactProjectText.length) {
+                peekToIndex = exactProjectText.length;
+            }
+
+            return exactProjectText.substring(position, peekToIndex);
+        };
+
+        let currentChar = () => {
+            return peekSubstring(position + 1);
+        };
+
+        while (currentChar() !== '\0') {
+            switch (currentChar()) {
+                case 'P':
+                    let peekedString = peekSubstring(position + projectReferenceString.length);
+                    if(peekedString === projectReferenceString)
+                    {
+                        var x = 2;
+                        position += 1;
+                        // Found a reference
+                    }
+                    else
+                    {
+                        position += 1;
+                    }
+                    break;
+                default:
+                    position += 1;
+                    break;
+            }
         }
+
+        return [];
+    }
 }
