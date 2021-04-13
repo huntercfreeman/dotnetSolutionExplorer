@@ -22,7 +22,7 @@ export class DotNetFileDirectory extends DotNetFile {
             dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileDirectoryIcon.svg')
         };
 
-        if(this.filename === "wwwroot") {
+        if (this.filename === "wwwroot") {
             this.iconPath = {
                 light: path.join(__filename, '..', '..', 'resources', 'light', 'fileWwwRootIcon.svg'),
                 dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileWwwRootIcon.svg')
@@ -52,9 +52,11 @@ export class DotNetFileDirectory extends DotNetFile {
             for (let i = 0; i < projectFiles.length; i++) {
                 let fileDelimiter: string = DotNetPathHelper.extractFileDelimiter(this.absolutePath);
 
-                let dotNetFile: DotNetFile = await DotNetFileFactory.create(this.absolutePath + fileDelimiter + projectFiles[i], projectFiles[i], this);
+                let dotNetFile: DotNetFile | undefined = await DotNetFileFactory.create(this.absolutePath + fileDelimiter + projectFiles[i], projectFiles[i], this);
 
-                this.children.push(dotNetFile);
+                if (dotNetFile) {
+                    this.children.push(dotNetFile);
+                }
             }
 
             await this.tryOrphanChildren();

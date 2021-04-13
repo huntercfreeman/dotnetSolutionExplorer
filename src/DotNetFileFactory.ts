@@ -15,7 +15,7 @@ export class DotNetFileFactory {
     ) {
     }
 
-    public static async create(absolutePath: string, filename: string, parent?: DotNetFile): Promise<DotNetFile> {
+    public static async create(absolutePath: string, filename: string, parent?: DotNetFile): Promise<DotNetFile | undefined> {
         if (filename.endsWith(".sln")) {
             return await DotNetFileSolution.createAsync(absolutePath, filename);
         }
@@ -79,6 +79,10 @@ export class DotNetFileFactory {
             }
         }
 
-        return await DotNetFileDirectory.createAsync(absolutePath, filename, parent);
+        if(filename !== "bin" && filename !== "obj") {
+            return await DotNetFileDirectory.createAsync(absolutePath, filename, parent);
+        }
+
+        return Promise.resolve(undefined);
     }
 }
