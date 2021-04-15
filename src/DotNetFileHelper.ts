@@ -17,6 +17,7 @@ export class DotNetFileHelper {
             csprojFiles: DotNetFile[] = [],
             razorFiles: DotNetFile[] = [],
             slnFiles: DotNetFile[] = [],
+            projectDependencies: DotNetFile[] = [],
             txtFiles: DotNetFile[] = [];
 
         let unrecognizedFiles: DotNetFile[] = [];
@@ -29,6 +30,9 @@ export class DotNetFileHelper {
             switch (currentFile.dotNetFileKind) {
                 case DotNetFileKind.dir:
                     dirFiles.push(currentFile);
+                    break;
+                case DotNetFileKind.projectDependencies:
+                    projectDependencies.push(currentFile);
                     break;
                 // case DotNetFileKind.cs:
                 //     csFiles.push(currentFile);
@@ -60,6 +64,7 @@ export class DotNetFileHelper {
         unrecognizedFiles.sort();
 
         organizedFiles = organizedFiles
+            .concat(projectDependencies)
             .concat(dirFiles)
             .concat(unrecognizedFiles);
         // .concat(csFiles)

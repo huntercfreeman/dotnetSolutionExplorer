@@ -67,9 +67,9 @@ export class DotNetFileProject extends DotNetFile {
                 await this.tryOrphanChildren();
             }
 
-            this.children = DotNetFileHelper.organizeContainer(this.children);
-
             this.children.push(await DotNetProjectDependencies.createAsync(this.absolutePath, "Dependencies", this));
+
+            this.children = DotNetFileHelper.organizeContainer(this.children);
 
             return this.children;
         }
