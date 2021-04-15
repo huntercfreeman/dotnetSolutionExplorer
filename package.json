@@ -37,6 +37,10 @@
 				"title": "Hello World"
 			},
 			{
+				"command": "dotnet-solution-explorer.newProject",
+				"title": "New Project"
+			},
+			{
 				"command": "dotnet-solution-explorer.openFile",
 				"title": "Open File"
 			},
@@ -136,6 +140,11 @@
 				{
 					"when": "viewItem == dotnet-solution-explorer.project-reference-list",
 					"command": "dotnet-solution-explorer.addProjectReference",
+					"group": "navigation"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.solution",
+					"command": "dotnet-solution-explorer.newProject",
 					"group": "navigation"
 				}
 			],
