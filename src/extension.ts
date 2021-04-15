@@ -7,7 +7,7 @@ import { DotNetSolutionExplorerProvider } from './DotNetSolutionExplorerProvider
 import { hasUncaughtExceptionCaptureCallback } from 'node:process';
 import { normalize } from 'node:path';
 import { DotNetFileSolution } from './DotNetFileSolution';
-
+//sanity
 const fs = require('fs');
 
 export function activate(context: vscode.ExtensionContext) {
