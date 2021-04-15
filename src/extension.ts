@@ -79,9 +79,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			let referenceNormalizedAbsolutePath = chosenFile[0].fsPath.replace(/\\/g, "/");
 
-			// let referenceNormalizedAbsolutePath = data.absolutePath.replace(/\\/g, "/");
-
-			//let cmd = `dotnet remove ${projectNormalizedAbsolutePath} reference ${referenceNormalizedAbsolutePath}`;
+			let cmd = `dotnet add ${projectNormalizedAbsolutePath} reference ${referenceNormalizedAbsolutePath}`;
 
 			let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
 
@@ -97,12 +95,12 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showErrorMessage("ERROR: could not access an integrated terminal check the " +
 					"information message for the command to run it yourself");
 
-				//vscode.window.showInformationMessage(cmd);
+				vscode.window.showInformationMessage(cmd);
 				return;
 			}
 			else {
 				activeTerminal.show();
-				//activeTerminal.sendText(cmd, false);
+				activeTerminal.sendText(cmd, false);
 			}
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.refreshEntry', (e: any) =>
