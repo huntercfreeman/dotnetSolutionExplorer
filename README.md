@@ -1,123 +1,87 @@
-Firstly, why download this solution explorer specifically?
+List of features (unordered)
 
-<ol>
-<li>Namespaces are generated for you when adding new files</li>
-<li>You can choose from a .sln that is anywhere in the workspace (doesn't have to be root).</li>
-<li>Templated files based on extension. If you add a .cs file the barebones class structure will be generated for you with string interpolation.</li>
-</ol>
+<ul>
+    <li>Add Existing Project</li>
+    <li>Add New Project</li>
+    <li>Add Project Reference</li>
+    <li>Remove Project Reference</li>
+    <li>Auto namespace generation when making new file</li>
+    <li>Choose a .sln file anywhere in workspace (does not have to be root)</li>
+    <li>Templated files (new .cs file will have namespace and class name generated for 	you based on the name of the file)</li>
+</ul>
 
-(recommended to check changelog I need to find time to update the README.md)
+![](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepOne.png)
 
-Now on to the documentation
+In order to showcase the capabilities of this extension I will make a .net5 application from scratch and show the important details pertaining to this extension in named sections.
 
-![stepOne](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepOne.png)
+<h3>New Solution</h3>
 
-In the above image I created a folder called 'MyBlazorCrudApp' to give us a clean slate.
+To make a new solution run the following command:
 
-The first step is to create .sln file for our application. Run the following command in your terminal of choosing:
-
-````
+``````
 dotnet new sln
-````
+``````
 
-![stepTwo](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepTwo.png)
+![stepTwo](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepTwo.png)
 
-Now that we have a .sln let's expand the 'DOTNET SOLUTION EXPLORER' tab under 'OPEN EDITORS' and vscode's folder explorer on the left sidebar.
+Now we can open the extension. If you opened the extension already run the vscode command titled 'reload window' by pressing 'ctrl' + 'shift' + 'p' or close and reopen vscode.
 
-![stepThree](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepThree.png)
+![stepFour](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepFour.png)
 
-Vscode will show a quickpick for us to choose our .sln. If you do not see this run the reload window command (press 'ctrl' + 'shift' + 'p' then type reload window). The result of selecting 'MyBlazorCrudApp.sln' from vscode's quickpick is the following.
+![stepFive](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepFive.png)
 
-![stepFour](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepFour.png)
+Now we see our .sln in the solution explorer.
 
-The second thing we need to do is add a project. Run the following command (I am using .net 5 sdk):
+It is important to acknowledge that the vscode folder explorer is still available to us above the solution explorer. When you click a file in the solution explorer it will scroll to and highlight that respective file in vscode's folder explorer. This allows for the full use of vscode's context menu when right clicking a file if that is so desired.
 
-```
-dotnet new blazorserver -o MyBlazorServerApp
-```
+<h3>Add New Project to .sln</h3>
 
-![stepFive](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepFive.png)
+The next step is for us to add a new project to our .sln.
 
-Now we need to add the project to our .sln. Run the following command:
+Right click the 'MyBlazorApp.sln' file in the solution explorer.
 
-```
-dotnet sln MyBlazorCrudApp.sln add MyBlazorServerApp/MyBlazorServerApp.csproj
-```
+![stepSix](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepSix.png)
 
-![stepSix](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepSix.png)
+Follow the vscode prompts that show at the top middle of vscode.
 
-Now when we expand 'MyBlazorCrudApp.sln' and then expand MyBlazorServerApp.csproj in the dotnet Solution Explorer we will see the following.
+If you don't know what .net Microsoft template you want type the following command in the terminal to find the one you want to new.
 
-![stepSeven](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepSeven.png)
+``````
+dotnet new --list
+``````
 
-IMPORTANT: Everything is lazily loaded and only once unless told to refresh. If you do not see 'MyBlazorServerApp.csproj' bring up the context menu (right click) for 'MyBlazorCrudApp.sln' and then refresh. As an aside you can refresh anything and you will only incur the cost of re-getting the children files of the tree node item you chose to refresh. It does not refresh the entire solution explorer unless you refresh the .sln file.
+I entered the following:
 
-At this point feel free to run the following command to run the application (make sure the path is relative to the directory you are in):
+My template was:
 
-```
-dotnet run --project MyBlazorServerApp/MyBlazorServerApp.csproj
-```
+![stepEight](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepEight.png)
 
-In your internet browser go to the localhost port that is described in the terminal. For me it was localhost:5001 for https and you will see your app.
+My project name was:
 
-![stepEight](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepEight.png)
+![stepNine](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepNine.png)
 
-My goal for this app is to have a list of people that displays their name and unique id.
+The result was:
 
-For this we need to write some code.
+![stepTen](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepTen.png)
 
-I added a folder called 'Code' and then using the context menu on the directory I clicked, 'Add File'. Look at how I have a vscode quick pick at the top of the screen.
+I purposefully go out of my way to not run any commands for you. I am under the belief that users first don't want me running random things in their terminal. And second if I run the command then you cannot alter it if you want to customize something.
 
-![stepTen](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepTen.png)
+You'll notice that I figured out how to put the command immediately into the console at some point and as such started doing so. I intend to standardize this (so that all commands do not appear as a notification but instead appear in your console ready to be ran with an enter key press). I need time to standardize this however and may prioritize other features.
 
-This quick pick uses templates that are based off the extension given. In addition any files requiring a namespace are given one automatically.
+![stepEleven](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepEleven.png)
 
-Let's see the templates in action. I'll type 'PersonRepository.cs ' and show the resulting file in an image following.
+Notice how the solution explorer did not update? In short it works similarly to Microsoft SQL Management Studio. In other words you have to right click the item you want to refresh and click refresh.
 
-![stepEleven](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepEleven.png)
-
-To spare the unrelated details I'm going to move on to making a blazor component that displays a Person object instead of going through how to make a PersonRepository.
-
-I added a directory called, 'Components' and then using the context menu selected the option, "Add Blazor Component". Again templating will come in to play here.
-
-![stepTwelve](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepTwelve.png)
-
-I enter the following: 'PersonRenderer' and follow with the results of the operation.
-
-Two files were generated: PersonRenderer.razor and PersonRenderer.razor.cs
-
-The two files appear nested and the .razor file can be collapsed just as a directory.
-
-PersonRenderer.razor:
-
-![stepThirteen](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepThirteen.png)
-
-PersonRenderer.razor.cs
-
-![stepFourteen](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepFourteen.png)
-
-If you wish to only create the markup (or only create the codebehind) use the context menu option 'Add File' and then type 'PersonRenderer.razor' it will use the same template but not create the codebehind ('PersonRenderer.razor.cs' to only create the codebehind).
-
-Frequently Asked Questions:
-
-How do I add a nuget package reference?
+Side notes:
 
 <ul>
-    <li>Nuget package management must be done through the command line currently (or a separate extension).</li>
+	<li>I refresh for you when I can but changing files outside vscode (i.e. in the terminal) is something I don't know how to have an event for.</li>    
+    <li>If a context menu refresh does not do the trick use the vscode command 'reload window' by pressing: 'ctrl' + 'shift' + 'p' and then typing 'reload window' and hittting 'enter'. (or you can close and reopen vscode)</li>
 </ul>
 
-How do I reach the author of this extension?
+ ![stepTwelve](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepTwelve.png)
 
-<ul>
-    <li>I can be reached at my email: huntercfreeman@gmail.com</li>
-    <li>The repository is located publically at: https://github.com/huntercfreeman/dotnetSolutionExplorer</li>
-    <li>I'm open to pull requests and if you need help cloning the extension from github feel free to email me I am available on the weekends and will likely help.</li>
-</ul>
+As a last resort only use reload window as described in the side notes, here you see it in an image.
 
-What are the future plans for this extension?
-
-<ul>
-    <li>I plan on working on this extension every weekend when I have free time outside of work.</li>
-    <li>I am interested in hearing from anyone that downloads it: what features you want, criticisms, etc. if you reach out to me I will likely add the feature requested.</li>
-</ul>
+![stepThirteen](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepThirteen.png)
 
