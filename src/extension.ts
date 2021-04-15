@@ -45,26 +45,23 @@ export function activate(context: vscode.ExtensionContext) {
 
 				if (!activeTerminal) {
 					let terminals = vscode.window.terminals;
-					
-					if(terminals.length !== 0) {
+
+					if (terminals.length !== 0) {
 						activeTerminal = terminals[0];
 					}
 				}
 
-				if(!activeTerminal) { 
-					vscode.window.showErrorMessage("ERROR: could not access a terminal check the informational " +
-													"message for the command to run it yourself");
+				if (!activeTerminal) {
+					vscode.window.showErrorMessage("ERROR: could not access an integrated terminal check the " +
+						"information message for the command to run it yourself");
+
 					vscode.window.showInformationMessage(cmd);
-					return; 
+					return;
 				}
-
-				
-
-				activeTerminal.show();
-				activeTerminal.sendText(, false);
-
-				solutionExplorerProvider.refresh(data);
-				vscode.window.showInformationMessage("Right click refresh Dependencies to see changes");
+				else {
+					activeTerminal.show();
+					activeTerminal.sendText(cmd, false);
+				}
 			}
 			else {
 				vscode.window.showErrorMessage("ERROR: The absolute path of the .csproj could not be found.");
