@@ -1,4 +1,4 @@
-[Repo is public here](https://github.com/huntercfreeman/dotnetSolutionExplorer)
+[Repo is public here](https://github.com/huntercfreeman/dotnetSolutionExplorer)</br>
 Email me: huntercfreeman@gmail.com
 
 List of features (unordered)
