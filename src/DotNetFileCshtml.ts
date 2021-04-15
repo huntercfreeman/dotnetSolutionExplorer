@@ -10,7 +10,7 @@ export class DotNetFileCshtml extends DotNetFile {
         public collapsibleState: vscode.TreeItemCollapsibleState,
         public parent: DotNetFile
     ) {
-        super(absolutePath, filename, collapsibleState, DotNetFileKind.razor, parent);
+        super(absolutePath, filename, collapsibleState, DotNetFileKind.cshtml, parent);
 
         let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
 

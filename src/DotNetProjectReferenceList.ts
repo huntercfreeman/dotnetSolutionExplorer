@@ -16,7 +16,7 @@ export class DotNetProjectReferenceList extends DotNetFile {
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly parent: DotNetFile
     ) {
-        super(absolutePath, filename, collapsibleState, DotNetFileKind.txt, parent);
+        super(absolutePath, filename, collapsibleState, DotNetFileKind.referenceList, parent);
 
         let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
 

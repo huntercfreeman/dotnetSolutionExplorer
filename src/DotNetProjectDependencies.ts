@@ -15,7 +15,7 @@ export class DotNetProjectDependencies extends DotNetFile {
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly parent?: DotNetFile
     ) {
-        super(absolutePath, filename, collapsibleState, DotNetFileKind.dir, parent);
+        super(absolutePath, filename, collapsibleState, DotNetFileKind.projectDependencies, parent);
 
         this.iconPath = {
             light: path.join(__filename, '..', '..', 'resources', 'light', 'fileProjectDependenciesIcon.svg'),
@@ -41,14 +41,14 @@ export class DotNetProjectDependencies extends DotNetFile {
             this.children = [];
 
             if(this.absolutePath.endsWith(".csproj")) {
-                let analyzers = await DotNetProjectAnaylzerList.createAsync(this.absolutePath, "Analyzers", this);
-                let frameworks = await DotNetProjectFrameworkList.createAsync(this.absolutePath, "Frameworks", this);
-                let packages = await DotNetProjectPackageList.createAsync(this.absolutePath, "Packages", this);
+                //let analyzers = await DotNetProjectAnaylzerList.createAsync(this.absolutePath, "Analyzers", this);
+                //let frameworks = await DotNetProjectFrameworkList.createAsync(this.absolutePath, "Frameworks", this);
+                //let packages = await DotNetProjectPackageList.createAsync(this.absolutePath, "Packages", this);
                 let projects = await DotNetProjectReferenceList.createAsync(this.absolutePath, "Projects", this);
 
-                this.children.push(analyzers);
-                this.children.push(frameworks);
-                this.children.push(packages);
+                //this.children.push(frameworks);
+                //this.children.push(analyzers);
+                //this.children.push(packages);
                 this.children.push(projects);
             }
 
