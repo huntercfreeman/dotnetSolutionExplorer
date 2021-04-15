@@ -1,3 +1,5 @@
+[text](https://github.com/huntercfreeman/dotnetSolutionExplorer)
+
 List of features (unordered)
 
 <ul>
