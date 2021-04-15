@@ -36,24 +36,32 @@ export function activate(context: vscode.ExtensionContext) {
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.removeProjectReference', (data: DotNetFile) => {
 			if (data.parent) {
+				let projectNormalizedAbsolutePath = data.parent.absolutePath.replace(/\\/g, "/");
+				let referenceNormalizedAbsolutePath = data.absolutePath.replace(/\\/g, "/");
+
+				let cmd = `dotnet remove ${projectNormalizedAbsolutePath} reference ${referenceNormalizedAbsolutePath}`;
+
 				let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
 
 				if (!activeTerminal) {
 					let terminals = vscode.window.terminals;
-
-					if (terminals.length === 0) {
-						activeTerminal = vscode.window.createTerminal("dotnet-solution-explorer");
-					}
-					else {
+					
+					if(terminals.length !== 0) {
 						activeTerminal = terminals[0];
 					}
 				}
 
-				let projectNormalizedAbsolutePath = data.parent.absolutePath.replace(/\\/g, "/");
-				let referenceNormalizedAbsolutePath = data.absolutePath.replace(/\\/g, "/");
+				if(!activeTerminal) { 
+					vscode.window.showErrorMessage("ERROR: could not access a terminal check the informational " +
+													"message for the command to run it yourself");
+					vscode.window.showInformationMessage(cmd);
+					return; 
+				}
+
+				
 
 				activeTerminal.show();
-				activeTerminal.sendText(`dotnet remove ${projectNormalizedAbsolutePath} reference ${referenceNormalizedAbsolutePath}`, false);
+				activeTerminal.sendText(, false);
 
 				solutionExplorerProvider.refresh(data);
 				vscode.window.showInformationMessage("Right click refresh Dependencies to see changes");
