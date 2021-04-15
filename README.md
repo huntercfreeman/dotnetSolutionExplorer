@@ -1,4 +1,5 @@
 [Repo is public here](https://github.com/huntercfreeman/dotnetSolutionExplorer)
+Email me: huntercfreeman@gmail.com
 
 List of features (unordered)
 
