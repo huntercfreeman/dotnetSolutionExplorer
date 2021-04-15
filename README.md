@@ -6,6 +6,8 @@ Firstly, why download this solution explorer specifically?
 <li>Templated files based on extension. If you add a .cs file the barebones class structure will be generated for you with string interpolation.</li>
 </ol>
 
+(recommended to check changelog I need to find time to update the README.md)
+
 Now on to the documentation
 
 ![stepOne](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepOne.png)
