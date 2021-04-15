@@ -161,7 +161,8 @@ export function activate(context: vscode.ExtensionContext) {
 				"viewColumn": vscode.ViewColumn.One
 			};
 
-			vscode.workspace.openTextDocument(uri.path).then((a: vscode.TextDocument) => {
+			let normalizedPath = `${uri.scheme}:${uri.path}`;
+			vscode.workspace.openTextDocument(normalizedPath).then((a: vscode.TextDocument) => {
 				vscode.window.showTextDocument(a, textDocumentShowOptions);
 			}, (error: any) => {
 				console.error(error);
