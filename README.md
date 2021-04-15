@@ -85,3 +85,26 @@ As a last resort only use reload window as described in the side notes, here you
 
 ![stepThirteen](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepThirteen.png)
 
+(I have to reload window when adding a project on a Windows machine but not when on Ubuntu I need to find time to fix this) 
+
+This all results in the following:
+
+![stepFourteen](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepFourteen.png)
+
+<h3>Add a Project Reference</h3>
+
+![stepFifteen](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepFifteen.png)
+
+![stepSixteen](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepSixteen.png)
+
+Upon clicking the context menu option 'Add Project Reference' your operating system's file explorer will open for you to select a .csproj file.
+
+The following will be placed into the terminal for you to run with the enter key.
+
+It is important to note that I thought of those who use external terminals. I will NOT force open a terminal if one is not open. 
+
+If one is using an external terminal you will receive a notification of the command to run instead of me placing it in the integrated terminal.
+
+![stepSeventeen](C:\Users\hunte\source\repos\dotnetSolutionExplorer\markdownImages\stepSeventeen.png)
+
+Now run the command and use the context menu to refresh the Dependencies and you'll see your change.
