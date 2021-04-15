@@ -37,6 +37,14 @@
 				"title": "Hello World"
 			},
 			{
+				"command": "dotnet-solution-explorer.newProject",
+				"title": "New Project"
+			},
+			{
+				"command": "dotnet-solution-explorer.addExistingProject",
+				"title": "Add Existing Project"
+			},
+			{
 				"command": "dotnet-solution-explorer.openFile",
 				"title": "Open File"
 			},
@@ -84,11 +92,6 @@
 		"menus": {
 			"view/item/context": [
 				{
-					"when": "viewItem == dotnet-solution-explorer.razor",
-					"command": "dotnet-solution-explorer.helloWorld",
-					"group": "navigation"
-				},
-				{
 					"command": "dotnet-solution-explorer.refreshEntry",
 					"group": "z_commands",
 					"when": "view == dotnetSolutionExplorer"
@@ -109,22 +112,22 @@
 					"group": "navigation"
 				},
 				{
-					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project",
+					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.project-reference && viewItem != dotnet-solution-explorer.project-reference-list",
 					"command": "dotnet-solution-explorer.copy",
 					"group": "9_cutcopypaste"
 				},
 				{
-					"when": "viewItem == dotnet-solution-explorer.directory || viewItem == dotnet-solution-explorer.project",
+					"when": "viewItem == dotnet-solution-explorer.directory || viewItem == dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.project-reference && viewItem != dotnet-solution-explorer.project-reference-list",
 					"command": "dotnet-solution-explorer.paste",
 					"group": "9_cutcopypaste"
 				},
 				{
-					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project",
+					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.project-reference && viewItem != dotnet-solution-explorer.project-reference-list",
 					"command": "dotnet-solution-explorer.cut",
 					"group": "9_cutcopypaste"
 				},
 				{
-					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.directory",
+					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.directory && viewItem != dotnet-solution-explorer.project-reference && viewItem != dotnet-solution-explorer.project-reference-list",
 					"command": "dotnet-solution-explorer.deleteFile",
 					"group": "9_cutcopypaste"
 				},
@@ -135,12 +138,22 @@
 				},
 				{
 					"when": "viewItem == dotnet-solution-explorer.project-reference",
+					"command": "dotnet-solution-explorer.removeProjectReference",
+					"group": "navigation"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.project-reference-list",
 					"command": "dotnet-solution-explorer.addProjectReference",
 					"group": "navigation"
 				},
 				{
-					"when": "viewItem == dotnet-solution-explorer.project-reference",
-					"command": "dotnet-solution-explorer.removeProjectReference",
+					"when": "viewItem == dotnet-solution-explorer.solution",
+					"command": "dotnet-solution-explorer.newProject",
+					"group": "navigation"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.solution",
+					"command": "dotnet-solution-explorer.addExistingProject",
 					"group": "navigation"
 				}
 			],

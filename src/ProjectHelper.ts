@@ -1,5 +1,6 @@
+import * as vscode from 'vscode';
 import { hasUncaughtExceptionCaptureCallback } from "node:process";
-import { isFunction } from "node:util";
+import { getVSCodeDownloadUrl } from "vscode-test/out/util";
 import { DotNetPathHelper } from "./DotNetPathHelper";
 import { DotNetProject } from "./DotNetProject";
 

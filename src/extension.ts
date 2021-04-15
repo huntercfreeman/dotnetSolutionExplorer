@@ -6,7 +6,8 @@ import { DotNetPathHelper } from './DotNetPathHelper';
 import { DotNetSolutionExplorerProvider } from './DotNetSolutionExplorerProvider';
 import { hasUncaughtExceptionCaptureCallback } from 'node:process';
 import { normalize } from 'node:path';
-
+import { DotNetFileSolution } from './DotNetFileSolution';
+//sanity
 const fs = require('fs');
 
 export function activate(context: vscode.ExtensionContext) {
@@ -33,6 +34,129 @@ export function activate(context: vscode.ExtensionContext) {
 		),
 		vscode.commands.registerCommand('dotnet-solution-explorer.helloWorld', () => {
 			vscode.window.showInformationMessage('Hello World from dotnet Solution Explorer!');
+		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.newProject', async (sln: DotNetFileSolution) => {
+			let slnNormalizedAbsolutePath = sln.absolutePath.replace(/\\/g, "/");
+
+			let templateInputOptions: vscode.InputBoxOptions = {
+				"placeHolder": "Enter template (Example: 'blazorserver')"
+			};
+			let selectedTemplate = await vscode.window.showInputBox(templateInputOptions);
+
+			let projectNameOptions: vscode.InputBoxOptions = {
+				"placeHolder": "Enter project name (Example: 'MyProject')"
+			};
+			let projectName = await vscode.window.showInputBox(projectNameOptions);
+
+			let cmd = `dotnet new ${selectedTemplate} -o ${projectName} && `;
+			cmd += `dotnet sln ${slnNormalizedAbsolutePath} add ${projectName}`;
+
+			vscode.window.showInformationMessage("Run this command: " + cmd);
+		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.addExistingProject', async (sln: DotNetFileSolution) => {
+			let slnNormalizedAbsolutePath = sln.absolutePath.replace(/\\/g, "/");
+
+			let chosenFile: vscode.Uri[] | undefined = await vscode.window.showOpenDialog();
+
+			if (!chosenFile || chosenFile.length > 1) {
+				vscode.window.showErrorMessage("ERROR: User did not select a valid file");
+				return;
+			}
+
+			let referenceNormalizedAbsolutePath = chosenFile[0].fsPath.replace(/\\/g, "/");
+
+			let cmd = `dotnet sln ${slnNormalizedAbsolutePath} add ${referenceNormalizedAbsolutePath}`;
+
+			let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
+
+			if (!activeTerminal) {
+				let terminals = vscode.window.terminals;
+
+				if (terminals.length !== 0) {
+					activeTerminal = terminals[0];
+				}
+			}
+
+			if (!activeTerminal) {
+				vscode.window.showErrorMessage("ERROR: could not access an integrated terminal check the " +
+					"information message for the command to run it yourself");
+
+				vscode.window.showInformationMessage(cmd);
+				return;
+			}
+			else {
+				activeTerminal.show();
+				activeTerminal.sendText(cmd, false);
+			}
+		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.removeProjectReference', (data: DotNetFile) => {
+			if (data.parent) {
+				let projectNormalizedAbsolutePath = data.parent.absolutePath.replace(/\\/g, "/");
+				let referenceNormalizedAbsolutePath = data.absolutePath.replace(/\\/g, "/");
+
+				let cmd = `dotnet remove ${projectNormalizedAbsolutePath} reference ${referenceNormalizedAbsolutePath}`;
+
+				let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
+
+				if (!activeTerminal) {
+					let terminals = vscode.window.terminals;
+
+					if (terminals.length !== 0) {
+						activeTerminal = terminals[0];
+					}
+				}
+
+				if (!activeTerminal) {
+					vscode.window.showErrorMessage("ERROR: could not access an integrated terminal check the " +
+						"information message for the command to run it yourself");
+
+					vscode.window.showInformationMessage(cmd);
+					return;
+				}
+				else {
+					activeTerminal.show();
+					activeTerminal.sendText(cmd, false);
+				}
+			}
+			else {
+				vscode.window.showErrorMessage("ERROR: The absolute path of the .csproj could not be found.");
+			}
+		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.addProjectReference', async (data: DotNetFile) => {
+			let projectNormalizedAbsolutePath = data.absolutePath.replace(/\\/g, "/");
+
+			let chosenFile: vscode.Uri[] | undefined = await vscode.window.showOpenDialog();
+
+			if (!chosenFile || chosenFile.length > 1) {
+				vscode.window.showErrorMessage("ERROR: User did not select a valid file");
+				return;
+			}
+
+			let referenceNormalizedAbsolutePath = chosenFile[0].fsPath.replace(/\\/g, "/");
+
+			let cmd = `dotnet add ${projectNormalizedAbsolutePath} reference ${referenceNormalizedAbsolutePath}`;
+
+			let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
+
+			if (!activeTerminal) {
+				let terminals = vscode.window.terminals;
+
+				if (terminals.length !== 0) {
+					activeTerminal = terminals[0];
+				}
+			}
+
+			if (!activeTerminal) {
+				vscode.window.showErrorMessage("ERROR: could not access an integrated terminal check the " +
+					"information message for the command to run it yourself");
+
+				vscode.window.showInformationMessage(cmd);
+				return;
+			}
+			else {
+				activeTerminal.show();
+				activeTerminal.sendText(cmd, false);
+			}
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.refreshEntry', (e: any) =>
 			solutionExplorerProvider.refresh(e)
@@ -163,7 +287,7 @@ export function activate(context: vscode.ExtensionContext) {
 			};
 
 			let normalizedPath;
-			if(uri.scheme !== "file") {
+			if (uri.scheme !== "file") {
 				normalizedPath = `${uri.scheme}:${uri.path}`;
 			}
 			else {
