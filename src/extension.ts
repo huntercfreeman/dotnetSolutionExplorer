@@ -5,6 +5,7 @@ import { DotNetFile } from './DotNetFile';
 import { DotNetPathHelper } from './DotNetPathHelper';
 import { DotNetSolutionExplorerProvider } from './DotNetSolutionExplorerProvider';
 import { hasUncaughtExceptionCaptureCallback } from 'node:process';
+import { normalize } from 'node:path';
 
 const fs = require('fs');
 
@@ -161,7 +162,14 @@ export function activate(context: vscode.ExtensionContext) {
 				"viewColumn": vscode.ViewColumn.One
 			};
 
-			let normalizedPath = `${uri.scheme}:${uri.path}`;
+			let normalizedPath;
+			if(uri.scheme !== "file") {
+				normalizedPath = `${uri.scheme}:${uri.path}`;
+			}
+			else {
+				normalizedPath = uri.path;
+			}
+
 			vscode.workspace.openTextDocument(normalizedPath).then((a: vscode.TextDocument) => {
 				vscode.window.showTextDocument(a, textDocumentShowOptions);
 			}, (error: any) => {
