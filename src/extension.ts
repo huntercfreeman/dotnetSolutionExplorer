@@ -67,6 +67,44 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showErrorMessage("ERROR: The absolute path of the .csproj could not be found.");
 			}
 		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.addProjectReference', async (data: DotNetFile) => {
+			let projectNormalizedAbsolutePath = data.absolutePath.replace(/\\/g, "/");
+
+			let chosenFile: vscode.Uri[] | undefined = await vscode.window.showOpenDialog();
+
+			if(!chosenFile || chosenFile.length > 1) {
+				vscode.window.showErrorMessage("ERROR: User did not select a valid file");
+				return;
+			}
+
+			let referenceNormalizedAbsolutePath = chosenFile[0].fsPath.replace(/\\/g, "/");
+
+			// let referenceNormalizedAbsolutePath = data.absolutePath.replace(/\\/g, "/");
+
+			//let cmd = `dotnet remove ${projectNormalizedAbsolutePath} reference ${referenceNormalizedAbsolutePath}`;
+
+			let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
+
+			if (!activeTerminal) {
+				let terminals = vscode.window.terminals;
+
+				if (terminals.length !== 0) {
+					activeTerminal = terminals[0];
+				}
+			}
+
+			if (!activeTerminal) {
+				vscode.window.showErrorMessage("ERROR: could not access an integrated terminal check the " +
+					"information message for the command to run it yourself");
+
+				//vscode.window.showInformationMessage(cmd);
+				return;
+			}
+			else {
+				activeTerminal.show();
+				//activeTerminal.sendText(cmd, false);
+			}
+		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.refreshEntry', (e: any) =>
 			solutionExplorerProvider.refresh(e)
 		),

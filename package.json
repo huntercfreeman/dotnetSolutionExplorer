@@ -104,22 +104,22 @@
 					"group": "navigation"
 				},
 				{
-					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.project-reference",
+					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.project-reference && viewItem != dotnet-solution-explorer.project-reference-list",
 					"command": "dotnet-solution-explorer.copy",
 					"group": "9_cutcopypaste"
 				},
 				{
-					"when": "viewItem == dotnet-solution-explorer.directory || viewItem == dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.project-reference",
+					"when": "viewItem == dotnet-solution-explorer.directory || viewItem == dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.project-reference && viewItem != dotnet-solution-explorer.project-reference-list",
 					"command": "dotnet-solution-explorer.paste",
 					"group": "9_cutcopypaste"
 				},
 				{
-					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.project-reference",
+					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.project-reference && viewItem != dotnet-solution-explorer.project-reference-list",
 					"command": "dotnet-solution-explorer.cut",
 					"group": "9_cutcopypaste"
 				},
 				{
-					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.directory && viewItem != dotnet-solution-explorer.project-reference",
+					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.directory && viewItem != dotnet-solution-explorer.project-reference && viewItem != dotnet-solution-explorer.project-reference-list",
 					"command": "dotnet-solution-explorer.deleteFile",
 					"group": "9_cutcopypaste"
 				},
@@ -131,6 +131,11 @@
 				{
 					"when": "viewItem == dotnet-solution-explorer.project-reference",
 					"command": "dotnet-solution-explorer.removeProjectReference",
+					"group": "navigation"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.project-reference-list",
+					"command": "dotnet-solution-explorer.addProjectReference",
 					"group": "navigation"
 				}
 			],

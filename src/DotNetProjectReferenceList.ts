@@ -18,17 +18,13 @@ export class DotNetProjectReferenceList extends DotNetFile {
     ) {
         super(absolutePath, filename, collapsibleState, DotNetFileKind.referenceList, parent);
 
+        this.contextValue = "dotnet-solution-explorer.project-reference-list";
+
         let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
 
         this.iconPath = {
             light: path.join(__filename, '..', '..', 'resources', 'light', 'fileTxtIcon.svg'),
             dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileTxtIcon.svg')
-        };
-
-        this.command = {
-            "command": "dotnet-solution-explorer.openFile",
-            "title": "open",
-            "arguments": [uri]
         };
     }
 
