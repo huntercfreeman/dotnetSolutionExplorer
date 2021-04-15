@@ -84,11 +84,6 @@
 		"menus": {
 			"view/item/context": [
 				{
-					"when": "viewItem == dotnet-solution-explorer.razor",
-					"command": "dotnet-solution-explorer.helloWorld",
-					"group": "navigation"
-				},
-				{
 					"command": "dotnet-solution-explorer.refreshEntry",
 					"group": "z_commands",
 					"when": "view == dotnetSolutionExplorer"
@@ -109,22 +104,22 @@
 					"group": "navigation"
 				},
 				{
-					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project",
+					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.project-reference",
 					"command": "dotnet-solution-explorer.copy",
 					"group": "9_cutcopypaste"
 				},
 				{
-					"when": "viewItem == dotnet-solution-explorer.directory || viewItem == dotnet-solution-explorer.project",
+					"when": "viewItem == dotnet-solution-explorer.directory || viewItem == dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.project-reference",
 					"command": "dotnet-solution-explorer.paste",
 					"group": "9_cutcopypaste"
 				},
 				{
-					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project",
+					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.project-reference",
 					"command": "dotnet-solution-explorer.cut",
 					"group": "9_cutcopypaste"
 				},
 				{
-					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.directory",
+					"when": "viewItem != dotnet-solution-explorer.solution && viewItem != dotnet-solution-explorer.project && viewItem != dotnet-solution-explorer.directory && viewItem != dotnet-solution-explorer.project-reference",
 					"command": "dotnet-solution-explorer.deleteFile",
 					"group": "9_cutcopypaste"
 				},
@@ -132,11 +127,6 @@
 					"when": "viewItem == dotnet-solution-explorer.directory",
 					"command": "dotnet-solution-explorer.deleteDirectory",
 					"group": "9_cutcopypaste"
-				},
-				{
-					"when": "viewItem == dotnet-solution-explorer.project-reference",
-					"command": "dotnet-solution-explorer.addProjectReference",
-					"group": "navigation"
 				},
 				{
 					"when": "viewItem == dotnet-solution-explorer.project-reference",

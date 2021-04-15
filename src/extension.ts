@@ -34,6 +34,34 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('dotnet-solution-explorer.helloWorld', () => {
 			vscode.window.showInformationMessage('Hello World from dotnet Solution Explorer!');
 		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.removeProjectReference', (data: DotNetFile) => {
+			if (data.parent) {
+				let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
+
+				if (!activeTerminal) {
+					let terminals = vscode.window.terminals;
+
+					if (terminals.length === 0) {
+						activeTerminal = vscode.window.createTerminal("dotnet-solution-explorer");
+					}
+					else {
+						activeTerminal = terminals[0];
+					}
+				}
+
+				let projectNormalizedAbsolutePath = data.parent.absolutePath.replace(/\\/g, "/");
+				let referenceNormalizedAbsolutePath = data.absolutePath.replace(/\\/g, "/");
+
+				activeTerminal.show();
+				activeTerminal.sendText(`dotnet remove ${projectNormalizedAbsolutePath} reference ${referenceNormalizedAbsolutePath}`, false);
+
+				solutionExplorerProvider.refresh(data);
+				vscode.window.showInformationMessage("Right click refresh Dependencies to see changes");
+			}
+			else {
+				vscode.window.showErrorMessage("ERROR: The absolute path of the .csproj could not be found.");
+			}
+		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.refreshEntry', (e: any) =>
 			solutionExplorerProvider.refresh(e)
 		),
@@ -163,7 +191,7 @@ export function activate(context: vscode.ExtensionContext) {
 			};
 
 			let normalizedPath;
-			if(uri.scheme !== "file") {
+			if (uri.scheme !== "file") {
 				normalizedPath = `${uri.scheme}:${uri.path}`;
 			}
 			else {
