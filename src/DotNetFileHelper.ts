@@ -61,7 +61,12 @@ export class DotNetFileHelper {
             }
         }
 
-        unrecognizedFiles.sort();
+        projectDependencies.sort((fileOne, fileTwo) => {
+            return fileOne.filename.localeCompare(fileTwo.filename);
+        });
+        unrecognizedFiles.sort((fileOne, fileTwo) => {
+            return fileOne.filename.localeCompare(fileTwo.filename);
+        });
 
         organizedFiles = organizedFiles
             .concat(projectDependencies)

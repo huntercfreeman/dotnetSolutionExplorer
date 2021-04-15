@@ -54,6 +54,10 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
             return [];
         }
 
+        slnPathObjects.sort((fileOne, fileTwo) => {
+            return fileOne.filename.localeCompare(fileTwo.filename);
+        });
+
         let selectedSolutionFilename = await vscode.window.showQuickPick(slnPathObjects.map(x => x.filename));
 
         if (selectedSolutionFilename) {
@@ -80,17 +84,20 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
                 this.solutionHelper.slnFileName
             );
 
+            let children: DotNetFile[] = await this.root.getChildren();
+
             for (let i = 0; i < this.solutionHelper.dotNetProjects.length; i++) {
                 let dotNetFileProject: DotNetFile = await DotNetFileProject.createAsync(
                     this.solutionHelper.dotNetProjects[i].absolutePath,
                     this.solutionHelper.dotNetProjects[i].filenameNoExtension + ".csproj"
                 );
 
-                let children: DotNetFile[] = await this.root.getChildren();
-
                 children.push(dotNetFileProject);
             }
 
+            children.sort((fileOne, fileTwo) => {
+                return fileOne.filename.localeCompare(fileTwo.filename);
+            });
 
             return [this.root];
         }
