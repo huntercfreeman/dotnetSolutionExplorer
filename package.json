@@ -45,6 +45,10 @@
 				"title": "Add Existing Project"
 			},
 			{
+				"command": "dotnet-solution-explorer.removeProject",
+				"title": "Remove Project"
+			},
+			{
 				"command": "dotnet-solution-explorer.openFile",
 				"title": "Open File"
 			},
@@ -95,6 +99,11 @@
 					"command": "dotnet-solution-explorer.refreshEntry",
 					"group": "z_commands",
 					"when": "view == dotnetSolutionExplorer"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.project",
+					"command": "dotnet-solution-explorer.removeProject",
+					"group": "navigation"
 				},
 				{
 					"when": "viewItem == dotnet-solution-explorer.directory || viewItem == dotnet-solution-explorer.project",

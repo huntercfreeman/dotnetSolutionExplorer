@@ -7,6 +7,7 @@ import { DotNetSolutionExplorerProvider } from './DotNetSolutionExplorerProvider
 import { hasUncaughtExceptionCaptureCallback } from 'node:process';
 import { normalize } from 'node:path';
 import { DotNetFileSolution } from './DotNetFileSolution';
+import { DotNetFileProject } from './DotNetFileProject';
 //sanity
 const fs = require('fs');
 
@@ -33,7 +34,21 @@ export function activate(context: vscode.ExtensionContext) {
 			solutionExplorerProvider
 		),
 		vscode.commands.registerCommand('dotnet-solution-explorer.helloWorld', () => {
-			vscode.window.showInformationMessage('Hello World from dotnet Solution Explorer!');
+			vscode.window.showInputBox();
+		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.removeProject', async (data: DotNetFileProject) => {
+			let inputBoxOptions: vscode.InputBoxOptions = {
+				placeHolder: `Enter 'yes' to delete ${data.filename}`
+			};
+
+			let inputBoxResponse = await vscode.window.showInputBox(inputBoxOptions);
+
+			if(inputBoxResponse === "yes") {
+				vscode.window.showInformationMessage(`Project ${data.filename} removed from .sln`);
+			}
+			else {
+				vscode.window.showInformationMessage('Remove project action was cancelled by user');
+			}
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.newProject', async (sln: DotNetFileSolution) => {
 			let slnNormalizedAbsolutePath = sln.absolutePath.replace(/\\/g, "/");
