@@ -6,6 +6,7 @@ import { DotNetFile, DotNetFileKind } from './DotNetFile';
 import { DotNetFileFactory } from './DotNetFileFactory';
 import { DotNetFileHelper } from './DotNetFileHelper';
 import { DotNetProjectDependencies } from './DotNetProjectDependencies';
+import { DotNetFileSolution } from './DotNetFileSolution';
 
 const fs = require('fs');
 
@@ -34,8 +35,8 @@ export class DotNetFileProject extends DotNetFile {
         this.namespaceString = filename.replace(".csproj", "");
     }
 
-    public static async createAsync(absolutePath: string, filename: string): Promise<DotNetFile> {
-        return new DotNetFileProject(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed);
+    public static async createAsync(absolutePath: string, filename: string, parent: DotNetFile): Promise<DotNetFile> {
+        return new DotNetFileProject(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed, parent);
     }
 
     public async getChildren(): Promise<DotNetFile[]> {

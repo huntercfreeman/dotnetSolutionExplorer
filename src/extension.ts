@@ -47,7 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showInformationMessage(`Project ${data.filename} removed from .sln`);
 			}
 			else {
-				vscode.window.showInformationMessage('Remove project action was cancelled by user');
+				vscode.window.showInformationMessage('Action was cancelled by user');
 			}
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.newProject', async (sln: DotNetFileSolution) => {

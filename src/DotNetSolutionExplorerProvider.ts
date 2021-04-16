@@ -89,7 +89,8 @@ export class DotNetSolutionExplorerProvider implements vscode.TreeDataProvider<D
             for (let i = 0; i < this.solutionHelper.dotNetProjects.length; i++) {
                 let dotNetFileProject: DotNetFile = await DotNetFileProject.createAsync(
                     this.solutionHelper.dotNetProjects[i].absolutePath,
-                    this.solutionHelper.dotNetProjects[i].filenameNoExtension + ".csproj"
+                    this.solutionHelper.dotNetProjects[i].filenameNoExtension + ".csproj",
+                    this.root
                 );
 
                 children.push(dotNetFileProject);

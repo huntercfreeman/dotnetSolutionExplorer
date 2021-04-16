@@ -19,9 +19,6 @@ export class DotNetFileFactory {
         if (filename.endsWith(".sln")) {
             return await DotNetFileSolution.createAsync(absolutePath, filename);
         }
-        if (filename.endsWith(".csproj")) {
-            return await DotNetFileProject.createAsync(absolutePath, filename);
-        }
         if (filename.endsWith(".txt")) {
             if (parent) {
                 return await DotNetFileTxt.createAsync(absolutePath, filename, parent);
