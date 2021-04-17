@@ -45,6 +45,9 @@ export function activate(context: vscode.ExtensionContext) {
 				return;
 			}
 
+			let slnNormalizedAbsolutePath = data.parent.absolutePath.replace(/\\/g, "/");
+			let projectNormalizedAbsolutePath = data.absolutePath.replace(/\\/g, "/");
+
 			let inputBoxOptions: vscode.InputBoxOptions = {
 				placeHolder: `Enter 'yes' to remove ${data.filename} from the .sln`
 			};
@@ -52,7 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
 			let inputBoxResponse = await vscode.window.showInputBox(inputBoxOptions);
 
 			if (inputBoxResponse === "yes") {
-				let cmd = `dotnet sln ${data.parent.absolutePath} remove ${data.absolutePath}`;
+				let cmd = `dotnet sln ${slnNormalizedAbsolutePath} remove ${projectNormalizedAbsolutePath}`;
 
 				let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
 
