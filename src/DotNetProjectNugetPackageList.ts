@@ -1,8 +1,10 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { DotNetFile, DotNetFileKind } from './DotNetFile';
+import { DotNetProjectNugetPackage } from './DotNetProjectNugetPackage';
+import { DotNetFileHelper } from './DotNetFileHelper';
+import { DotNetPathHelper } from './DotNetPathHelper';
 import { ProjectHelper } from './ProjectHelper';
-
 const fs = require('fs');
 
 export class DotNetProjectNugetPackageList extends DotNetFile {
@@ -38,48 +40,6 @@ export class DotNetProjectNugetPackageList extends DotNetFile {
         }
         else {
             this.children = [];
-            return Promise.resolve(this.children);
-        }
-    }
-
-    public tryFosterChildren(): Promise<void> {
-        return Promise.resolve();
-    }
-}
-
-export class DotNetProjectNugetPackage extends DotNetFile {
-    private constructor(
-        public readonly absolutePath: string,
-        public readonly filename: string,
-        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-        public readonly parent: DotNetFile
-    ) {
-        super(absolutePath, filename, collapsibleState, DotNetFileKind.nugetPackage, parent);
-
-        let uri: vscode.Uri = vscode.Uri.parse(absolutePath);
-
-        this.iconPath = {
-            light: path.join(__filename, '..', '..', 'resources', 'light', 'fileTxtIcon.svg'),
-            dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileTxtIcon.svg')
-        };
-
-        // this.command = {
-        //     "command": "dotnet-solution-explorer.openFile",
-        //     "title": "open",
-        //     "arguments": [uri]
-        // };
-    }
-
-    public static async createAsync(absolutePath: string, filename: string, parent: DotNetFile): Promise<DotNetFile> {
-        return new DotNetProjectNugetPackage(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed, parent);
-    }
-
-    public async getChildren(): Promise<DotNetFile[]> {
-        if (this.children) {
-            return Promise.resolve(this.children);
-        }
-        else {
-            this.children = [];
 
             let projectFileContents: string = fs.readFileSync(this.absolutePath, { "encoding": "UTF-8" });
 
@@ -98,7 +58,7 @@ export class DotNetProjectNugetPackage extends DotNetFile {
 
                 var startOfInclude = (projectReference.substring(++position)).indexOf('\"');
 
-                position = startOfInclude += startOfInclude;
+                position = startOfInclude + position + 1;
 
                 let isolatedVersion = "";
 
@@ -112,7 +72,22 @@ export class DotNetProjectNugetPackage extends DotNetFile {
                 };
             });
 
+            this.children = [];
 
+            for (let i = 0; i < projectNugetPackageObjects.length; i++) {
+                let nugetPackage: any = projectNugetPackageObjects[i];
+                let dotNetFile: DotNetFile = await DotNetProjectNugetPackage.createAsync(this.absolutePath,
+                    nugetPackage.include,
+                    nugetPackage.version,
+                    "Nuget Package",
+                    this);
+
+                this.children.push(dotNetFile);
+            }
+
+            await this.tryOrphanChildren();
+
+            this.children = DotNetFileHelper.organizeContainer(this.children);
 
             return Promise.resolve(this.children);
         }
@@ -121,6 +96,6 @@ export class DotNetProjectNugetPackage extends DotNetFile {
     public tryFosterChildren(): Promise<void> {
         return Promise.resolve();
     }
-
-    contextValue = "dotnet-solution-explorer.nuget-package";
 }
+
+
