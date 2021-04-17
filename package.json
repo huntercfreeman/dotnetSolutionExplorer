@@ -37,6 +37,10 @@
 				"title": "Hello World"
 			},
 			{
+				"command": "dotnet-solution-explorer.openNugetPackageManager",
+				"title": "Open Nuget Package Manager"
+			},
+			{
 				"command": "dotnet-solution-explorer.newProject",
 				"title": "New Project"
 			},
@@ -171,7 +175,7 @@
 				},
 				{
 					"when": "viewItem == dotnet-solution-explorer.project-nuget-package-list",
-					"command": "dotnet-solution-explorer.addNugetPackage",
+					"command": "dotnet-solution-explorer.openNugetPackageManager",
 					"group": "navigation"
 				}
 			],
