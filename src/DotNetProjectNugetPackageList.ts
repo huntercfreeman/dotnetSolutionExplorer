@@ -22,12 +22,6 @@ export class DotNetProjectNugetPackageList extends DotNetFile {
             light: path.join(__filename, '..', '..', 'resources', 'light', 'fileTxtIcon.svg'),
             dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileTxtIcon.svg')
         };
-
-        this.command = {
-            "command": "dotnet-solution-explorer.openFile",
-            "title": "open",
-            "arguments": [uri]
-        };
     }
 
     public static async createAsync(absolutePath: string, filename: string, parent: DotNetFile): Promise<DotNetFile> {
@@ -96,6 +90,8 @@ export class DotNetProjectNugetPackageList extends DotNetFile {
     public tryFosterChildren(): Promise<void> {
         return Promise.resolve();
     }
+
+    contextValue = "dotnet-solution-explorer.project-nuget-package-list";
 }
 
 

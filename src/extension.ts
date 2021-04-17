@@ -36,6 +36,9 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('dotnet-solution-explorer.helloWorld', () => {
 			vscode.window.showInputBox();
 		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.addNugetPackage', () => {
+			vscode.window.showInputBox();
+		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.removeProject', async (data: DotNetFileProject) => {
 			if(!data.parent) {
 				vscode.window.showErrorMessage("ERROR: DotNetFileProject's parent was null. Could not find .sln absolute path.");
