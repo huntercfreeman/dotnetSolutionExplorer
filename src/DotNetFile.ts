@@ -15,6 +15,22 @@ import * as vscode from 'vscode';
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export enum DotNetFileKind {
     cs,
     css,
@@ -27,7 +43,8 @@ export enum DotNetFileKind {
     cshtml,
     projectDependencies,
     referenceList,
-    projectReference
+    projectReference,
+    nugetPackage
 }
 
 export abstract class DotNetFile extends vscode.TreeItem {

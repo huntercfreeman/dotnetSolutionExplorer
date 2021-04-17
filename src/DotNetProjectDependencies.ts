@@ -6,7 +6,7 @@ import { DotNetFileTxt } from './DotNetFileTxt';
 import { DotNetProjectReferenceList } from './DotNetProjectReferenceList';
 import { DotNetProjectFrameworkList } from './DotNetProjectFrameworkList';
 import { DotNetProjectAnaylzerList } from './DotNetProjectAnaylzerList';
-import { DotNetProjectPackageList } from './DotNetProjectPackageList';
+import { DotNetProjectNugetPackageList } from './DotNetProjectNugetPackageList';
 
 export class DotNetProjectDependencies extends DotNetFile {
     private constructor(

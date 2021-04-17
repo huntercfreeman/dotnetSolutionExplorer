@@ -19,11 +19,11 @@ export class DotNetProjectReference extends DotNetFile {
             dark: path.join(__filename, '..', '..', 'resources', 'dark', 'fileTxtIcon.svg')
         };
 
-        this.command = {
-            "command": "dotnet-solution-explorer.openFile",
-            "title": "open",
-            "arguments": [uri]
-        };
+        // this.command = {
+        //     "command": "dotnet-solution-explorer.openFile",
+        //     "title": "open",
+        //     "arguments": [uri]
+        // };
     }
 
     public static async createAsync(absolutePath: string, filename: string, parent: DotNetFile): Promise<DotNetFile> {
