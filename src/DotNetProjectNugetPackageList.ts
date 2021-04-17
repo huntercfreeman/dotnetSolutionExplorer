@@ -78,8 +78,8 @@ export class DotNetProjectNugetPackageList extends DotNetFile {
                 let nugetPackage: any = projectNugetPackageObjects[i];
                 let dotNetFile: DotNetFile = await DotNetProjectNugetPackage.createAsync(this.absolutePath,
                     nugetPackage.include,
+                    nugetPackage.include,
                     nugetPackage.version,
-                    "Nuget Package",
                     this);
 
                 this.children.push(dotNetFile);

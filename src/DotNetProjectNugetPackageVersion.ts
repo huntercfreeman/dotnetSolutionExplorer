@@ -1,18 +1,12 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { DotNetFile, DotNetFileKind } from './DotNetFile';
-import { ProjectHelper } from './ProjectHelper';
-import { DotNetPathHelper } from './DotNetPathHelper';
-import { DotNetProjectNugetPackageVersion } from './DotNetProjectNugetPackageVersion';
-const fs = require('fs');
 
 
-export class DotNetProjectNugetPackage extends DotNetFile {
+export class DotNetProjectNugetPackageVersion extends DotNetFile {
     private constructor(
         public readonly absolutePath: string,
         public readonly filename: string,
-        public readonly include: string,
-        public readonly version: string,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly parent: DotNetFile
     ) {
@@ -32,8 +26,8 @@ export class DotNetProjectNugetPackage extends DotNetFile {
         // };
     }
 
-    public static async createAsync(absolutePath: string, filename: string, include: string, version: string, parent: DotNetFile): Promise<DotNetFile> {
-        return new DotNetProjectNugetPackage(absolutePath, filename, include, version, vscode.TreeItemCollapsibleState.Collapsed, parent);
+    public static async createAsync(absolutePath: string, filename: string, parent: DotNetFile): Promise<DotNetFile> {
+        return new DotNetProjectNugetPackageVersion(absolutePath, filename, vscode.TreeItemCollapsibleState.None, parent);
     }
 
     public async getChildren(): Promise<DotNetFile[]> {
@@ -43,7 +37,7 @@ export class DotNetProjectNugetPackage extends DotNetFile {
         else {
             this.children = [];
 
-            this.children.push(await DotNetProjectNugetPackageVersion.createAsync(this.absolutePath, this.version, this.parent));
+            this.children.push();
 
             return Promise.resolve(this.children);
         }
@@ -53,6 +47,5 @@ export class DotNetProjectNugetPackage extends DotNetFile {
         return Promise.resolve();
     }
 
-    contextValue = "dotnet-solution-explorer.nuget-package";
+    contextValue = "dotnet-solution-explorer.nuget-package-version";
 }
-
