@@ -172,11 +172,6 @@
 					"when": "viewItem == dotnet-solution-explorer.solution",
 					"command": "dotnet-solution-explorer.addExistingProject",
 					"group": "navigation"
-				},
-				{
-					"when": "viewItem == dotnet-solution-explorer.project-nuget-package-list",
-					"command": "dotnet-solution-explorer.openNugetPackageManager",
-					"group": "navigation"
 				}
 			],
 			"explorer/context": [

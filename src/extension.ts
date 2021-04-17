@@ -8,7 +8,6 @@ import { hasUncaughtExceptionCaptureCallback } from 'node:process';
 import { normalize } from 'node:path';
 import { DotNetFileSolution } from './DotNetFileSolution';
 import { DotNetFileProject } from './DotNetFileProject';
-import { NugetPackageManagerProvider } from './webviews/NugetPackageManagerProvider';
 
 const fs = require('fs');
 
@@ -34,18 +33,6 @@ export function activate(context: vscode.ExtensionContext) {
 			'dotnetSolutionExplorer',
 			solutionExplorerProvider
 		),
-		vscode.commands.registerCommand('dotnet-solution-explorer.openNugetPackageManager', () => {
-			const panel = vscode.window.createWebviewPanel(
-				'dnse_nuget-package-manager',
-				'Dotnet Nuget Package Manager',
-				vscode.ViewColumn.One,
-				{ enableScripts: true }
-			);
-
-			let nugetPackageManagerProvider: NugetPackageManagerProvider = new NugetPackageManagerProvider();
-				
-			panel.webview.html = nugetPackageManagerProvider.getWebviewContent();
-		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.helloWorld', () => {
 			vscode.window.showInputBox();
 		}),
