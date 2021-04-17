@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { DotNetFile, DotNetFileKind } from './DotNetFile';
+import { ProjectHelper } from './ProjectHelper';
 
+const fs = require('fs');
 
 export class DotNetProjectNugetPackageList extends DotNetFile {
     private constructor(
@@ -78,6 +80,40 @@ export class DotNetProjectNugetPackage extends DotNetFile {
         }
         else {
             this.children = [];
+
+            let projectFileContents: string = fs.readFileSync(this.absolutePath, { "encoding": "UTF-8" });
+
+            let projectNugetPackageStrings: string[] = ProjectHelper.extractNugetPackageReferences(projectFileContents);
+
+            let projectNugetPackageObjects: any = projectNugetPackageStrings.map(projectReference => {
+                var startOfInclude = projectReference.indexOf('\"');
+
+                let position: number = startOfInclude + 1;
+
+                let isolatedInclude = "";
+
+                while (position < projectReference.length && projectReference[position] !== '\"') {
+                    isolatedInclude += projectReference[position++];
+                }
+
+                var startOfInclude = (projectReference.substring(++position)).indexOf('\"');
+
+                position = startOfInclude += startOfInclude;
+
+                let isolatedVersion = "";
+
+                while (position < projectReference.length && projectReference[position] !== '\"') {
+                    isolatedVersion += projectReference[position++];
+                }
+
+                return {
+                    "include": isolatedInclude,
+                    "version": isolatedVersion
+                };
+            });
+
+
+
             return Promise.resolve(this.children);
         }
     }

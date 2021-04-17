@@ -4,10 +4,10 @@ import { DotNetFile, DotNetFileKind } from './DotNetFile';
 import { DotNetFileHelper } from './DotNetFileHelper';
 import { DotNetPathHelper } from './DotNetPathHelper';
 import { ProjectHelper } from './ProjectHelper';
-const fs = require('fs');
 import { DotNetProjectDependencies } from './DotNetProjectDependencies';
 import { DotNetProjectReference } from './DotNetProjectReference';
 
+const fs = require('fs');
 
 export class DotNetProjectReferenceList extends DotNetFile {
     private constructor(
@@ -42,6 +42,7 @@ export class DotNetProjectReferenceList extends DotNetFile {
             let projectFileContents: string = fs.readFileSync(this.absolutePath, { "encoding": "UTF-8" });
 
             let projectReferences: string[] = ProjectHelper.extractProjectReferences(projectFileContents);
+            
             projectReferences = projectReferences.map(projectReference => {
                 var startOfAbsolutePath = projectReference.indexOf('\"');
 

@@ -258,4 +258,58 @@ export class ProjectHelper {
 
         return projectReferencesArray;
     }
+
+    public static extractNugetPackageReferences(exactProjectText: string): string[] {
+        let position: number = 0;
+
+        let projectReferenceString = "PackageReference";
+
+        let peekSubstring = (peekToIndex: number) => {
+            if (position >= exactProjectText.length) {
+                return '\0';
+            }
+
+            if (peekToIndex > exactProjectText.length) {
+                peekToIndex = exactProjectText.length;
+            }
+
+            return exactProjectText.substring(position, peekToIndex);
+        };
+
+        let currentChar = () => {
+            return peekSubstring(position + 1);
+        };
+
+        let projectReferencesArray: string[] = [];
+
+        while (currentChar() !== '\0') {
+            switch (currentChar()) {
+                case 'P':
+                    let peekedString = peekSubstring(position + projectReferenceString.length);
+                    if(peekedString === projectReferenceString)
+                    {
+                        position += projectReferenceString.length;
+                        let projectReference: string = "";
+
+                        while(peekSubstring(position + 2) !== '/>')
+                        {
+                            projectReference += currentChar();
+                            position++;
+                        }
+
+                        projectReferencesArray.push(projectReference);
+                    }
+                    else
+                    {
+                        position += 1;
+                    }
+                    break;
+                default:
+                    position += 1;
+                    break;
+            }
+        }
+
+        return projectReferencesArray;
+    }
 }
