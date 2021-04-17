@@ -6,6 +6,8 @@ List of features (unordered)
 <ul>
     <li>Add Existing Project</li>
     <li>Add New Project</li>
+    <li>Remove Project from Solution</li>
+    <li>View all referenced nuget packages and their versions</li>
     <li>Add Project Reference</li>
     <li>Remove Project Reference</li>
     <li>Auto namespace generation when making new file</li>

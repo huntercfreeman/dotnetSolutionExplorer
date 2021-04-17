@@ -20,7 +20,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 <li>Added 'Add Project Reference' to .csproj dependencies context menu</li>
 <li>Added 'Remove Project Reference' to .csproj dependency item context menu</li>
 </ol>
-    
+-Version 1.2.2:
+<ol>
+<li>Added ability to remove a project from a solution using the 'Remove Project' context menu option on the .sln</li>
+<li>View all referenced nuget packages and their versions. This is found by expanding a project and then expanding its dependencies then the packages.</li>
+</ol>
     
 
     
