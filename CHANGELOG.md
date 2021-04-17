@@ -25,6 +25,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 <li>Added ability to remove a project from a solution using the 'Remove Project' context menu option on the .sln</li>
 <li>View all referenced nuget packages and their versions. This is found by expanding a project and then expanding its dependencies then the packages.</li>
 </ol>
-    
+-Version 1.2.3:
+<ol>
+<li>Normalized routes to use '/' file delimiter in the dotnet command when removing a project</li>
+</ol>
 
     
