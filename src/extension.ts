@@ -37,14 +37,41 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showInputBox();
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.removeProject', async (data: DotNetFileProject) => {
+			if(!data.parent) {
+				vscode.window.showErrorMessage("ERROR: DotNetFileProject's parent was null. Could not find .sln absolute path.");
+				return;
+			}
+
 			let inputBoxOptions: vscode.InputBoxOptions = {
-				placeHolder: `Enter 'yes' to delete ${data.filename}`
+				placeHolder: `Enter 'yes' to remove ${data.filename} from the .sln`
 			};
 
 			let inputBoxResponse = await vscode.window.showInputBox(inputBoxOptions);
 
-			if(inputBoxResponse === "yes") {
-				vscode.window.showInformationMessage(`Project ${data.filename} removed from .sln`);
+			if (inputBoxResponse === "yes") {
+				let cmd = `dotnet sln ${data.parent.absolutePath} remove ${data.absolutePath}`;
+
+				let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
+
+				if (!activeTerminal) {
+					let terminals = vscode.window.terminals;
+
+					if (terminals.length !== 0) {
+						activeTerminal = terminals[0];
+					}
+				}
+
+				if (!activeTerminal) {
+					vscode.window.showErrorMessage("ERROR: could not access an integrated terminal check the " +
+						"information message for the command to run it yourself");
+
+					vscode.window.showInformationMessage(cmd);
+					return;
+				}
+				else {
+					activeTerminal.show();
+					activeTerminal.sendText(cmd, false);
+				}
 			}
 			else {
 				vscode.window.showInformationMessage('Action was cancelled by user');
