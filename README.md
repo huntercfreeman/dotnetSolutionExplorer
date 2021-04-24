@@ -71,7 +71,7 @@ The result was:
 
 I purposefully go out of my way to not run any commands for you. I am under the belief that users first don't want me running random things in their terminal. And second if I run the command then you cannot alter it if you want to customize something.
 
-You'll notice that I figured out how to put the command immediately into the console at some point and as such started doing so. I intend to standardize this (so that all commands do not appear as a notification but instead appear in your console ready to be ran with an enter key press). I need time to standardize this however and may prioritize other features.
+You'll notice that I figured out how to put the command immediately into the console at some point and as such started doing so. I standardized this so all commands now either appear in the integrated terminal if one is open or as a notification to allow external terminal usage.
 
 ![stepEleven](https://raw.githubusercontent.com/huntercfreeman/dotnetSolutionExplorer/main/markdownImages/stepEleven.png)
 
