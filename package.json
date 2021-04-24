@@ -25,6 +25,11 @@
 		},
 		"commands": [
 			{
+				"command": "catCoding.start",
+				"title": "Start new cat coding session",
+				"category": "Cat Coding"
+			},
+			{
 				"command": "dotnet-solution-explorer.refreshEntry",
 				"title": "Refresh",
 				"icon": {

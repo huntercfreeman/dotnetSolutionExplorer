@@ -8,6 +8,7 @@ import { hasUncaughtExceptionCaptureCallback } from 'node:process';
 import { normalize } from 'node:path';
 import { DotNetFileSolution } from './DotNetFileSolution';
 import { DotNetFileProject } from './DotNetFileProject';
+import { NugetPackageManagerProvider } from './webviews/NugetPackageManagerProvider';
 
 const fs = require('fs');
 
@@ -28,7 +29,23 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let solutionExplorerProvider: DotNetSolutionExplorerProvider = new DotNetSolutionExplorerProvider(workspaceFolderAbsolutePath ?? "");
 
+	let nugetPackageManagerPanel: vscode.WebviewPanel | undefined = undefined;
+	let nugetPackageManagerProvider: NugetPackageManagerProvider | undefined = undefined;
+
 	context.subscriptions.push(
+		vscode.commands.registerCommand('catCoding.start', () => {
+			// Create and show a new webview
+			const panel = vscode.window.createWebviewPanel(
+				'catCoding', // Identifies the type of the webview. Used internally
+				'Cat Coding', // Title of the panel displayed to the user
+				vscode.ViewColumn.One, // Editor column to show the new webview panel in.
+				{} // Webview options. More on these later.
+			);
+			
+			let catCodingProvider = new CatCodingProvider();
+
+			panel.webview.html = catCodingProvider.getWebviewContent();
+		}),
 		vscode.window.registerTreeDataProvider(
 			'dotnetSolutionExplorer',
 			solutionExplorerProvider
