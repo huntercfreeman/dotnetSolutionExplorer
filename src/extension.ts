@@ -33,18 +33,38 @@ export function activate(context: vscode.ExtensionContext) {
 	let nugetPackageManagerProvider: NugetPackageManagerProvider | undefined = undefined;
 
 	context.subscriptions.push(
-		vscode.commands.registerCommand('catCoding.start', () => {
-			// Create and show a new webview
-			const panel = vscode.window.createWebviewPanel(
-				'catCoding', // Identifies the type of the webview. Used internally
-				'Cat Coding', // Title of the panel displayed to the user
-				vscode.ViewColumn.One, // Editor column to show the new webview panel in.
-				{} // Webview options. More on these later.
-			);
-			
-			let catCodingProvider = new CatCodingProvider();
+		vscode.commands.registerCommand('dotnet-solution-explorer.openNugetPackageManager', () => {
+			const columnToShowIn = vscode.window.activeTextEditor
+				? vscode.window.activeTextEditor.viewColumn
+				: undefined;
 
-			panel.webview.html = catCodingProvider.getWebviewContent();
+			if (nugetPackageManagerPanel) {
+				nugetPackageManagerPanel.reveal(columnToShowIn);
+			}
+			else {
+				nugetPackageManagerPanel = vscode.window.createWebviewPanel(
+					'nugetPackageManager',
+					'Nuget Package Manager',
+					vscode.ViewColumn.One,
+					{ enableScripts: true }
+				);
+	
+				nugetPackageManagerProvider = new NugetPackageManagerProvider();
+	
+				nugetPackageManagerPanel.webview.html = nugetPackageManagerProvider.getWebviewContent();
+
+				nugetPackageManagerPanel.webview.onDidReceiveMessage(
+					message => {
+					  switch (message.command) {
+						case 'increment':
+						  vscode.window.showInformationMessage(message.text);
+						  return;
+					  }
+					},
+					undefined,
+					context.subscriptions
+				  );
+			}
 		}),
 		vscode.window.registerTreeDataProvider(
 			'dotnetSolutionExplorer',

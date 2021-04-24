@@ -25,9 +25,9 @@
 		},
 		"commands": [
 			{
-				"command": "catCoding.start",
-				"title": "Start new cat coding session",
-				"category": "Cat Coding"
+				"command": "dotnet-solution-explorer.openNugetPackageManager",
+				"title": "Open Nuget Package Manager",
+				"category": "Nuget Package Manager"
 			},
 			{
 				"command": "dotnet-solution-explorer.refreshEntry",
