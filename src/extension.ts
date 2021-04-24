@@ -57,27 +57,7 @@ export function activate(context: vscode.ExtensionContext) {
 			if (inputBoxResponse === "yes") {
 				let cmd = `dotnet sln ${slnNormalizedAbsolutePath} remove ${projectNormalizedAbsolutePath}`;
 
-				let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
-
-				if (!activeTerminal) {
-					let terminals = vscode.window.terminals;
-
-					if (terminals.length !== 0) {
-						activeTerminal = terminals[0];
-					}
-				}
-
-				if (!activeTerminal) {
-					vscode.window.showErrorMessage("ERROR: could not access an integrated terminal check the " +
-						"information message for the command to run it yourself");
-
-					vscode.window.showInformationMessage(cmd);
-					return;
-				}
-				else {
-					activeTerminal.show();
-					activeTerminal.sendText(cmd, false);
-				}
+				showUserCommand(cmd);
 			}
 			else {
 				vscode.window.showInformationMessage('Action was cancelled by user');
@@ -99,14 +79,14 @@ export function activate(context: vscode.ExtensionContext) {
 			let cmd = `dotnet new ${selectedTemplate} -o ${projectName} && `;
 			cmd += `dotnet sln ${slnNormalizedAbsolutePath} add ${projectName}`;
 
-			vscode.window.showInformationMessage("Run this command: " + cmd);
+			showUserCommand(cmd);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.addExistingProject', async (sln: DotNetFileSolution) => {
 			let slnNormalizedAbsolutePath = sln.absolutePath.replace(/\\/g, "/");
 
 			let chosenFile: vscode.Uri[] | undefined = await vscode.window.showOpenDialog();
 
-			if (!chosenFile || chosenFile.length > 1) {
+			if (!chosenFile || chosenFile.length > 1 || !chosenFile[0].fsPath.endsWith(".csproj")) {
 				vscode.window.showErrorMessage("ERROR: User did not select a valid file");
 				return;
 			}
@@ -115,27 +95,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			let cmd = `dotnet sln ${slnNormalizedAbsolutePath} add ${referenceNormalizedAbsolutePath}`;
 
-			let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
-
-			if (!activeTerminal) {
-				let terminals = vscode.window.terminals;
-
-				if (terminals.length !== 0) {
-					activeTerminal = terminals[0];
-				}
-			}
-
-			if (!activeTerminal) {
-				vscode.window.showErrorMessage("ERROR: could not access an integrated terminal check the " +
-					"information message for the command to run it yourself");
-
-				vscode.window.showInformationMessage(cmd);
-				return;
-			}
-			else {
-				activeTerminal.show();
-				activeTerminal.sendText(cmd, false);
-			}
+			showUserCommand(cmd);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.removeProjectReference', (data: DotNetFile) => {
 			if (data.parent) {
@@ -144,27 +104,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 				let cmd = `dotnet remove ${projectNormalizedAbsolutePath} reference ${referenceNormalizedAbsolutePath}`;
 
-				let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
-
-				if (!activeTerminal) {
-					let terminals = vscode.window.terminals;
-
-					if (terminals.length !== 0) {
-						activeTerminal = terminals[0];
-					}
-				}
-
-				if (!activeTerminal) {
-					vscode.window.showErrorMessage("ERROR: could not access an integrated terminal check the " +
-						"information message for the command to run it yourself");
-
-					vscode.window.showInformationMessage(cmd);
-					return;
-				}
-				else {
-					activeTerminal.show();
-					activeTerminal.sendText(cmd, false);
-				}
+				showUserCommand(cmd);
 			}
 			else {
 				vscode.window.showErrorMessage("ERROR: The absolute path of the .csproj could not be found.");
@@ -184,27 +124,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			let cmd = `dotnet add ${projectNormalizedAbsolutePath} reference ${referenceNormalizedAbsolutePath}`;
 
-			let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
-
-			if (!activeTerminal) {
-				let terminals = vscode.window.terminals;
-
-				if (terminals.length !== 0) {
-					activeTerminal = terminals[0];
-				}
-			}
-
-			if (!activeTerminal) {
-				vscode.window.showErrorMessage("ERROR: could not access an integrated terminal check the " +
-					"information message for the command to run it yourself");
-
-				vscode.window.showInformationMessage(cmd);
-				return;
-			}
-			else {
-				activeTerminal.show();
-				activeTerminal.sendText(cmd, false);
-			}
+			showUserCommand(cmd);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.refreshEntry', (e: any) =>
 			solutionExplorerProvider.refresh(e)
@@ -446,6 +366,30 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() { }
+
+function showUserCommand(cmd: string): void {
+	let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
+
+	if (!activeTerminal) {
+		let terminals = vscode.window.terminals;
+
+		if (terminals.length !== 0) {
+			activeTerminal = terminals[0];
+		}
+	}
+
+	if (!activeTerminal) {
+		vscode.window.showErrorMessage("ERROR: could not access an integrated terminal check the " +
+			"information message for the command to run it yourself");
+
+		vscode.window.showInformationMessage(cmd);
+		return;
+	}
+	else {
+		activeTerminal.show();
+		activeTerminal.sendText(cmd, false);
+	}
+}
 
 async function deleteFile(data: DotNetFile, solutionExplorerProvider: DotNetSolutionExplorerProvider): Promise<void> {
 	let children = await data.getChildren();
