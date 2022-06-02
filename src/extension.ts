@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
 import { uuid } from 'uuidv4';
-import { CopyState } from './CopyState';
-import { DotNetFile } from './DotNetFile';
-import { DotNetPathHelper } from './DotNetPathHelper';
-import { DotNetSolutionExplorerProvider } from './DotNetSolutionExplorerProvider';
+import { CopyState } from './Models/CopyStateModel';
+import { FileBase } from './Files/FileBase';
+import { FilePathParser } from './Parsers/FilePathParser';
 import { hasUncaughtExceptionCaptureCallback } from 'node:process';
 import { normalize } from 'node:path';
-import { DotNetFileSolution } from './DotNetFileSolution';
-import { DotNetFileProject } from './DotNetFileProject';
-import { DotNetSolutionExplorerWebview } from './DotNetSolutionExplorerWebViewProvider';
+import { SolutionFile } from './Files/DotNet/SolutionFile';
+import { ProjectFile } from './Files/DotNet/CSharp/ProjectFile';
+import { NugetPackageManagerWebview } from './Providers/NugetPackageManagerWebview';
+import { SolutionExplorerTreeView } from './Providers/SolutionExplorerTreeView';
 
 const fs = require('fs');
 
@@ -22,7 +22,7 @@ const crossWidgetCommunicationTest: CrossWidgetCommunicationTest =
 
 export function activate(context: vscode.ExtensionContext) {
 	const sidebarProvider = 
-		new DotNetSolutionExplorerWebview(context.extensionUri, 
+		new NugetPackageManagerWebview(context.extensionUri, 
 			context, 
 			crossWidgetCommunicationTest);
 
@@ -47,7 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
 		workspaceFolderAbsolutePath = workspaceFolderFsPaths[0];
 	}
 
-	let solutionExplorerProvider: DotNetSolutionExplorerProvider = new DotNetSolutionExplorerProvider(workspaceFolderAbsolutePath ?? "");
+	let solutionExplorerProvider: SolutionExplorerTreeView = new SolutionExplorerTreeView(workspaceFolderAbsolutePath ?? "");
 
 	context.subscriptions.push(
 		vscode.window.registerTreeDataProvider(
@@ -60,9 +60,9 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('dotnet-solution-explorer.addNugetPackage', () => {
 			vscode.window.showInputBox();
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.removeProject', async (data: DotNetFileProject) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.removeProject', async (data: ProjectFile) => {
 			if (!data.parent) {
-				vscode.window.showErrorMessage("ERROR: DotNetFileProject's parent was null. Could not find .sln absolute path.");
+				vscode.window.showErrorMessage("ERROR: FileBaseProject's parent was null. Could not find .sln absolute path.");
 				return;
 			}
 
@@ -84,7 +84,7 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showInformationMessage('Action was cancelled by user');
 			}
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.newProject', async (sln: DotNetFileSolution) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.newProject', async (sln: SolutionFile) => {
 			let slnNormalizedAbsolutePath = sln.absolutePath.replace(/\\/g, "/");
 
 			let templateInputOptions: vscode.InputBoxOptions = {
@@ -102,7 +102,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			showUserCommand(cmd);
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.addExistingProject', async (sln: DotNetFileSolution) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.addExistingProject', async (sln: SolutionFile) => {
 			let slnNormalizedAbsolutePath = sln.absolutePath.replace(/\\/g, "/");
 
 			let chosenFile: vscode.Uri[] | undefined = await vscode.window.showOpenDialog();
@@ -118,7 +118,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			showUserCommand(cmd);
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.removeProjectReference', (data: DotNetFile) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.removeProjectReference', (data: FileBase) => {
 			if (data.parent) {
 				let projectNormalizedAbsolutePath = data.parent.absolutePath.replace(/\\/g, "/");
 				let referenceNormalizedAbsolutePath = data.absolutePath.replace(/\\/g, "/");
@@ -131,7 +131,7 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showErrorMessage("ERROR: The absolute path of the .csproj could not be found.");
 			}
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.addProjectReference', async (data: DotNetFile) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.addProjectReference', async (data: FileBase) => {
 			let projectNormalizedAbsolutePath = data.absolutePath.replace(/\\/g, "/");
 
 			let chosenFile: vscode.Uri[] | undefined = await vscode.window.showOpenDialog();
@@ -150,14 +150,14 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('dotnet-solution-explorer.refreshEntry', (e: any) =>
 			solutionExplorerProvider.refresh(e)
 		),
-		vscode.commands.registerCommand('dotnet-solution-explorer.addDirectory', async (data: DotNetFile) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.addDirectory', async (data: FileBase) => {
 			let absolutePathToAddFileTo: string = data.absolutePath;
 
 			if (data.filename.endsWith(".csproj")) {
 				absolutePathToAddFileTo = absolutePathToAddFileTo.replace(data.filename, "");
 			}
 			else {
-				let fileDelimiter = DotNetPathHelper.extractFileDelimiter(data.absolutePath);
+				let fileDelimiter = FilePathParser.extractFileDelimiter(data.absolutePath);
 				absolutePathToAddFileTo += fileDelimiter;
 			}
 
@@ -181,16 +181,16 @@ export function activate(context: vscode.ExtensionContext) {
 
 			solutionExplorerProvider.refresh(data);
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.copy', (data: DotNetFile) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.copy', (data: FileBase) => {
 			clipboard.copy(data.absolutePath);
 			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.cut', (data: DotNetFile) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.cut', (data: FileBase) => {
 			clipboard.cut(data.absolutePath);
 			vscode.window.showInformationMessage(`Cut: ${data.absolutePath} to virtual clipboard`);
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.deleteFile', (data: DotNetFile) => deleteFile(data, solutionExplorerProvider)),
-		vscode.commands.registerCommand('dotnet-solution-explorer.deleteDirectory', async (data: DotNetFile) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.deleteFile', (data: FileBase) => deleteFile(data, solutionExplorerProvider)),
+		vscode.commands.registerCommand('dotnet-solution-explorer.deleteDirectory', async (data: FileBase) => {
 			const edit = new vscode.WorkspaceEdit();
 
 			let fileUri = vscode.Uri.file(data.absolutePath);
@@ -205,10 +205,10 @@ export function activate(context: vscode.ExtensionContext) {
 				solutionExplorerProvider.refresh(data.parent);
 			}
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.paste', async (data: DotNetFile) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.paste', async (data: FileBase) => {
 			let clipboardObject: any = clipboard.readClipboard();
 
-			let clipboardItemFileName: string = DotNetPathHelper.extractFileName(clipboardObject.absolutePath);
+			let clipboardItemFileName: string = FilePathParser.extractFileName(clipboardObject.absolutePath);
 
 			let absolutePathToAddFileTo: string = data.absolutePath;
 
@@ -216,7 +216,7 @@ export function activate(context: vscode.ExtensionContext) {
 				absolutePathToAddFileTo.replace(data.filename, "");
 			}
 			else {
-				let fileDelimiter = DotNetPathHelper.extractFileDelimiter(data.absolutePath);
+				let fileDelimiter = FilePathParser.extractFileDelimiter(data.absolutePath);
 				absolutePathToAddFileTo += fileDelimiter;
 			}
 
@@ -229,7 +229,7 @@ export function activate(context: vscode.ExtensionContext) {
 					clipboardItemFileName;
 			}
 			else {
-				let extension = DotNetPathHelper.extractExtension(clipboardItemFileName);
+				let extension = FilePathParser.extractExtension(clipboardItemFileName);
 
 				let filenameNoExtension = clipboardItemFileName.replace(extension, "");
 
@@ -290,7 +290,7 @@ export function activate(context: vscode.ExtensionContext) {
 				debugger;
 			});
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.addFile', async (data: DotNetFile) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.addFile', async (data: FileBase) => {
 
 			let absolutePathToAddFileTo: string = data.absolutePath;
 
@@ -298,7 +298,7 @@ export function activate(context: vscode.ExtensionContext) {
 				absolutePathToAddFileTo = absolutePathToAddFileTo.replace(data.filename, "");
 			}
 			else {
-				let fileDelimiter = DotNetPathHelper.extractFileDelimiter(data.absolutePath);
+				let fileDelimiter = FilePathParser.extractFileDelimiter(data.absolutePath);
 				absolutePathToAddFileTo += fileDelimiter;
 			}
 
@@ -335,7 +335,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			solutionExplorerProvider.refresh(data);
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.addBlazorComponent', async (data: DotNetFile) => {
+		vscode.commands.registerCommand('dotnet-solution-explorer.addBlazorComponent', async (data: FileBase) => {
 
 			let absolutePathToAddFileTo: string = data.absolutePath;
 
@@ -343,7 +343,7 @@ export function activate(context: vscode.ExtensionContext) {
 				absolutePathToAddFileTo = absolutePathToAddFileTo.replace(data.filename, "");
 			}
 			else {
-				let fileDelimiter = DotNetPathHelper.extractFileDelimiter(data.absolutePath);
+				let fileDelimiter = FilePathParser.extractFileDelimiter(data.absolutePath);
 				absolutePathToAddFileTo += fileDelimiter;
 			}
 
@@ -412,7 +412,7 @@ function showUserCommand(cmd: string): void {
 	}
 }
 
-async function deleteFile(data: DotNetFile, solutionExplorerProvider: DotNetSolutionExplorerProvider): Promise<void> {
+async function deleteFile(data: FileBase, solutionExplorerProvider: SolutionExplorerTreeView): Promise<void> {
 	let children = await data.getChildren();
 	let childDeleteCounter: number = 0;
 

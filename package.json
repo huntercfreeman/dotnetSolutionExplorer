@@ -114,6 +114,10 @@
 				"title": "Remove Project Reference"
 			},
 			{
+				"command": "dotnet-solution-explorer.removeNugetPackageReference",
+				"title": "Remove Nuget Package Reference"
+			},
+			{
 				"command": "dotnet-solution-explorer.addNugetPackage",
 				"title": "Add Nuget Package"
 			}
@@ -178,6 +182,11 @@
 				{
 					"when": "viewItem == dotnet-solution-explorer.project-reference-list",
 					"command": "dotnet-solution-explorer.addProjectReference",
+					"group": "navigation"
+				},
+				{
+					"when": "viewItem == dotnet-solution-explorer.nuget-package",
+					"command": "dotnet-solution-explorer.removeNugetPackageReference",
 					"group": "navigation"
 				},
 				{
