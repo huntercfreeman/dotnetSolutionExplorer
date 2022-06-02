@@ -11,18 +11,30 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onView:dotnetSolutionExplorer"
+		"onView:dotnet-solution-explorer.webview"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-		"views": {
-			"explorer": [
-				{
-					"id": "dotnetSolutionExplorer",
-					"name": "dotnet Solution Explorer"
-				}
+		"viewsContainers": {
+			"activitybar": [
+			  {
+				"id": "dotnet-solution-explorer",
+				"title": ".NET Solution Explorer",
+				"icon": "media/dotNetSolutionExplorerIcon.svg"
+			  }
 			]
-		},
+		  },
+		  "views": {
+			"dotnet-solution-explorer": [
+			  {
+				"type": "webview",
+				"id": "dotnet-solution-explorer.webview",
+				"name": ".NET Solution Explorer",
+				"icon": "media/dotNetSolutionExplorerIcon.svg",
+				"contextualTitle": ".NET Solution Explorer"
+			  }
+			]
+		  },
 		"commands": [
 			{
 				"command": "dotnet-solution-explorer.refreshEntry",
@@ -202,9 +214,18 @@
 		"glob": "^7.1.6",
 		"mocha": "^8.2.1",
 		"typescript": "^4.1.3",
-		"vscode-test": "^1.5.0"
+		"vscode-test": "^1.5.0",
+		"@rollup/plugin-commonjs": "^17.0.0",
+		"@rollup/plugin-node-resolve": "^11.0.0",
+		"rollup": "^2.3.4",
+		"rollup-plugin-css-only": "^3.1.0",
+		"rollup-plugin-livereload": "^2.0.0",
+		"rollup-plugin-svelte": "^7.0.0",
+		"rollup-plugin-terser": "^7.0.0",
+		"svelte": "^3.0.0"
 	},
 	"dependencies": {
-		"uuidv4": "^6.2.7"
+		"uuidv4": "^6.2.7",
+		"sirv-cli": "^2.0.0"
 	}
 }

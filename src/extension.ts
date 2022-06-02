@@ -8,10 +8,19 @@ import { hasUncaughtExceptionCaptureCallback } from 'node:process';
 import { normalize } from 'node:path';
 import { DotNetFileSolution } from './DotNetFileSolution';
 import { DotNetFileProject } from './DotNetFileProject';
+import { DotNetSolutionExplorerWebview } from './DotNetSolutionExplorerWebViewProvider';
 
 const fs = require('fs');
 
 export function activate(context: vscode.ExtensionContext) {
+	const sidebarProvider = new DotNetSolutionExplorerWebview(context.extensionUri);
+	context.subscriptions.push(
+		vscode.window.registerWebviewViewProvider(
+		"dotnet-solution-explorer.webview",
+		sidebarProvider
+		)
+	);
+	
 	let clipboard: CopyState = new CopyState();
 
 	let workspaceFolderAbsolutePath;
@@ -460,3 +469,4 @@ namespace ${namespace}
 
 `;
 }
+
