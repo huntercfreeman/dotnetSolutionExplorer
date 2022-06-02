@@ -13,7 +13,9 @@ import { DotNetSolutionExplorerWebview } from './DotNetSolutionExplorerWebViewPr
 const fs = require('fs');
 
 export function activate(context: vscode.ExtensionContext) {
-	const sidebarProvider = new DotNetSolutionExplorerWebview(context.extensionUri);
+	const sidebarProvider = 
+		new DotNetSolutionExplorerWebview(context.extensionUri, context);
+		
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(
 		"dotnet-solution-explorer.webview",
