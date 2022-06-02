@@ -9,6 +9,8 @@ import { DotNetFileDirectory } from './DotNetFileDirectory';
 import { DotNetFileJson } from './DotNetFileJson';
 import { DotNetFileCs } from './DotNetFileCs';
 import { DotNetFileCshtml } from './DotNetFileCshtml';
+import { isDir } from './utility';
+import { DotNetFileMarkdown } from './DotNetFileMarkdown';
 
 export class DotNetFileFactory {
     private constructor(
@@ -67,6 +69,14 @@ export class DotNetFileFactory {
                 throw new Error(".json requires a parent");
             }
         }
+        if (filename.endsWith(".md")) {
+            if (parent) {
+                return await DotNetFileMarkdown.createAsync(absolutePath, filename, parent);
+            }
+            else {
+                throw new Error(".md requires a parent");
+            }
+        }
         if (filename.includes(".")) {
             if (parent) {
                 return await DotNetFileTxt.createAsync(absolutePath, filename, parent);
@@ -77,7 +87,17 @@ export class DotNetFileFactory {
         }
 
         if(filename !== "bin" && filename !== "obj") {
-            return await DotNetFileDirectory.createAsync(absolutePath, filename, parent);
+            if(isDir(absolutePath)) {
+                return await DotNetFileDirectory.createAsync(absolutePath, filename, parent);
+            } 
+            else {
+                if (parent) {
+                    return await DotNetFileTxt.createAsync(absolutePath, filename, parent);
+                }
+                else {
+                    throw new Error(".txt file requires a parent");
+                }
+            }
         }
 
         return Promise.resolve(undefined);
