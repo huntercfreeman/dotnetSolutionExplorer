@@ -3,7 +3,6 @@ import * as path from 'path';
 import { FileBase } from '../FileBase';
 import { FileBaseKind } from "../FileBaseKind";
 
-
 export class CssFile extends FileBase {
     private constructor(
         public readonly absolutePath: string,
