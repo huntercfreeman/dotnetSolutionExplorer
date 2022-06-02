@@ -12,10 +12,20 @@ import { DotNetSolutionExplorerWebview } from './DotNetSolutionExplorerWebViewPr
 
 const fs = require('fs');
 
+export class CrossWidgetCommunicationTest {
+	constructor(public numericValue: number) {
+	}
+}
+
+const crossWidgetCommunicationTest: CrossWidgetCommunicationTest = 
+	new CrossWidgetCommunicationTest(41951);
+
 export function activate(context: vscode.ExtensionContext) {
 	const sidebarProvider = 
-		new DotNetSolutionExplorerWebview(context.extensionUri, context);
-		
+		new DotNetSolutionExplorerWebview(context.extensionUri, 
+			context, 
+			crossWidgetCommunicationTest);
+
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(
 		"dotnet-solution-explorer.webview",

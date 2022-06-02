@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce, isDir } from "./utility";
+import { CrossWidgetCommunicationTest } from "./extension";
 
 export class DotNetSolutionExplorerWebview implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
@@ -7,7 +8,8 @@ export class DotNetSolutionExplorerWebview implements vscode.WebviewViewProvider
 
   constructor(
 	  private readonly _extensionUri: vscode.Uri,
-	  private readonly context: vscode.ExtensionContext
+	  private readonly context: vscode.ExtensionContext,
+	  private readonly crossWidgetCommunicationTest: CrossWidgetCommunicationTest
 	  ) {}
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
@@ -21,6 +23,16 @@ export class DotNetSolutionExplorerWebview implements vscode.WebviewViewProvider
     };
 
     webviewView.webview.html = this.getWebviewContent(webviewView.webview);
+
+	webviewView.webview.onDidReceiveMessage(async (data) => {
+		switch (data.command) {
+		  case "showMessage": {
+			const y = await vscode.window.showInformationMessage(
+			  `Cheese`);
+			break;
+		  }
+		}
+	  });
   }
 
   public revive(panel: vscode.WebviewView) {
@@ -39,9 +51,11 @@ export class DotNetSolutionExplorerWebview implements vscode.WebviewViewProvider
 	  <meta charset="UTF-8">
 	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	  <title>Cat Coding</title>
+	  <script nonce="${nonce}">
+		const tsVscode = acquireVsCodeApi();
+	</script>
   </head>
   <body>
-	  <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
 	  <script nonce="${nonce}" src="${scriptUri}"></script>
   </body>
   </html>`;
@@ -81,10 +95,10 @@ export class DotNetSolutionExplorerWebview implements vscode.WebviewViewProvider
         <link href="${styleMainUri}" rel="stylesheet">
         <script nonce="${nonce}">
             const tsvscode = acquireVsCodeApi();
+            const crossWidgetCommunicationTest = ${this.crossWidgetCommunicationTest.numericValue};
         </script>
 			</head>
       <body>
-	  	<h1>Test Hello World!</h1>
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
 			</html>`;

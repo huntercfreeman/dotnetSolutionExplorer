@@ -3,6 +3,11 @@
 	
 	function handleClick() {
 		count += 1;
+
+        tsVscode.postMessage({
+            command: 'showMessage',
+            text: 'stuff'
+        });
 	}
 </script>
 
