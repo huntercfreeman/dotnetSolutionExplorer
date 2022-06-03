@@ -42,7 +42,7 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
 
   private getWebviewContent(webview: vscode.Webview) {
 	const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(
-		this.context.extensionUri, 'out/compiled', 'SolutionExplorer.js'));
+		this.context.extensionUri, 'out/compiled', 'NugetPackageManager.js'));
 
 		const nonce = getNonce();
 
