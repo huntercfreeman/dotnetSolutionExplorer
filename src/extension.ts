@@ -10,6 +10,9 @@ import { ProjectFile } from './Files/DotNet/CSharp/ProjectFile';
 import { NugetPackageManagerWebview } from './Providers/NugetPackageManagerWebview';
 import { SolutionExplorerControlsWebview } from './Providers/SolutionExplorerControlsWebview';
 import { SolutionExplorerTreeView } from './Providers/SolutionExplorerTreeView';
+import { razorMarkupFileTemplate } from './Templates/razorMarkupFileTemplate';
+import { razorCodebehindFileTemplate } from './Templates/razorCodebehindFileTemplate';
+import { csFileTemplate } from './Templates/csFileTemplate';
 
 const fs = require('fs');
 
@@ -402,48 +405,6 @@ async function deleteFile(data: FileBase, solutionExplorerProvider: SolutionExpl
 	}
 
 	return Promise.resolve();
-}
-
-function razorMarkupFileTemplate(filename: string): string {
-	return `<h3>${filename.replace(".razor", "")}</h3>
-
-@code {
-	
-}
-`;
-}
-
-function razorCodebehindFileTemplate(filename: string, namespace: string): string {
-	return `using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
-
-namespace ${namespace}
-{
-    public partial class ${filename.replace(".razor.cs", "")} : ComponentBase
-    {
-    }
-}
-
-`;
-}
-
-function csFileTemplate(filename: string, namespace: string): string {
-	return `using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ${namespace}
-{
-    public class ${filename.replace(".cs", "")}
-    {
-    }
-}
-
-`;
 }
 
 function constructSolutionExplorerTreeView(context: vscode.ExtensionContext): SolutionExplorerTreeView {
