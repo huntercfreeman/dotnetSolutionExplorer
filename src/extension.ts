@@ -354,7 +354,7 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 
 			let inputBoxOptions: vscode.InputBoxOptions = {
-				placeHolder: "Enter component name no extension"
+				placeHolder: "Enter component name (without extension)."
 			};
 
 			let componentName = await vscode.window.showInputBox(inputBoxOptions);
@@ -362,6 +362,8 @@ export function activate(context: vscode.ExtensionContext) {
 			if (!componentName) {
 				return;
 			}
+
+			componentName = componentName.replace(".razor", "").replace(".cs", "");
 
 			let fileTemplate = "";
 
