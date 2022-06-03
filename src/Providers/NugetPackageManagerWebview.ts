@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { showUserCommand } from "../extension";
 import { getNonce } from "../Utility/getNonce";
 import { isDir } from "../Utility/isDir";
 import { SolutionExplorerTreeView } from "./SolutionExplorerTreeView";
@@ -37,8 +38,15 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
           webviewView.webview.postMessage({
             type: 'getProjects',
             projects: projects
-                        .map(project => project.filename)
+                        .map(project => new ProjectDto(project.filename, project.absolutePath))
           });
+        }
+        case "addNugetPackage": {
+          vscode.window.showInformationMessage(`Add Nuget Package: ${data.title}`);
+          let cmd = `Add Nuget Package: ${data.title}`;
+
+				  showUserCommand(cmd);
+          break;
         }
       }
     });
@@ -84,4 +92,8 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
   </body>
   </html>`;
   }
+}
+
+class ProjectDto {
+  constructor(public filename: string, public absolutePath: string) { }
 }

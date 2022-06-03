@@ -16,6 +16,9 @@ import { csFileTemplate } from './Templates/csFileTemplate';
 
 const fs = require('fs');
 
+let displayIntegratedTerminalInformativeMessage = 1;
+let displayIntegratedTerminalErrorMessage = 1;
+
 export function activate(context: vscode.ExtensionContext) {
 	const extensionClipboardState: ExtensionClipboardState = constructExtensionClipboardState(context);
 	const solutionExplorerTreeView: SolutionExplorerTreeView = constructSolutionExplorerTreeView(context);
@@ -355,7 +358,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 export function deactivate() { }
 
-function showUserCommand(cmd: string): void {
+export function showUserCommand(cmd: string): void {
 	let activeTerminal: vscode.Terminal | undefined = vscode.window.activeTerminal;
 
 	if (!activeTerminal) {
@@ -367,13 +370,23 @@ function showUserCommand(cmd: string): void {
 	}
 
 	if (!activeTerminal) {
-		vscode.window.showErrorMessage("ERROR: could not access an integrated terminal check the " +
-			"information message for the command to run it yourself");
+		if(displayIntegratedTerminalErrorMessage) {
+			displayIntegratedTerminalErrorMessage--;
+			vscode.window.showErrorMessage("Could not access an integrated terminal. " + 
+			"Check the information message for the command to run it yourself in an external terminal. " +
+			"This tutorial notification will only show once.");
+		}
 
 		vscode.window.showInformationMessage(cmd);
 		return;
 	}
 	else {
+		if(displayIntegratedTerminalInformativeMessage) {
+			displayIntegratedTerminalInformativeMessage--;
+			vscode.window.showInformationMessage("Integrated terminal input field had the command inserted into it. " +
+			"This tutorial notification will only show once.");
+		}
+
 		activeTerminal.show();
 		activeTerminal.sendText(cmd, false);
 	}

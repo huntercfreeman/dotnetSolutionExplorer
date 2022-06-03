@@ -15,3 +15,14 @@
 .dnse_project-file.active:hover {
 	background-color: var(--vscode-button-hoverBackground);
 }
+
+.dnse_nuget-package-entry {
+	cursor: pointer;
+	border: 2px solid transparent;
+	margin-bottom: 3px;
+}
+
+.dnse_nuget-package-entry:hover {
+	background-color: var(--vscode-inputOption-hoverBackground);
+	border: 2px solid var(--vscode-textSeparator-foreground);
+}

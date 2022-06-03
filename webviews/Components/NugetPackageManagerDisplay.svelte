@@ -46,18 +46,17 @@
 		<button on:click="{getProjects}">Refresh Project List</button>
 
 		<div style="margin-top: 5px;">
-			selectedProjectFile: {selectedProjectFile}
+			selectedProjectFile: {selectedProjectFile?.filename ?? "undefined"}
 		</div>
 		<hr/>
 		{#each projectFiles as project}
 			{#if selectedProjectFile === project}
-				<div class="dnse_project-file active" on:click="{() => selectedProjectFile = project}">
-					{project}
+				<div class="dnse_project-file active" on:click="{() => selectedProjectFile.filename = project.filename}">
+					{project.filename}
 				</div>
 			{:else}
 				<div class="dnse_project-file" on:click="{() => selectedProjectFile = project}">
-					
-					{project}
+					{project.filename}
 				</div>
 			{/if}
 		{/each}
