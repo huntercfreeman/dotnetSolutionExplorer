@@ -40,6 +40,7 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
             projects: projects
                         .map(project => new ProjectDto(project.filename, project.absolutePath))
           });
+          break;
         }
         case "addNugetPackage": {
           vscode.window.showInformationMessage(`Add Nuget Package: ${data.title}`);
