@@ -1,0 +1,17 @@
+.dnse_project-file {
+	cursor: pointer;
+	border: 2px solid transparent;
+}
+
+.dnse_project-file.active {
+	background-color: var(--vscode-button-hoverBackground);
+}
+
+.dnse_project-file:hover {
+	background-color: var(--vscode-inputOption-hoverBackground);
+	border: 2px solid var(--vscode-textSeparator-foreground);
+}
+
+.dnse_project-file.active:hover {
+	background-color: var(--vscode-button-hoverBackground);
+}

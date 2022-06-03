@@ -55,8 +55,13 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
     const styleResetUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "media", "reset.css")
     );
+
     const styleVSCodeUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "media", "vscode.css")
+    );
+
+    const dotNetSolutionExplorerUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "media", "dotNetSolutionExplorer.css")
     );
     
 		const nonce = getNonce();
@@ -69,6 +74,7 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
 	  <title>NugetPackageManagerWebview</title>
     <link href="${styleResetUri}" rel="stylesheet">
     <link href="${styleVSCodeUri}" rel="stylesheet">
+    <link href="${dotNetSolutionExplorerUri}" rel="stylesheet">
 	  <script nonce="${nonce}">
 		const tsVscode = acquireVsCodeApi();
 	</script>

@@ -8,6 +8,7 @@
 	let query = undefined;
 	let displayQuery = false;
 	let projectFiles = [];
+	let selectedProjectFile = undefined;
 
 	function sendGetRequest() {
 		fetch(
@@ -43,12 +44,25 @@
 <div>
 	<div>
 		<button on:click="{getProjects}">Refresh Project List</button>
-		Select a Project to manage
 
+		<div style="margin-top: 5px;">
+			selectedProjectFile: {selectedProjectFile}
+		</div>
+		<hr/>
 		{#each projectFiles as project}
-			<div>{project}</div>
+			{#if selectedProjectFile === project}
+				<div class="dnse_project-file active" on:click="{() => selectedProjectFile = project}">
+					{project}
+				</div>
+			{:else}
+				<div class="dnse_project-file" on:click="{() => selectedProjectFile = project}">
+					
+					{project}
+				</div>
+			{/if}
 		{/each}
 	</div>
+	<hr/>
 
 	<div>
 		Display generated GET request: <input type="checkbox" bind:value={displayQuery}>
