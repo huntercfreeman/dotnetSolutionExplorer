@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { uuid } from 'uuidv4';
-import { CopyState } from './Models/CopyStateModel';
+import { CopyState as ExtensionClipboardState } from './Models/CopyStateModel';
 import { FileBase } from './Files/FileBase';
 import { FilePathParser } from './Parsers/FilePathParser';
 import { hasUncaughtExceptionCaptureCallback } from 'node:process';
@@ -13,63 +13,14 @@ import { SolutionExplorerTreeView } from './Providers/SolutionExplorerTreeView';
 
 const fs = require('fs');
 
-export class CrossWidgetCommunicationTest {
-	constructor(public numericValue: number) {
-	}
-}
-
-const crossWidgetCommunicationTest: CrossWidgetCommunicationTest = 
-	new CrossWidgetCommunicationTest(41951);
-
 export function activate(context: vscode.ExtensionContext) {
-	const nugetPackageManagerProvider = 
-		new NugetPackageManagerWebview(context.extensionUri, 
-			context, 
-			crossWidgetCommunicationTest);
-
-	context.subscriptions.push(
-		vscode.window.registerWebviewViewProvider(
-		"dotnet-solution-explorer.webview",
-		nugetPackageManagerProvider
-		)
-	);
+	const extensionClipboardState: ExtensionClipboardState = constructExtensionClipboardState(context);
+	const solutionExplorerTreeView: SolutionExplorerTreeView = constructSolutionExplorerTreeView(context);
+	const nugetPackageManagerWebview: NugetPackageManagerWebview = constructAndRegisterNugetPackageManagerWebview(context);
+	const solutionExplorerControlsWebview: SolutionExplorerControlsWebview = constructAndRegisterSolutionExplorerControlsWebview(context);
 	
-	const solutionExplorerControlsProvider = 
-		new SolutionExplorerControlsWebview(context.extensionUri, 
-			context, 
-			crossWidgetCommunicationTest);
-
 	context.subscriptions.push(
-		vscode.window.registerWebviewViewProvider(
-		"dotnet-solution-explorer.controls.webview",
-		solutionExplorerControlsProvider
-		)
-	);
-	
-	let clipboard: CopyState = new CopyState();
-
-	let workspaceFolderAbsolutePath;
-
-	let workspaceFolderFsPaths = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath);
-
-	if (workspaceFolderFsPaths === null ||
-		workspaceFolderFsPaths === undefined ||
-		workspaceFolderFsPaths.length === 0) {
-	}
-	else {
-		workspaceFolderAbsolutePath = workspaceFolderFsPaths[0];
-	}
-
-	let solutionExplorerProvider: SolutionExplorerTreeView = new SolutionExplorerTreeView(workspaceFolderAbsolutePath ?? "");
-
-	context.subscriptions.push(
-		vscode.window.registerTreeDataProvider(
-			'dotnetSolutionExplorer',
-			solutionExplorerProvider
-		),
-		vscode.commands.registerCommand('dotnet-solution-explorer.helloWorld', () => {
-			vscode.window.showInputBox();
-		}),
+		
 		vscode.commands.registerCommand('dotnet-solution-explorer.addNugetPackage', () => {
 			vscode.window.showInputBox();
 		}),
@@ -161,7 +112,7 @@ export function activate(context: vscode.ExtensionContext) {
 			showUserCommand(cmd);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.refreshEntry', (e: any) =>
-			solutionExplorerProvider.refresh(e)
+			solutionExplorerTreeView.refresh(e)
 		),
 		vscode.commands.registerCommand('dotnet-solution-explorer.addDirectory', async (data: FileBase) => {
 			let absolutePathToAddFileTo: string = data.absolutePath;
@@ -192,17 +143,17 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showErrorMessage("Could not add directory.");
 			}
 
-			solutionExplorerProvider.refresh(data);
+			solutionExplorerTreeView.refresh(data);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.copy', (data: FileBase) => {
-			clipboard.copy(data.absolutePath);
+			extensionClipboardState.copy(data.absolutePath);
 			vscode.window.showInformationMessage(`Copied: ${data.absolutePath} to virtual clipboard`);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.cut', (data: FileBase) => {
-			clipboard.cut(data.absolutePath);
+			extensionClipboardState.cut(data.absolutePath);
 			vscode.window.showInformationMessage(`Cut: ${data.absolutePath} to virtual clipboard`);
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.deleteFile', (data: FileBase) => deleteFile(data, solutionExplorerProvider)),
+		vscode.commands.registerCommand('dotnet-solution-explorer.deleteFile', (data: FileBase) => deleteFile(data, solutionExplorerTreeView)),
 		vscode.commands.registerCommand('dotnet-solution-explorer.deleteDirectory', async (data: FileBase) => {
 			const edit = new vscode.WorkspaceEdit();
 
@@ -215,11 +166,11 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showInformationMessage(`Deleted: ${data.filename}`);
 
 			if (data.parent) {
-				solutionExplorerProvider.refresh(data.parent);
+				solutionExplorerTreeView.refresh(data.parent);
 			}
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.paste', async (data: FileBase) => {
-			let clipboardObject: any = clipboard.readClipboard();
+			let clipboardObject: any = extensionClipboardState.readClipboard();
 
 			let clipboardItemFileName: string = FilePathParser.extractFileName(clipboardObject.absolutePath);
 
@@ -279,7 +230,7 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showInformationMessage(`Deleted: ${clipboardObject.filename}`);
 			}
 
-			solutionExplorerProvider.refresh(data);
+			solutionExplorerTreeView.refresh(data);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.openFile', (uri: vscode.Uri) => {
 			let textDocumentShowOptions: vscode.TextDocumentShowOptions = {
@@ -346,7 +297,7 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showInformationMessage("Created " + filename);
 			});
 
-			solutionExplorerProvider.refresh(data);
+			solutionExplorerTreeView.refresh(data);
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.addBlazorComponent', async (data: FileBase) => {
 
@@ -394,7 +345,7 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showInformationMessage("Created " + componentName + ".razor.cs");
 			});
 
-			solutionExplorerProvider.refresh(data);
+			solutionExplorerTreeView.refresh(data);
 		})
 	);
 }
@@ -493,5 +444,65 @@ namespace ${namespace}
 }
 
 `;
+}
+
+function constructSolutionExplorerTreeView(context: vscode.ExtensionContext): SolutionExplorerTreeView {
+	let workspaceFolderAbsolutePath;
+
+	let workspaceFolderFsPaths = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath);
+
+	if (workspaceFolderFsPaths === null ||
+		workspaceFolderFsPaths === undefined ||
+		workspaceFolderFsPaths.length === 0) {
+	}
+	else {
+		workspaceFolderAbsolutePath = workspaceFolderFsPaths[0];
+	}
+
+	const solutionExplorerTreeView = new SolutionExplorerTreeView(workspaceFolderAbsolutePath ?? "");
+
+	context.subscriptions.push(
+		vscode.window.registerTreeDataProvider(
+			'dotnetSolutionExplorer',
+			solutionExplorerTreeView
+		)
+	);
+
+	return solutionExplorerTreeView;
+}
+
+function constructAndRegisterNugetPackageManagerWebview(context: vscode.ExtensionContext): NugetPackageManagerWebview {
+	const nugetPackageManagerProvider = 
+		new NugetPackageManagerWebview(context.extensionUri, 
+			context);
+
+	context.subscriptions.push(
+		vscode.window.registerWebviewViewProvider(
+		"dotnet-solution-explorer.webview",
+		nugetPackageManagerProvider
+		)
+	);
+
+	return nugetPackageManagerProvider;
+}
+function constructAndRegisterSolutionExplorerControlsWebview(context: vscode.ExtensionContext): SolutionExplorerControlsWebview {
+	const solutionExplorerControlsWebview = 
+		new SolutionExplorerControlsWebview(context.extensionUri, 
+			context);
+
+	context.subscriptions.push(
+		vscode.window.registerWebviewViewProvider(
+		"dotnet-solution-explorer.controls.webview",
+		solutionExplorerControlsWebview
+		)
+	);
+
+	return solutionExplorerControlsWebview;
+}
+
+function constructExtensionClipboardState(context: vscode.ExtensionContext): ExtensionClipboardState {
+	const newLocal = new ExtensionClipboardState();
+	
+	return newLocal;
 }
 

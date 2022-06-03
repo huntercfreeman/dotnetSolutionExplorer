@@ -31,7 +31,7 @@ export class SolutionExplorerTreeView implements vscode.TreeDataProvider<FileBas
         }
     }
 
-    private async getRoot(): Promise<FileBase[]> {
+    public async getRoot(): Promise<FileBase[]> {
         if (this.root) { return [this.root]; }
 
         let solutions = await vscode.workspace.findFiles("**/*.sln");

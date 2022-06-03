@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce } from "../Utility/getNonce";
 import { isDir } from "../Utility/isDir";
-import { CrossWidgetCommunicationTest } from "../extension";
 
 export class SolutionExplorerControlsWebview implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
@@ -9,8 +8,7 @@ export class SolutionExplorerControlsWebview implements vscode.WebviewViewProvid
 
   constructor(
 	  private readonly _extensionUri: vscode.Uri,
-	  private readonly context: vscode.ExtensionContext,
-	  private readonly crossWidgetCommunicationTest: CrossWidgetCommunicationTest
+	  private readonly context: vscode.ExtensionContext
 	  ) {}
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
