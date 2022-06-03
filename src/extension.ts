@@ -41,12 +41,12 @@ export function activate(context: vscode.ExtensionContext) {
 			let projectNormalizedAbsolutePath = data.absolutePath.replace(/\\/g, "/");
 
 			let inputBoxOptions: vscode.InputBoxOptions = {
-				placeHolder: `Enter 'yes' to remove ${data.filename} from the .sln`
+				placeHolder: `Enter '[y]es' to remove ${data.filename} from the .sln`
 			};
 
 			let inputBoxResponse = await vscode.window.showInputBox(inputBoxOptions);
 
-			if (inputBoxResponse === "yes") {
+			if (userAgreed(inputBoxResponse)) {
 				let cmd = `dotnet sln ${slnNormalizedAbsolutePath} remove ${projectNormalizedAbsolutePath}`;
 
 				showUserCommand(cmd);
@@ -173,20 +173,42 @@ export function activate(context: vscode.ExtensionContext) {
 			extensionClipboardState.cut(data.absolutePath);
 			vscode.window.showInformationMessage(`Cut: ${data.absolutePath} to virtual clipboard`);
 		}),
-		vscode.commands.registerCommand('dotnet-solution-explorer.deleteFile', (data: FileBase) => deleteFile(data, solutionExplorerTreeView)),
+		vscode.commands.registerCommand('dotnet-solution-explorer.deleteFile', async (data: FileBase) => { 
+			let inputBoxOptions: vscode.InputBoxOptions = {
+				placeHolder: `Enter '[y]es' to DELETE ${data.filename} from the filesystem`
+			};
+
+			let inputBoxResponse = await vscode.window.showInputBox(inputBoxOptions);
+
+			if (userAgreed(inputBoxResponse)) {
+				deleteFile(data, solutionExplorerTreeView);
+			}
+			else {
+				vscode.window.showInformationMessage('DELETE Action was cancelled by user');
+			}
+		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.deleteDirectory', async (data: FileBase) => {
-			const edit = new vscode.WorkspaceEdit();
+			let inputBoxOptions: vscode.InputBoxOptions = {
+				placeHolder: `Enter '[y]es' to DELETE ${data.filename} from the filesystem`
+			};
 
-			let fileUri = vscode.Uri.file(data.absolutePath);
+			let inputBoxResponse = await vscode.window.showInputBox(inputBoxOptions);
 
-			edit.deleteFile(fileUri, { recursive: true, ignoreIfNotExists: true });
+			if (userAgreed(inputBoxResponse)) {
+				const edit = new vscode.WorkspaceEdit();
 
-			await vscode.workspace.applyEdit(edit);
+				deleteFile(data, solutionExplorerTreeView);
 
-			vscode.window.showInformationMessage(`Deleted: ${data.filename}`);
+				await vscode.workspace.applyEdit(edit);
 
-			if (data.parent) {
-				solutionExplorerTreeView.refresh(data.parent);
+				vscode.window.showInformationMessage(`Deleted: ${data.filename}`);
+
+				if (data.parent) {
+					solutionExplorerTreeView.refresh(data.parent);
+				}
+			}
+			else {
+				vscode.window.showInformationMessage('DELETE Action was cancelled by user');
 			}
 		}),
 		vscode.commands.registerCommand('dotnet-solution-explorer.paste', async (data: FileBase) => {
@@ -499,5 +521,23 @@ function constructExtensionClipboardState(context: vscode.ExtensionContext): Ext
 	const newLocal = new ExtensionClipboardState();
 	
 	return newLocal;
+}
+
+function userAgreed(inputBoxResponse: string | undefined): boolean {
+	if(inputBoxResponse === undefined) {
+		return false;
+	}
+
+	switch (inputBoxResponse) {
+		case "yes":
+		case "Yes":
+		case "y":
+		case "Y":
+		case "[y]es":
+		case "[Y]es":
+			return true;
+		default:
+			return false;
+	}
 }
 
