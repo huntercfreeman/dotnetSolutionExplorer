@@ -112,15 +112,19 @@ export class SolutionExplorerTreeView implements vscode.TreeDataProvider<FileBas
     private _onDidChangeTreeData: vscode.EventEmitter<FileBase | undefined | null | void> = new vscode.EventEmitter<FileBase | undefined | null | void>();
     readonly onDidChangeTreeData: vscode.Event<FileBase | undefined | null | void> = this._onDidChangeTreeData.event;
 
-    refresh(e: FileBase): void {
+    refresh(e: FileBase | undefined): void {
         if (e) {
             if(e.fileBaseKind !== FileBaseKind.sln) {
                 e.overwriteChildren(undefined);
             }
             else {
                 this.root = undefined;
-                this.getRoot();
+                this.getRoot();    
             }
+        }
+        else {
+            this.root = undefined;
+            this.getRoot();
         }
 
         this._onDidChangeTreeData.fire();

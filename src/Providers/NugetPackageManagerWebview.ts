@@ -42,6 +42,13 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
 	const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(
 		this.context.extensionUri, 'out/compiled', 'NugetPackageManager.js'));
 
+    const styleResetUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "media", "reset.css")
+    );
+    const styleVSCodeUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "media", "vscode.css")
+    );
+    
 		const nonce = getNonce();
 
 	return `<!DOCTYPE html>
@@ -49,7 +56,9 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
   <head>
 	  <meta charset="UTF-8">
 	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	  <title>Cat Coding</title>
+	  <title>NugetPackageManagerWebview</title>
+    <link href="${styleResetUri}" rel="stylesheet">
+    <link href="${styleVSCodeUri}" rel="stylesheet">
 	  <script nonce="${nonce}">
 		const tsVscode = acquireVsCodeApi();
 	</script>
@@ -59,3 +68,4 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
   </body>
   </html>`;
   }
+}
