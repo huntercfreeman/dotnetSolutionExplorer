@@ -19,7 +19,7 @@ const fs = require('fs');
 export function activate(context: vscode.ExtensionContext) {
 	const extensionClipboardState: ExtensionClipboardState = constructExtensionClipboardState(context);
 	const solutionExplorerTreeView: SolutionExplorerTreeView = constructSolutionExplorerTreeView(context);
-	const nugetPackageManagerWebview: NugetPackageManagerWebview = constructAndRegisterNugetPackageManagerWebview(context);
+	const nugetPackageManagerWebview: NugetPackageManagerWebview = constructAndRegisterNugetPackageManagerWebview(context, solutionExplorerTreeView);
 	const solutionExplorerControlsWebview: SolutionExplorerControlsWebview = constructAndRegisterSolutionExplorerControlsWebview(context, solutionExplorerTreeView);
 	
 	context.subscriptions.push(
@@ -432,10 +432,13 @@ function constructSolutionExplorerTreeView(context: vscode.ExtensionContext): So
 	return solutionExplorerTreeView;
 }
 
-function constructAndRegisterNugetPackageManagerWebview(context: vscode.ExtensionContext): NugetPackageManagerWebview {
+function constructAndRegisterNugetPackageManagerWebview(context: vscode.ExtensionContext,
+		solutionExplorerTreeView: SolutionExplorerTreeView)
+		: NugetPackageManagerWebview {
 	const nugetPackageManagerProvider = 
 		new NugetPackageManagerWebview(context.extensionUri, 
-			context);
+			context,
+			solutionExplorerTreeView);
 
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(

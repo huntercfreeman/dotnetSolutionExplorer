@@ -1,4 +1,5 @@
 <script>
+	import { onMount } from 'svelte';
     import { bind } from 'svelte/internal';
 	import { NugetPackageModel } from '../../src/Models/NugetPackageModel';
 	import NugetPackageEntryDisplay from './NugetPackageEntryDisplay.svelte';
@@ -6,6 +7,7 @@
 	let testGetRequestResults = {};
 	let query = undefined;
 	let displayQuery = false;
+	let projectFiles = [];
 
 	function sendGetRequest() {
 		fetch(
@@ -20,11 +22,32 @@
 				return [];
 			});
 	}
+
+	function getProjects() {
+		tsVscode.postMessage({
+			command: "getProjects"
+		});
+	}
+
+	onMount(async () => {
+		window.addEventListener("message", async (event) => {
+			const message = event.data;
+			switch (message.type) {
+				case "getProjects":
+					projectFiles = message.projects;
+			}
+		});
+	});
 </script>
 
 <div>
 	<div>
+		<button on:click="{getProjects}">Refresh Project List</button>
 		Select a Project to manage
+
+		{#each projectFiles as project}
+			<div>{project}</div>
+		{/each}
 	</div>
 
 	<div>

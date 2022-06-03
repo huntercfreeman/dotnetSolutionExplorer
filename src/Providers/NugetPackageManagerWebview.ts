@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { getNonce } from "../Utility/getNonce";
 import { isDir } from "../Utility/isDir";
+import { SolutionExplorerTreeView } from "./SolutionExplorerTreeView";
 
 export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
@@ -8,7 +9,8 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
 
   constructor(
 	  private readonly _extensionUri: vscode.Uri,
-	  private readonly context: vscode.ExtensionContext
+	  private readonly context: vscode.ExtensionContext,
+	  private readonly solutionExplorerTreeView: SolutionExplorerTreeView
 	  ) {}
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
@@ -23,15 +25,23 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
 
     webviewView.webview.html = this.getWebviewContent(webviewView.webview);
 
-	webviewView.webview.onDidReceiveMessage(async (data) => {
-		switch (data.command) {
-		  case "showMessage": {
-			const y = await vscode.window.showInformationMessage(
-			  `Cheese`);
-			break;
-		  }
-		}
-	  });
+    webviewView.webview.onDidReceiveMessage(async (data) => {
+      switch (data.command) {
+        case "getProjects": {
+          let solution = (await this.solutionExplorerTreeView.getChildren())[0];
+
+          this.solutionExplorerTreeView.fireOnDidChangeTreeData();
+
+          let projects = await solution.getChildren();
+
+          webviewView.webview.postMessage({
+            type: 'getProjects',
+            projects: projects
+                        .map(project => project.filename)
+          });
+        }
+      }
+    });
   }
 
   public revive(panel: vscode.WebviewView) {

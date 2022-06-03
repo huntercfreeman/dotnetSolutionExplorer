@@ -129,4 +129,8 @@ export class SolutionExplorerTreeView implements vscode.TreeDataProvider<FileBas
 
         this._onDidChangeTreeData.fire();
     }
+    
+    public fireOnDidChangeTreeData(): void {
+        this._onDidChangeTreeData.fire();
+    }
 }
