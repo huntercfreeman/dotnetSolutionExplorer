@@ -2,13 +2,13 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { FileBase } from '../../FileBase';
 import { FileBaseKind } from '../../FileBaseKind';
-import { ProjectNugetPackage } from './NugetPackageFile';
+import { NugetPackageFile } from './NugetPackageFile';
 import { FileSorter } from '../../../Utility/FileSorter';
 import { FilePathParser } from '../../../Parsers/FilePathParser';
 import { ProjectParser } from '../../../Parsers/ProjectParser';
 const fs = require('fs');
 
-export class ProjectNugetPackageListFile extends FileBase {
+export class NugetPackageListFile extends FileBase {
     private constructor(
         public readonly absolutePath: string,
         public readonly filename: string,
@@ -26,7 +26,7 @@ export class ProjectNugetPackageListFile extends FileBase {
     }
 
     public static async createAsync(absolutePath: string, filename: string, parent: FileBase): Promise<FileBase> {
-        return new ProjectNugetPackageListFile(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed, parent);
+        return new NugetPackageListFile(absolutePath, filename, vscode.TreeItemCollapsibleState.Collapsed, parent);
     }
 
     public async getChildren(): Promise<FileBase[]> {
@@ -71,7 +71,7 @@ export class ProjectNugetPackageListFile extends FileBase {
 
             for (let i = 0; i < projectNugetPackageObjects.length; i++) {
                 let nugetPackage: any = projectNugetPackageObjects[i];
-                let fileBase: FileBase = await ProjectNugetPackage.createAsync(this.absolutePath,
+                let fileBase: FileBase = await NugetPackageFile.createAsync(this.absolutePath,
                     nugetPackage.include,
                     nugetPackage.include,
                     nugetPackage.version,

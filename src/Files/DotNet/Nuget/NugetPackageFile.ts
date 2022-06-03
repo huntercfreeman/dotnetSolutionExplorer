@@ -4,11 +4,11 @@ import { FileBase } from '../../FileBase';
 import { FileBaseKind } from "../../FileBaseKind";
 import { ProjectParser } from '../../../Parsers/ProjectParser';
 import { FilePathParser } from '../../../Parsers/FilePathParser';
-import { ProjectNugetPackageVersion } from './NugetPackageVersionFile';
+import { NugetPackageVersion } from './NugetPackageVersionFile';
 const fs = require('fs');
 
 
-export class ProjectNugetPackage extends FileBase {
+export class NugetPackageFile extends FileBase {
     private constructor(
         public readonly absolutePath: string,
         public readonly filename: string,
@@ -34,7 +34,7 @@ export class ProjectNugetPackage extends FileBase {
     }
 
     public static async createAsync(absolutePath: string, filename: string, include: string, version: string, parent: FileBase): Promise<FileBase> {
-        return new ProjectNugetPackage(absolutePath, filename, include, version, vscode.TreeItemCollapsibleState.Collapsed, parent);
+        return new NugetPackageFile(absolutePath, filename, include, version, vscode.TreeItemCollapsibleState.Collapsed, parent);
     }
 
     public async getChildren(): Promise<FileBase[]> {
@@ -44,7 +44,7 @@ export class ProjectNugetPackage extends FileBase {
         else {
             this.children = [];
 
-            this.children.push(await ProjectNugetPackageVersion.createAsync(this.absolutePath, this.version, this.parent));
+            this.children.push(await NugetPackageVersion.createAsync(this.absolutePath, this.version, this.parent));
 
             return Promise.resolve(this.children);
         }

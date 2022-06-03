@@ -7,7 +7,7 @@ import { DefaultFile } from '../../FileSystem/DefaultFile';
 import { ProjectReferenceListFile } from './ProjectReferenceListFile';
 import { ProjectFrameworkListFile } from './ProjectFrameworkListFile';
 import { ProjectAnaylzerListFile } from './ProjectAnaylzerListFile';
-import { ProjectNugetPackageListFile } from '../Nuget/NugetPackageListFile';
+import { NugetPackageListFile } from '../Nuget/NugetPackageListFile';
 
 export class ProjectDependencyListFile extends FileBase {
     private constructor(
@@ -44,7 +44,7 @@ export class ProjectDependencyListFile extends FileBase {
             if(this.absolutePath.endsWith(".csproj")) {
                 //let analyzers = await ProjectAnaylzerList.createAsync(this.absolutePath, "Analyzers", this);
                 //let frameworks = await ProjectFrameworkList.createAsync(this.absolutePath, "Frameworks", this);
-                let packages = await ProjectNugetPackageListFile.createAsync(this.absolutePath, "Packages", this);
+                let packages = await NugetPackageListFile.createAsync(this.absolutePath, "Packages", this);
                 let projects = await ProjectReferenceListFile.createAsync(this.absolutePath, "Projects", this);
 
                 //this.children.push(frameworks);

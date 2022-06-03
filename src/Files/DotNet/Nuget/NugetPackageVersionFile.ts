@@ -3,7 +3,7 @@ import * as path from 'path';
 import { FileBase } from '../../FileBase';
 import { FileBaseKind } from '../../FileBaseKind';
 
-export class ProjectNugetPackageVersion extends FileBase {
+export class NugetPackageVersion extends FileBase {
     private constructor(
         public readonly absolutePath: string,
         public readonly filename: string,
@@ -27,7 +27,7 @@ export class ProjectNugetPackageVersion extends FileBase {
     }
 
     public static async createAsync(absolutePath: string, filename: string, parent: FileBase): Promise<FileBase> {
-        return new ProjectNugetPackageVersion(absolutePath, filename, vscode.TreeItemCollapsibleState.None, parent);
+        return new NugetPackageVersion(absolutePath, filename, vscode.TreeItemCollapsibleState.None, parent);
     }
 
     public async getChildren(): Promise<FileBase[]> {

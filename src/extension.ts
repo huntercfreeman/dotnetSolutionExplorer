@@ -13,6 +13,7 @@ import { SolutionExplorerTreeView } from './Providers/SolutionExplorerTreeView';
 import { razorMarkupFileTemplate } from './Templates/razorMarkupFileTemplate';
 import { razorCodebehindFileTemplate } from './Templates/razorCodebehindFileTemplate';
 import { csFileTemplate } from './Templates/csFileTemplate';
+import { NugetPackageFile } from './Files/DotNet/Nuget/NugetPackageFile';
 
 const fs = require('fs');
 
@@ -114,6 +115,19 @@ export function activate(context: vscode.ExtensionContext) {
 			let referenceNormalizedAbsolutePath = chosenFile[0].fsPath.replace(/\\/g, "/");
 
 			let cmd = `dotnet add ${projectNormalizedAbsolutePath} reference ${referenceNormalizedAbsolutePath}`;
+
+			showUserCommand(cmd);
+		}),
+		vscode.commands.registerCommand('dotnet-solution-explorer.removeNugetPackageReference', async (data: NugetPackageFile) => {
+			var project = data.parent?.parent?.parent;
+			
+			if(!project) {
+				vscode.window.showErrorMessage(`Could not remove nuget package ${data.filename}`);
+			}
+
+			let projectNormalizedAbsolutePath = project!.absolutePath.replace(/\\/g, "/");
+
+			let cmd = `dotnet remove ${projectNormalizedAbsolutePath} package ${data.filename}`;
 
 			showUserCommand(cmd);
 		}),
