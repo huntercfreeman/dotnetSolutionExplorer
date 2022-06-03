@@ -43,8 +43,9 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
           break;
         }
         case "addNugetPackage": {
-          vscode.window.showInformationMessage(`Add Nuget Package: ${data.title}`);
-          let cmd = `Add Nuget Package: ${data.title}`;
+          let projectNormalizedAbsolutePath = data.selectedProjectFile.absolutePath.replace(/\\/g, "/");
+
+          let cmd = `dotnet add ${projectNormalizedAbsolutePath} package ${data.nugetPackage.title}`;
 
 				  showUserCommand(cmd);
           break;

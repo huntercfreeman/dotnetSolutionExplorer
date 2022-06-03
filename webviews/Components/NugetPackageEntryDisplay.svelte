@@ -1,14 +1,17 @@
 <script>
     import { NugetPackageModel } from "../../src/Models/NugetPackageModel";
+	import { onMount } from 'svelte';
 
 	export let entry;
+	export let selectedProjectFile;
 
 	let expandContents = false;
 
     function addNugetPackage() {
 		tsVscode.postMessage({
 			command: "addNugetPackage",
-            title: entry.title
+            nugetPackage: entry,
+			selectedProjectFile: selectedProjectFile
 		});
 	}
 
@@ -22,7 +25,7 @@
 {#if expandContents}
 	<div style="margin-left: 15px;">
 		<button on:click="{addNugetPackage}">
-			Add Nuget Package
+			Add Nuget Package To {selectedProjectFile.filename}
 		</button>
 
 		<div>

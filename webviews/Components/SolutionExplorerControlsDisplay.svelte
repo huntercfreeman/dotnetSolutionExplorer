@@ -11,5 +11,3 @@
 <button on:click={handleClick}>
 	Pick a .NET Solution
 </button>
-
-

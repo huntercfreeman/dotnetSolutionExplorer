@@ -86,7 +86,8 @@
 </form>
 
 {#each testGetRequestResults as entry}
-	<NugetPackageEntryDisplay entry="{new NugetPackageModel(entry.title)}" />
+	<NugetPackageEntryDisplay entry="{entry}"
+	                          selectedProjectFile="{selectedProjectFile}" />
 {/each}
 
 
