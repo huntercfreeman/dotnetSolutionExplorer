@@ -8,6 +8,7 @@ import { normalize } from 'node:path';
 import { SolutionFile } from './Files/DotNet/SolutionFile';
 import { ProjectFile } from './Files/DotNet/CSharp/ProjectFile';
 import { NugetPackageManagerWebview } from './Providers/NugetPackageManagerWebview';
+import { SolutionExplorerControlsWebview } from './Providers/SolutionExplorerControlsWebview';
 import { SolutionExplorerTreeView } from './Providers/SolutionExplorerTreeView';
 
 const fs = require('fs');
@@ -21,7 +22,7 @@ const crossWidgetCommunicationTest: CrossWidgetCommunicationTest =
 	new CrossWidgetCommunicationTest(41951);
 
 export function activate(context: vscode.ExtensionContext) {
-	const sidebarProvider = 
+	const nugetPackageManagerProvider = 
 		new NugetPackageManagerWebview(context.extensionUri, 
 			context, 
 			crossWidgetCommunicationTest);
@@ -29,7 +30,19 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(
 		"dotnet-solution-explorer.webview",
-		sidebarProvider
+		nugetPackageManagerProvider
+		)
+	);
+	
+	const solutionExplorerControlsProvider = 
+		new SolutionExplorerControlsWebview(context.extensionUri, 
+			context, 
+			crossWidgetCommunicationTest);
+
+	context.subscriptions.push(
+		vscode.window.registerWebviewViewProvider(
+		"dotnet-solution-explorer.controls.webview",
+		solutionExplorerControlsProvider
 		)
 	);
 	

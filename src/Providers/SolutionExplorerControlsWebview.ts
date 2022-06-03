@@ -3,7 +3,7 @@ import { getNonce } from "../Utility/getNonce";
 import { isDir } from "../Utility/isDir";
 import { CrossWidgetCommunicationTest } from "../extension";
 
-export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
+export class SolutionExplorerControlsWebview implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
 
@@ -28,8 +28,7 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
 	webviewView.webview.onDidReceiveMessage(async (data) => {
 		switch (data.command) {
 		  case "showMessage": {
-			const y = await vscode.window.showInformationMessage(
-			  `Cheese`);
+			const y = await vscode.window.showInformationMessage(data.text);
 			break;
 		  }
 		}
@@ -42,7 +41,7 @@ export class NugetPackageManagerWebview implements vscode.WebviewViewProvider {
 
   private getWebviewContent(webview: vscode.Webview) {
 	const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(
-		this.context.extensionUri, 'out/compiled', 'NugetPackageManager.js'));
+		this.context.extensionUri, 'out/compiled', 'SolutionExplorerControls.js'));
 
 		const nonce = getNonce();
 

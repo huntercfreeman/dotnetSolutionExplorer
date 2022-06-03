@@ -11,8 +11,9 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onView:dotnetSolutionExplorer",
-		"onView:dotnet-solution-explorer.webview"
+		"onView:dotnet-solution-explorer.webview",
+		"onView:dotnet-solution-explorer.controls.webview",
+		"onView:dotnetSolutionExplorer"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -33,6 +34,13 @@
 					"name": "Nuget Package Manager",
 					"icon": "media/dotNetSolutionExplorerIcon.svg",
 					"contextualTitle": ".NET Solution Explorer"
+				},
+				{
+					"type": "webview",
+					"id": "dotnet-solution-explorer.controls.webview",
+					"name": "Solution Explorer Controls",
+					"icon": "media/dotNetSolutionExplorerIcon.svg",
+					"contextualTitle": ".NET Solution Explorer Controls"
 				},
 				{
 					"id": "dotnetSolutionExplorer",
