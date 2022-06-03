@@ -27,9 +27,8 @@ export class SolutionExplorerControlsWebview implements vscode.WebviewViewProvid
 
 	webviewView.webview.onDidReceiveMessage(async (data) => {
 		switch (data.command) {
-		  case "showMessage": {
+		  case "reloadTreeView": {
         this.solutionExplorerTreeView.refresh(undefined);
-			  const y = await vscode.window.showInformationMessage(data.text);
 			  break;
 		  }
 		}

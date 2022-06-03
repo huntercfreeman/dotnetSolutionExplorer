@@ -1,22 +1,13 @@
 <script>
     import { bind } from 'svelte/internal';
-import { NugetPackageModel } from '../../src/Models/NugetPackageModel';
+	import { NugetPackageModel } from '../../src/Models/NugetPackageModel';
 	import NugetPackageEntryDisplay from './NugetPackageEntryDisplay.svelte';
-	let count = 0;
-
-	function handleClick() {
-		count += 1;
-
-		tsVscode.postMessage({
-			command: "showMessage",
-			text: "stuff",
-		});
-	}
 
 	let testGetRequestResults = {};
 	let query = undefined;
+	let displayQuery = false;
 
-	function testGetRequest() {
+	function sendGetRequest() {
 		fetch(
 			`https://azuresearch-usnc.nuget.org/query?q=${query}&prerelease=false`
 		)
@@ -31,22 +22,32 @@ import { NugetPackageModel } from '../../src/Models/NugetPackageModel';
 	}
 </script>
 
-<button on:click={handleClick}>
-	clicks: {count}
-</button>
-
-
 <div>
-	{#if query}
-		{`https://azuresearch-usnc.nuget.org/query?q=${query}&prerelease=false`}
-	{:else}
-		query is undefined
+	<div>
+		Select a Project to manage
+	</div>
+
+	<div>
+		Display generated GET request: <input type="checkbox" bind:value={displayQuery}>
+	</div>
+
+	{#if displayQuery}
+		<div>
+			GET request:&nbsp;
+			{#if query}
+				{`https://azuresearch-usnc.nuget.org/query?q=${query}&prerelease=false`}
+			{:else}
+				query is undefined
+			{/if}
+		</div>
 	{/if}
 </div>
 
-<input bind:value={query}>
+<form on:submit|preventDefault={() => sendGetRequest()}>
+    <input bind:value={query}>
 
-<button on:click={testGetRequest}> testGetRequest </button>
+	<button on:click={sendGetRequest}> send GET request </button>
+</form>
 
 {#each testGetRequestResults as entry}
 	<NugetPackageEntryDisplay entry="{new NugetPackageModel(entry.title)}" />
